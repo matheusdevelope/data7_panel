@@ -51,9 +51,9 @@ class _BottomPanelBarState extends State<BottomPanelBar> {
             children: [
               _buildListLegends(legends),
               IconButton(
-                tooltip: "Reconectar.",
+                tooltip: widget.connected ? "Painel Conectado" : "Reconectar",
                 onPressed: () {
-                  widget.callback();
+                  widget.connected ? null : widget.callback();
                 },
                 icon: Icon(
                   Icons.connected_tv_outlined,
