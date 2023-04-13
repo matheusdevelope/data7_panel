@@ -6,17 +6,19 @@ class BottomPanelBar extends StatefulWidget {
       required this.legends,
       required this.lastTimeSync,
       required this.connected,
-      required this.callback});
+      required this.callback,
+      required this.fontSize});
   final String legends;
   final String lastTimeSync;
   final bool connected;
   final VoidCallback callback;
+  final double fontSize;
 
   @override
   State<BottomPanelBar> createState() => _BottomPanelBarState();
 }
 
-_buildListLegends(List<String> legends) {
+_buildListLegends(List<String> legends, BuildContext context) {
   return Row(
       mainAxisSize: MainAxisSize.min,
       children: List<Row>.generate(
@@ -46,10 +48,10 @@ class _BottomPanelBarState extends State<BottomPanelBar> {
         child: Wrap(
             crossAxisAlignment: WrapCrossAlignment.center,
             alignment: WrapAlignment.spaceBetween,
-            spacing: 8.0, // gap between adjacent chips
+            spacing: 8.0,
             runSpacing: 4.0,
             children: [
-              _buildListLegends(legends),
+              _buildListLegends(legends, context),
               IconButton(
                 tooltip: widget.connected ? "Painel Conectado" : "Reconectar",
                 onPressed: () {
@@ -58,10 +60,11 @@ class _BottomPanelBarState extends State<BottomPanelBar> {
                 icon: Icon(
                   Icons.connected_tv_outlined,
                   color: widget.connected ? Colors.green : Colors.red,
-                  size: 24,
                 ),
               ),
-              Text(widget.lastTimeSync),
+              Text(
+                widget.lastTimeSync,
+              ),
             ]),
       ),
     );

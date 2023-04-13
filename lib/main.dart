@@ -1,7 +1,9 @@
 import 'package:data7_panel/pages/home/home.dart';
 import 'package:flutter/material.dart';
+import 'package:wakelock/wakelock.dart';
 
 void main() {
+  Wakelock.enable();
   runApp(const MyApp());
 }
 
@@ -17,7 +19,7 @@ const Map<int, Color> color = {
   800: Color(0xFF006B98),
   900: Color(0xFF006B98),
 };
-MaterialColor myColor = MaterialColor(0xFF006B98, color);
+MaterialColor myColor = const MaterialColor(0xFF006B98, color);
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -27,31 +29,72 @@ class MyApp extends StatelessWidget {
     return LayoutBuilder(
       builder: (_, c) {
         final width = c.maxWidth;
-        var fontSize = 14.0;
-        if (width <= 480) {
-          fontSize = 16.0;
-        } else if (width > 480 && width <= 960) {
-          fontSize = 22.0;
-        } else {
-          fontSize = 28.0;
-        }
+        var fontSizeFactor = 1.0;
+        final devices = [
+          {
+            "device": "Mobile devices",
+            "min": 320,
+            "max": 480,
+            "fontFactorSize": 1.0
+          },
+          {
+            "device": "iPads, Tablets",
+            "min": 481,
+            "max": 768,
+            "fontFactorSize": 1.2
+          },
+          {
+            "device": "Small screens, laptops",
+            "min": 769,
+            "max": 1024,
+            "fontFactorSize": 1.3
+          },
+          {
+            "device": "Desktops, large screens",
+            "min": 1025,
+            "max": 1300,
+            "fontFactorSize": 1.5
+          },
+          {
+            "device": "Extra large screens, TV",
+            "min": 1300,
+            "max": 1600,
+            "fontFactorSize": 1.8
+          },
+          {
+            "device": "Extra large screens, TV",
+            "min": 1601,
+            "max": 5000,
+            "fontFactorSize": 2.0
+          },
+        ];
+        devices.forEach((device) {
+          if (width >= double.parse(device['min'].toString()) &&
+              width <= double.parse(device['max'].toString())) {
+            fontSizeFactor = double.parse(device['fontFactorSize'].toString());
+          }
+        });
+
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Painel Data7',
           theme: ThemeData(
-            primarySwatch: myColor,
-            textTheme: TextTheme(
-              bodySmall: TextStyle(fontSize: fontSize - 4),
-              bodyMedium: TextStyle(fontSize: fontSize - 2),
-              bodyLarge: TextStyle(fontSize: fontSize),
-              labelSmall: TextStyle(fontSize: fontSize - 4),
-              labelMedium: TextStyle(fontSize: fontSize - 2),
-              labelLarge: TextStyle(fontSize: fontSize),
-              titleSmall: TextStyle(fontSize: fontSize),
-              titleMedium: TextStyle(fontSize: fontSize - 2),
-              titleLarge: TextStyle(fontSize: fontSize),
-            ),
-          ),
+              primarySwatch: myColor,
+              textTheme: Theme.of(context)
+                  .textTheme
+                  .apply(
+                    fontSizeFactor: fontSizeFactor,
+                    fontSizeDelta: 2.0,
+                  )
+                  .copyWith(
+                      titleSmall: Theme.of(context)
+                          .textTheme
+                          .titleSmall
+                          ?.copyWith(fontWeight: FontWeight.bold)
+                          .apply(
+                            fontSizeFactor: fontSizeFactor,
+                            fontSizeDelta: 2.0,
+                          ))),
           home: const HomePage(title: 'Painel Data7'),
         );
       },

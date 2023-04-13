@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../models/tableComponentData.dart';
 
+// class Config {
+//   double fontSize = 14;
+// }
+
 class TransformData {
   double configFontSize = 14;
   String configOrderDefault = "ASC";
@@ -11,10 +15,6 @@ class TransformData {
   List<Columns> columns = [];
   List<Columns> columnsHide = [];
   List<Rows> rows = [];
-
-// {01_ID: 370631, 02_OP.: 1, 03_Cliente: 2325 - A C B ACIOLE COM PECAS E SERVICOS EIRELI - ME, 04_Vendedor: DOUGLAS, 05_Municipio: ITAITUBA - PA, 06_Data/Hora: 2023-02-21 15:05, CodFilial: 1,
-//Config_Painel: 2, Config_TituloPainel: Expedicao Externa, Config_OrientacaoPainel: Vertical, Config_CampoOrdenacaoPainel: 06_Data/Hora,
-// Config_OrdenacaoPainel: ASC, Config_CorFundo: #FFF, Config_CorFonte: #000, Config_TamanhoFonte: 15, Config_LegendaCores: #FF0000:1h, #FFFF00:0h30m, #00FF00:0h15m, Config_OcultarColunas: CodFilial}
 
   parseData(List<Map<String, dynamic>> data) {
     if (data.isEmpty == false) {

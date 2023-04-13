@@ -38,8 +38,8 @@ class _PanelPageState extends State<PanelPage> {
     socket.on('data_dispath_panel', (data) {
       setState(() {
         _lastTimeSync = inputFormat.format(DateTime.now()).toString();
-        dataPanel = TransformData()
-            .parseData(json.decode(data).cast<Map<String, dynamic>>());
+        dataPanel =
+            TransformData().parseData(data.cast<Map<String, dynamic>>());
       });
     });
     socket.onDisconnect((_) {
@@ -91,6 +91,7 @@ class _PanelPageState extends State<PanelPage> {
           connected: _connected,
           legends: "#FF0000:1h, #FFFF00:0h30m, #00FF00:0h15m",
           lastTimeSync: _lastTimeSync,
+          fontSize: 16.0,
           callback: () {
             showAlertDialog(context, "Atenção",
                 "Painel Desconectado.\nVerifique se o servidor está ativo e disponível no endereço fornececido.",
