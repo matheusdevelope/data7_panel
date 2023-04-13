@@ -36,6 +36,7 @@ class MyApp extends StatelessWidget {
           fontSize = 28.0;
         }
         return MaterialApp(
+          debugShowCheckedModeBanner: false,
           title: 'Painel Data7',
           theme: ThemeData(
             primarySwatch: myColor,
@@ -46,7 +47,7 @@ class MyApp extends StatelessWidget {
               labelSmall: TextStyle(fontSize: fontSize - 4),
               labelMedium: TextStyle(fontSize: fontSize - 2),
               labelLarge: TextStyle(fontSize: fontSize),
-              titleSmall: TextStyle(fontSize: fontSize - 4),
+              titleSmall: TextStyle(fontSize: fontSize),
               titleMedium: TextStyle(fontSize: fontSize - 2),
               titleLarge: TextStyle(fontSize: fontSize),
             ),

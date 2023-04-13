@@ -16,47 +16,78 @@ class TableComponent extends StatelessWidget {
   }
 
   _buildColumns() {
-    List<Columns>? cols = data.columns;
-    if (cols != null) {
-      return List<DataColumn>.generate(
-          cols.length, (index) => _buildCol(cols[index]));
-    }
-    return [];
+    List<Columns> cols = data.columns;
+    return List<DataColumn>.generate(
+        cols.length, (index) => _buildCol(cols[index]));
   }
 
   _buildCells(List<Data> dataRow) {
     return List<DataCell>.generate(dataRow.length,
-        (index) => DataCell(Text(dataRow[index].value.toString())));
+        (index) => DataCell(Text(dataRow[index].value.toString())),
+        growable: true);
   }
 
-  _buildRow(List<Data> dataRow, int i, BuildContext context) {
-    return DataRow(
-        color: MaterialStateProperty.resolveWith<Color?>(
-            (Set<MaterialState> states) {
-          // All rows will have the same selected color.
-          if (states.contains(MaterialState.selected)) {
-            return Theme.of(context).colorScheme.primary.withOpacity(0.08);
-          }
-          // Even rows will have a grey color.
-          if (i.isEven) {
-            return Colors.grey.withOpacity(0.3);
-          }
-          return null; // Use default value for other states and odd rows.
-        }),
-        cells: _buildCells(dataRow));
+  _buildRow(Rows dataRow, int i, BuildContext context) {
+    List<Data>? rows = dataRow.data;
+    if (rows != null) {
+      return DataRow(
+          color: MaterialStateProperty.resolveWith<Color?>(
+              (Set<MaterialState> states) {
+            // All rows will have the same selected color.
+            if (states.contains(MaterialState.selected)) {
+              return Theme.of(context).colorScheme.primary.withOpacity(0.08);
+            }
+            // Even rows will have a grey color.
+            if (i.isEven) {
+              return Color.fromRGBO(237, 242, 247, 1);
+            }
+            return null; // Use default value for other states and odd rows.
+          }),
+          cells: _buildCells(rows));
+    }
   }
 
   _buildRows(BuildContext context) {
-    List<Data>? rows = data.rows?.data;
-    if (rows != null) {
-      return List<DataRow>.generate(
-          rows.length, (index) => _buildRow(rows, index, context)).toList();
-    }
-    return [];
+    List<Rows> rows = data.rows;
+    return List<DataRow>.generate(
+            rows.length, (index) => _buildRow(rows[index], index, context))
+        .toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    return DataTable(columns: _buildColumns(), rows: _buildRows(context));
+    if (data.columns.isNotEmpty) {
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: DataTable(
+              // headingTextStyle: TextStyle(
+              //     fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize,
+              //     color: Colors.black),
+              dataTextStyle: TextStyle(
+                  fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize,
+                  color: Colors.black),
+              dividerThickness: 0.3,
+              columns: _buildColumns(),
+              rows: _buildRows(context)),
+        ),
+      );
+    }
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            'Aguardando Novos Registros...',
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          const CircularProgressIndicator()
+        ],
+      ),
+    );
   }
 }

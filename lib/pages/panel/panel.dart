@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:data7_panel/components/dialogAlert.dart';
 import 'package:data7_panel/models/tableComponentData.dart';
 import 'package:data7_panel/pages/panel/table.dart';
+import 'package:data7_panel/pages/panel/transformData.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:intl/intl.dart';
@@ -19,8 +20,7 @@ class _PanelPageState extends State<PanelPage> {
   var inputFormat = DateFormat('dd/MM/yyyy HH:mm:ss');
   bool _connected = false;
   String _lastTimeSync = '';
-  List<dynamic> _data = [];
-  List<String> _columnTitles = [];
+  TableComponentData dataPanel = TableComponentData(columns: [], rows: []);
 
   late IO.Socket socket;
   _connectSocket() {
@@ -38,8 +38,8 @@ class _PanelPageState extends State<PanelPage> {
     socket.on('data_dispath_panel', (data) {
       setState(() {
         _lastTimeSync = inputFormat.format(DateTime.now()).toString();
-        _data = json.decode(data);
-        _columnTitles = _data[0].keys.toList();
+        dataPanel = TransformData()
+            .parseData(json.decode(data).cast<Map<String, dynamic>>());
       });
     });
     socket.onDisconnect((_) {
@@ -64,18 +64,18 @@ class _PanelPageState extends State<PanelPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (_columnTitles.isEmpty) {
+    if (dataPanel.columns.isEmpty) {
       return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.url),
-        ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                'Aguardando Itens',
+                'Conectando ao servidor...',
                 style: Theme.of(context).textTheme.headlineMedium,
+              ),
+              const SizedBox(
+                height: 16,
               ),
               const CircularProgressIndicator()
             ],
@@ -85,67 +85,8 @@ class _PanelPageState extends State<PanelPage> {
     }
     return Scaffold(
       body: TableComponent(
-        data: TableComponentData(
-            columns: [
-              Columns(
-                  name: "Name",
-                  label: "Label",
-                  toolTip: "ToolTip",
-                  isOrderColumn: false,
-                  hide: false)
-            ],
-            rows: Rows(
-                data: [Data(value: "Teste"), Data(value: "Teste2")],
-                options: Options(
-                  color: "#000",
-                ))),
-      )
-      // Column(
-      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //   children: <Widget>[
-      //     SingleChildScrollView(
-      //   scrollDirection: Axis.vertical,
-      //   // Data table widget in not scrollable so we have to wrap it in a scroll view when we have a large data set..
-      //   child:
-      //       // SingleChildScrollView(
-      //       //   scrollDirection: Axis.horizontal,
-      //       //   child:
-      //       DataTable(
-      //           sortColumnIndex: 0,
-      //           sortAscending: true,
-      //           columns:
-      //               List<DataColumn>.generate(_columnTitles.length, (index) {
-      //             return DataColumn(
-      //                 label: Text(_columnTitles[index].substring(
-      //                     _columnTitles[index].indexOf("_") + 1,
-      //                     _columnTitles[index].length)));
-      //           }),
-      //           rows: List<DataRow>.generate(
-      //               _data.length,
-      //               (int i) => DataRow(
-      //                     color: MaterialStateProperty.resolveWith<Color?>(
-      //                         (Set<MaterialState> states) {
-      //                       // All rows will have the same selected color.
-      //                       if (states.contains(MaterialState.selected)) {
-      //                         return Theme.of(context)
-      //                             .colorScheme
-      //                             .primary
-      //                             .withOpacity(0.08);
-      //                       }
-      //                       // Even rows will have a grey color.
-      //                       if (i.isEven) {
-      //                         return Colors.grey.withOpacity(0.3);
-      //                       }
-      //                       return null; // Use default value for other states and odd rows.
-      //                     }),
-      //                     cells: List<DataCell>.generate(_columnTitles.length,
-      //                         (index) {
-      //                       return DataCell(Text(
-      //                           _data[i][_columnTitles[index]].toString()));
-      //                     }),
-      //                   ))),
-      // ),
-      ,
+        data: dataPanel,
+      ),
       bottomNavigationBar: BottomPanelBar(
           connected: _connected,
           legends: "#FF0000:1h, #FFFF00:0h30m, #00FF00:0h15m",

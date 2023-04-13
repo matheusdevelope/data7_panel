@@ -1,27 +1,32 @@
-class TableComponentData {
-  List<Columns>? columns;
-  Rows? rows;
+import 'package:flutter/material.dart';
 
-  TableComponentData({this.columns, this.rows});
+class TableComponentData {
+  List<Columns> columns = [];
+  List<Columns> columnsHide = [];
+  List<Rows> rows = [];
+
+  TableComponentData({required this.columns, required this.rows});
 
   TableComponentData.fromJson(Map<String, dynamic> json) {
     if (json['columns'] != null) {
       columns = <Columns>[];
       json['columns'].forEach((v) {
-        columns!.add(new Columns.fromJson(v));
+        columns.add(Columns.fromJson(v));
       });
     }
-    rows = json['rows'] != null ? new Rows.fromJson(json['rows']) : null;
+    if (json['rows'] != null) {
+      rows = <Rows>[];
+      json['rows'].forEach((v) {
+        rows.add(Rows.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.columns != null) {
-      data['columns'] = this.columns!.map((v) => v.toJson()).toList();
-    }
-    if (this.rows != null) {
-      data['rows'] = this.rows!.toJson();
-    }
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['columns'] = columns.map((v) => v.toJson()).toList();
+    data['columnsHide'] = columnsHide.map((v) => v.toJson()).toList();
+    data['rows'] = rows.map((v) => v.toJson()).toList();
     return data;
   }
 }
@@ -52,28 +57,35 @@ class Columns {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['label'] = this.label;
-    data['toolTip'] = this.toolTip;
-    data['isOrderColumn'] = this.isOrderColumn;
-    data['hide'] = this.hide;
-    data['fontSize'] = this.fontSize;
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['name'] = name;
+    data['label'] = label;
+    data['toolTip'] = toolTip;
+    data['isOrderColumn'] = isOrderColumn;
+    data['hide'] = hide;
+    data['fontSize'] = fontSize;
     return data;
   }
 }
 
 class Rows {
   List<Data>? data;
+  List<Data>? dataHide;
   Options? options;
 
-  Rows({this.data, this.options});
+  Rows({this.data, this.dataHide, this.options});
 
   Rows.fromJson(Map<String, dynamic> json) {
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
         data!.add(new Data.fromJson(v));
+      });
+    }
+    if (json['dataHide'] != null) {
+      dataHide = <Data>[];
+      json['dataHide'].forEach((v) {
+        dataHide!.add(new Data.fromJson(v));
       });
     }
     options =
@@ -84,6 +96,9 @@ class Rows {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
+    }
+    if (this.dataHide != null) {
+      data['dataHide'] = this.dataHide!.map((v) => v.toJson()).toList();
     }
     if (this.options != null) {
       data['options'] = this.options!.toJson();
@@ -104,17 +119,17 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['field'] = this.field;
-    data['value'] = this.value;
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['field'] = field;
+    data['value'] = value;
     return data;
   }
 }
 
 class Options {
-  String? color;
-  String? backgroundColor;
-  int? fontSize;
+  Color? color;
+  Color? backgroundColor;
+  double? fontSize;
 
   Options({this.color, this.backgroundColor, this.fontSize});
 
@@ -125,10 +140,10 @@ class Options {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['color'] = this.color;
-    data['backgroundColor'] = this.backgroundColor;
-    data['fontSize'] = this.fontSize;
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['color'] = color;
+    data['backgroundColor'] = backgroundColor;
+    data['fontSize'] = fontSize;
     return data;
   }
 }
