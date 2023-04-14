@@ -1,8 +1,10 @@
 import 'package:data7_panel/pages/panel/panel.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../components/dialogAlert.dart';
+import '../../providers/theme_model.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
@@ -50,49 +52,52 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Container(
-          margin: const EdgeInsets.all(24),
-          constraints: const BoxConstraints(minWidth: 300, maxWidth: 700),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const Padding(
-                padding: EdgeInsets.only(bottom: 8 * 2),
-                child: Text(
-                  'Painel Data7',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Column(
-                children: <Widget>[
-                  TextField(
-                    controller: textController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Endereço do Servidor',
-                      contentPadding: EdgeInsets.all(8),
+    return Consumer<ThemeModel>(
+        builder: (context, ThemeModel themeNotifier, child) {
+      return Scaffold(
+        body: Center(
+          child: Container(
+            margin: const EdgeInsets.all(24),
+            constraints: const BoxConstraints(minWidth: 300, maxWidth: 700),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 8 * 2),
+                  child: Text(
+                    'Painel Data7',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size.fromHeight(50), // NEW
+                ),
+                Column(
+                  children: <Widget>[
+                    TextField(
+                      controller: textController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Endereço do Servidor',
+                        contentPadding: EdgeInsets.all(8),
                       ),
-                      onPressed: _saveAndOpenPanel,
-                      child: const Text(
-                        "Abrir Painel",
-                        style: TextStyle(fontWeight: FontWeight.w400),
-                      ))
-                ],
-              ),
-            ],
+                    ),
+                    const SizedBox(height: 8),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size.fromHeight(50), // NEW
+                        ),
+                        onPressed: _saveAndOpenPanel,
+                        child: const Text(
+                          "Abrir Painel",
+                          style: TextStyle(fontWeight: FontWeight.w400),
+                        ))
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

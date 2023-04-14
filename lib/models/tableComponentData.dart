@@ -4,6 +4,7 @@ class TableComponentData {
   List<Columns> columns = [];
   List<Columns> columnsHide = [];
   List<Rows> rows = [];
+  double fontSize = 14;
 
   TableComponentData({required this.columns, required this.rows});
 

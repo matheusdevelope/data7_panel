@@ -69,21 +69,22 @@ class _PanelPageState extends State<PanelPage> {
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
+            children: const <Widget>[
               Text(
                 'Conectando ao servidor...',
-                style: Theme.of(context).textTheme.headlineMedium,
+                textAlign: TextAlign.center,
               ),
-              const SizedBox(
+              SizedBox(
                 height: 16,
               ),
-              const CircularProgressIndicator()
+              CircularProgressIndicator()
             ],
           ),
         ),
       );
     }
     return Scaffold(
+      // appBar: AppBar(title: Text("teste")),
       body: TableComponent(
         data: dataPanel,
       ),
@@ -91,7 +92,7 @@ class _PanelPageState extends State<PanelPage> {
           connected: _connected,
           legends: "#FF0000:1h, #FFFF00:0h30m, #00FF00:0h15m",
           lastTimeSync: _lastTimeSync,
-          fontSize: 16.0,
+          fontSize: dataPanel.fontSize,
           callback: () {
             showAlertDialog(context, "Atenção",
                 "Painel Desconectado.\nVerifique se o servidor está ativo e disponível no endereço fornececido.",

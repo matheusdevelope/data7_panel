@@ -1,15 +1,19 @@
 import 'package:data7_panel/models/tableComponentData.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/theme_model.dart';
 
 class TableComponent extends StatelessWidget {
   const TableComponent({super.key, required this.data});
   final TableComponentData data;
+  static double? fontSize;
 
   _buildCol(Columns col) {
     return DataColumn(
       label: Text(
         col.label.toString(),
-        style: TextStyle(fontSize: col.fontSize),
+        style: TextStyle(fontSize: fontSize),
       ),
       tooltip: col.toolTip,
     );
@@ -24,11 +28,9 @@ class TableComponent extends StatelessWidget {
   _buildCells(List<Data> dataRow) {
     return List<DataCell>.generate(
         dataRow.length,
-        (index) => DataCell(Text(
-              dataRow[index].value.toString(),
-              overflow: TextOverflow.ellipsis,
-              softWrap: true,
-            )));
+        (index) => DataCell(Text(dataRow[index].value.toString(),
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontSize: fontSize))));
   }
 
   _buildRow(Rows dataRow, int i, BuildContext context) {
@@ -59,17 +61,18 @@ class TableComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (data.columns.isNotEmpty) {
-      return SingleChildScrollView(
+      return Consumer<ThemeModel>(builder: (context, ThemeModel theme, child) {
+        fontSize = theme.fontSizeDataPanel;
+        return SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          child: SizedBox(
-            width: double.infinity,
-            child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: DataTable(
-                    dividerThickness: 0.4,
-                    columns: _buildColumns(),
-                    rows: _buildRows(context))),
-          ));
+          child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: DataTable(
+                  dividerThickness: 0.4,
+                  columns: _buildColumns(),
+                  rows: _buildRows(context))),
+        );
+      });
     }
     return Center(
       child: Column(
@@ -77,7 +80,7 @@ class TableComponent extends StatelessWidget {
         children: const <Widget>[
           Text(
             'Aguardando Novos Registros...',
-            // style: Theme.of(context).textTheme.headlineMedium,
+            textAlign: TextAlign.center,
           ),
           SizedBox(
             height: 16,
