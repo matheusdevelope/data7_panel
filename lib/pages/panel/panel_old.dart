@@ -93,21 +93,10 @@ class _PanelPageState extends State<PanelPage> {
         ),
       );
     }
-
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Row(
-            children: [
-              Expanded(
-                  child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: TableComponent(
-                        data: dataPanel,
-                      )))
-            ],
-          ),
-        ),
+      // appBar: AppBar(title: Text("teste")),
+      body: TableComponent(
+        data: dataPanel,
       ),
       bottomNavigationBar: BottomPanelBar(
           connected: _connected,

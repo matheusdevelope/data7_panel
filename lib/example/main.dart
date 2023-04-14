@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'panel_example.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -12,8 +14,7 @@ class MyApp extends StatelessWidget {
         body: SafeArea(
           child: SingleChildScrollView(
             child: Row(
-              children: [
-                FixedColumnWidget(),
+              children: const [
                 ScrollableColumnWidget(),
               ],
             ),

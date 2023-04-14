@@ -227,38 +227,9 @@ List<Team> teamsData = [
       gd: -9),
 ];
 
-class FixedColumnWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return DataTable(
-      columnSpacing: 10,
-      headingRowColor: MaterialStateProperty.all(Colors.green[300]),
-      decoration: BoxDecoration(
-        border: Border(
-          right: BorderSide(
-            color: Colors.grey,
-            width: 2,
-          ),
-        ),
-      ),
-      columns: [
-        DataColumn(label: Text('Team')),
-      ],
-      rows: [
-        ...teamsData.map((team) => DataRow(
-              cells: [
-                DataCell(Text(
-                  '${team.position.toString()}  ${team.name}',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                )),
-              ],
-            ))
-      ],
-    );
-  }
-}
-
 class ScrollableColumnWidget extends StatelessWidget {
+  const ScrollableColumnWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -267,7 +238,7 @@ class ScrollableColumnWidget extends StatelessWidget {
         child: DataTable(
             headingRowColor: MaterialStateProperty.all(Colors.green[100]),
             columnSpacing: 40,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               border: Border(
                 right: BorderSide(
                   color: Colors.grey,
@@ -275,7 +246,7 @@ class ScrollableColumnWidget extends StatelessWidget {
                 ),
               ),
             ),
-            columns: [
+            columns: const [
               DataColumn(label: Text('Points')),
               DataColumn(label: Text('Won')),
               DataColumn(label: Text('Lost')),
@@ -290,7 +261,7 @@ class ScrollableColumnWidget extends StatelessWidget {
                           alignment: AlignmentDirectional.center,
                           child: Text(
                             team.points.toString(),
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                           ))),
                       DataCell(Container(
                           alignment: AlignmentDirectional.center,

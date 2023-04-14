@@ -63,15 +63,10 @@ class TableComponent extends StatelessWidget {
     if (data.columns.isNotEmpty) {
       return Consumer<ThemeModel>(builder: (context, ThemeModel theme, child) {
         fontSize = theme.fontSizeDataPanel;
-        return SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                  dividerThickness: 0.4,
-                  columns: _buildColumns(),
-                  rows: _buildRows(context))),
-        );
+        return DataTable(
+            dividerThickness: 0.4,
+            columns: _buildColumns(),
+            rows: _buildRows(context));
       });
     }
     return Center(
