@@ -1,7 +1,6 @@
 import 'package:data7_panel/models/tableComponentData.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../providers/theme_model.dart';
 
 class TableComponent extends StatelessWidget {
@@ -30,7 +29,8 @@ class TableComponent extends StatelessWidget {
         dataRow.length,
         (index) => DataCell(Text(dataRow[index].value.toString(),
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: fontSize))));
+            style:
+                TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold))));
   }
 
   _buildRow(Rows dataRow, int i, BuildContext context) {

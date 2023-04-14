@@ -53,6 +53,7 @@ class _BottomPanelBarState extends State<BottomPanelBar> {
   @override
   Widget build(BuildContext context) {
     List<String> legends = widget.legends.split(',');
+    double step = 0.5;
 
     return Consumer<ThemeModel>(builder: (context, ThemeModel theme, child) {
       return BottomAppBar(
@@ -68,7 +69,7 @@ class _BottomPanelBarState extends State<BottomPanelBar> {
               children: [
                 _buildListLegends(legends, context, theme.fontSizeMenuPanel),
                 IconButton(
-                  padding: EdgeInsets.all(0),
+                  padding: const EdgeInsets.all(0),
                   iconSize: theme.fontSizeMenuPanel + 8.0,
                   tooltip: widget.connected ? "Painel Conectado" : "Reconectar",
                   onPressed: () {
@@ -108,7 +109,6 @@ class _BottomPanelBarState extends State<BottomPanelBar> {
                           },
                           child: Text("Tamanho Único",
                               style: TextStyle(fontSize: theme.fontSize))),
-
                       if (incrementAllTogeter)
                         NumberStepper(
                           label: "Fonte Geral",
@@ -116,7 +116,7 @@ class _BottomPanelBarState extends State<BottomPanelBar> {
                           initialValue: theme.fontSize,
                           min: 14,
                           max: 60,
-                          step: 0.2,
+                          step: step,
                           onChanged: (value) {
                             theme.fontSize = value;
                             theme.fontSizeTitlePanel = value;
@@ -133,7 +133,7 @@ class _BottomPanelBarState extends State<BottomPanelBar> {
                           initialValue: theme.fontSize,
                           min: 14,
                           max: 60,
-                          step: 0.2,
+                          step: step,
                           onChanged: (value) {
                             theme.fontSize = value;
                             theme.fontSizeTitlePanel = value;
@@ -147,7 +147,7 @@ class _BottomPanelBarState extends State<BottomPanelBar> {
                           initialValue: theme.fontSizeTitlePanel,
                           min: 14,
                           max: 60,
-                          step: 0.2,
+                          step: step,
                           onChanged: (value) {
                             theme.fontSizeTitlePanel = value;
                           },
@@ -158,7 +158,7 @@ class _BottomPanelBarState extends State<BottomPanelBar> {
                           initialValue: theme.fontSizeDataPanel,
                           min: 14,
                           max: 60,
-                          step: 0.2,
+                          step: step,
                           onChanged: (value) {
                             setState(() {
                               theme.fontSizeDataPanel = value;
@@ -171,7 +171,7 @@ class _BottomPanelBarState extends State<BottomPanelBar> {
                           initialValue: theme.fontSizeMenuPanel,
                           min: 14,
                           max: 60,
-                          step: 0.2,
+                          step: step,
                           onChanged: (value) {
                             setState(() {
                               theme.fontSizeMenuPanel = value;
@@ -179,7 +179,6 @@ class _BottomPanelBarState extends State<BottomPanelBar> {
                           },
                         ),
                       ],
-                      // ),
                     ],
                   )
                 ]
@@ -187,23 +186,3 @@ class _BottomPanelBarState extends State<BottomPanelBar> {
     });
   }
 }
-
-//////////////////////////
-///
-
-// class BottomOanelOptions extends StatefulWidget {
-//   const BottomOanelOptions(
-//       {super.key, required this.opened, required this.fontSize});
-//   final bool opened;
-//   final double fontSize;
-
-//   @override
-//   State<BottomOanelOptions> createState() => _BottomOanelOptions();
-// }
-
-// class _BottomOanelOptions extends State<BottomOanelOptions> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return 
-//   }
-// }

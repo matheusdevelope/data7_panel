@@ -1,8 +1,7 @@
-import 'dart:convert';
 import 'package:data7_panel/components/dialogAlert.dart';
 import 'package:data7_panel/models/tableComponentData.dart';
 import 'package:data7_panel/pages/panel/table.dart';
-import 'package:data7_panel/pages/panel/transformData.dart';
+import 'package:data7_panel/pages/panel/transform_data.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:intl/intl.dart';
@@ -21,7 +20,8 @@ class _PanelPageState extends State<PanelPage> {
   bool _connected = false;
   String _lastTimeSync = '';
   TableComponentData dataPanel = TableComponentData(columns: [], rows: []);
-
+  bool _connecting = false;
+  String _error = "";
   late IO.Socket socket;
   _connectSocket() {
     socket = IO.io(
@@ -53,6 +53,16 @@ class _PanelPageState extends State<PanelPage> {
         _connectSocket();
       });
     });
+    socket.onConnecting((data) {
+      setState(() {
+        _connecting = true;
+      });
+    });
+    socket.onConnectError((data) {
+      setState(() {
+        _error = data.toString();
+      });
+    });
     socket.connect();
   }
 
@@ -69,15 +79,15 @@ class _PanelPageState extends State<PanelPage> {
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const <Widget>[
+            children: <Widget>[
               Text(
-                'Conectando ao servidor...',
+                'Conectando ao servidor... \n ${_connecting.toString()} \n Error:${_error.toString()}',
                 textAlign: TextAlign.center,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 16,
               ),
-              CircularProgressIndicator()
+              const CircularProgressIndicator()
             ],
           ),
         ),

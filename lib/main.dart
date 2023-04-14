@@ -2,7 +2,6 @@ import 'package:data7_panel/pages/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
-
 import 'providers/theme_model.dart';
 
 void main() {
