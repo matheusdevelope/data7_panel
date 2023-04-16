@@ -5,18 +5,17 @@ import 'package:provider/provider.dart';
 import '../providers/theme_model.dart';
 
 class BottomPanelBar extends StatefulWidget {
-  const BottomPanelBar(
-      {super.key,
-      required this.legends,
-      required this.lastTimeSync,
-      required this.connected,
-      required this.callback,
-      required this.fontSize});
+  const BottomPanelBar({
+    super.key,
+    required this.legends,
+    required this.lastTimeSync,
+    required this.connected,
+    required this.callback,
+  });
   final String legends;
   final String lastTimeSync;
   final bool connected;
   final VoidCallback callback;
-  final double fontSize;
 
   @override
   State<BottomPanelBar> createState() => _BottomPanelBarState();

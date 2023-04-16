@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:intl/intl.dart';
 
-import '../../components/BottomPanelBar.dart';
+import '../../../components/BottomPanelBar.dart';
 
 class PanelPage extends StatefulWidget {
   const PanelPage({super.key, required this.url});

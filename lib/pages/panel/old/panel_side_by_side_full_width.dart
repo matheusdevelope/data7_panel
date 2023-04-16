@@ -6,8 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:intl/intl.dart';
 
-import '../../components/BottomPanelBar.dart';
-import 'render_panel.dart';
+import '../../../components/BottomPanelBar.dart';
 
 class PanelPage extends StatefulWidget {
   const PanelPage({super.key, required this.url});
@@ -20,7 +19,7 @@ class _PanelPageState extends State<PanelPage> {
   var inputFormat = DateFormat('dd/MM/yyyy HH:mm:ss');
   bool _connected = false;
   String _lastTimeSync = '';
-  List<TableComponentData> dataPanel = [];
+  TableComponentData dataPanel = TableComponentData(columns: [], rows: []);
   bool _connecting = false;
   String _error = "";
   late IO.Socket socket;
@@ -75,14 +74,14 @@ class _PanelPageState extends State<PanelPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (dataPanel.isEmpty) {
+    if (dataPanel.columns.isEmpty) {
       return Scaffold(
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                'Conectando ao servidor... \n ${_connecting.toString()} ${_error.toString().isNotEmpty ? _error.toString() : ""}',
+                'Conectando ao servidor... \n ${_connecting.toString()} \n Error:${_error.toString()}',
                 textAlign: TextAlign.center,
               ),
               const SizedBox(
@@ -94,8 +93,6 @@ class _PanelPageState extends State<PanelPage> {
         ),
       );
     }
-
-    // return    RenderPanels(dataList: dataPanel, isHorizontal: false);
 
     // return Scaffold(
     //   body: LayoutBuilder(
@@ -129,11 +126,41 @@ class _PanelPageState extends State<PanelPage> {
     // );
 
     return Scaffold(
-      body: RenderPanels(dataList: dataPanel, isHorizontal: false),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Row(
+            children: [
+              Expanded(
+                  child: LayoutBuilder(
+                      builder: (context, constraints) => SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: ConstrainedBox(
+                              constraints: BoxConstraints.expand(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: MediaQuery.of(context).size.height),
+                              child: TableComponent(
+                                data: dataPanel,
+                              ))))),
+              Expanded(
+                  child: LayoutBuilder(
+                      builder: (context, constraints) => SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: ConstrainedBox(
+                              constraints: BoxConstraints.expand(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: MediaQuery.of(context).size.height),
+                              child: TableComponent(
+                                data: dataPanel,
+                              )))))
+            ],
+          ),
+        ),
+      ),
       bottomNavigationBar: BottomPanelBar(
           connected: _connected,
-          legends: dataPanel[0].legendColors,
+          legends: "#FF0000:1h, #FFFF00:0h30m, #00FF00:0h15m",
           lastTimeSync: _lastTimeSync,
+          fontSize: dataPanel.fontSize,
           callback: () {
             showAlertDialog(context, "Atenção",
                 "Painel Desconectado.\nVerifique se o servidor está ativo e disponível no endereço fornececido.",

@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 
 class TableComponentData {
+  String title = 'Panel';
   List<Columns> columns = [];
   List<Columns> columnsHide = [];
   List<Rows> rows = [];
-  double fontSize = 14;
+  String legendColors = '';
 
-  TableComponentData({required this.columns, required this.rows});
+  TableComponentData(
+      {this.title = "Panel",
+      required this.columns,
+      required this.rows,
+      required this.columnsHide,
+      this.legendColors = ''});
 
   TableComponentData.fromJson(Map<String, dynamic> json) {
     if (json['columns'] != null) {
@@ -39,6 +45,7 @@ class Columns {
   bool? isOrderColumn;
   bool? hide;
   double? fontSize;
+  double? width;
 
   Columns(
       {this.name,
@@ -46,7 +53,8 @@ class Columns {
       this.toolTip,
       this.isOrderColumn,
       this.hide,
-      this.fontSize});
+      this.fontSize,
+      this.width});
 
   Columns.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -55,6 +63,7 @@ class Columns {
     isOrderColumn = json['isOrderColumn'];
     hide = json['hide'];
     fontSize = json['fontSize'];
+    width = json['width'];
   }
 
   Map<String, dynamic> toJson() {
@@ -65,6 +74,7 @@ class Columns {
     data['isOrderColumn'] = isOrderColumn;
     data['hide'] = hide;
     data['fontSize'] = fontSize;
+    data['width'] = width;
     return data;
   }
 }

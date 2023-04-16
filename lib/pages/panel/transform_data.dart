@@ -2,38 +2,104 @@ import 'package:flutter/material.dart';
 
 import '../../models/tableComponentData.dart';
 
-// class Config {
-//   double fontSize = 14;
-// }
+class Table {
+  String title;
+  int order;
+  TableComponentData data;
+  Table({required this.title, required this.order, required this.data});
+}
 
 class TransformData {
-  double configFontSize = 14;
+  double configFontSize = 0;
   String configOrderDefault = "ASC";
   String configOrderFieldDefault = "ID";
+  String consfigTitlePanel = "Painel";
+  String configOrientationPanel = 'VERTICAL';
+  String configLegendColors = "";
   int configColumnPanelOrder = 0;
+
+  Map<String, double> configWidthColummns = {};
   List<String> configHideColumns = [];
   List<Columns> columns = [];
   List<Columns> columnsHide = [];
   List<Rows> rows = [];
 
-  parseData(List<Map<String, dynamic>> data) {
-    if (data.isEmpty == false) {
-      _gererateGeneralInfo(data[0]);
-      _gererateColumns(data[0]);
-      _gererateRows(data);
-      _sortRows(rows);
-    }
-    return TableComponentData(columns: columns, rows: rows);
+  List<TableComponentData> tables = [];
+
+  List<TableComponentData> parseData(List<Map<String, dynamic>> data) {
+    List<List<Map<String, dynamic>>> separated_data = [];
+    _separatePanelsData(data).forEach((key, value) {
+      separated_data.add(value);
+    });
+
+    separated_data
+        .sort((a, b) => a[0]["Config_Painel"].compareTo(b[0]["Config_Painel"]));
+
+    separated_data.forEach((value) {
+      configFontSize = 0;
+      configOrderDefault = "ASC";
+      configOrderFieldDefault = "ID";
+      consfigTitlePanel = "Painel";
+      configOrientationPanel = 'VERTICAL';
+      configLegendColors = "";
+      configColumnPanelOrder = 0;
+      configWidthColummns = {};
+      configHideColumns = [];
+      columns = [];
+      columnsHide = [];
+      rows = [];
+
+      if (value.isNotEmpty) {
+        _gererateGeneralInfo(value[0]);
+        _gererateColumns(value[0]);
+        _gererateRows(value);
+        _sortRows(rows);
+      }
+      tables.add(TableComponentData(
+          title: consfigTitlePanel,
+          columns: columns,
+          rows: rows,
+          columnsHide: columnsHide,
+          legendColors: configLegendColors));
+    });
+
+    return tables;
+  }
+
+  Map<int, List<Map<String, dynamic>>> _separatePanelsData(
+      List<Map<String, dynamic>> data) {
+    Map<int, List<Map<String, dynamic>>> groupedData = {};
+    data.forEach((element) {
+      int configPainel = element['Config_Painel'] ?? 1;
+      if (groupedData.containsKey(configPainel)) {
+        groupedData[configPainel]!.add(element);
+      } else {
+        groupedData[configPainel] = [element];
+      }
+    });
+    return groupedData;
   }
 
   _gererateGeneralInfo(Map<String, dynamic> objData) {
+    consfigTitlePanel = objData['Config_TituloPainel'].toString();
+    configLegendColors = objData['Config_LegendaCores'].toString();
+    configOrientationPanel =
+        objData['Config_OrientacaoPainel'].toString().toUpperCase() ==
+                "HORIZONTAL"
+            ? "HORIZONTAL"
+            : configOrientationPanel;
     configOrderDefault =
         objData['Config_OrdenacaoPainel'].toString().toUpperCase() == 'DESC'
             ? "DESC"
-            : "ASC";
+            : configOrderDefault;
     configOrderFieldDefault = objData['Config_CampoOrdenacaoPainel'].toString();
     configHideColumns = objData['Config_OcultarColunas'].toString().split(',');
-    configFontSize = _getFontSize(objData['Config_TamanhoFonte'].toString());
+    configFontSize = getFontSize(objData['Config_TamanhoFonte'].toString());
+
+    objData['Config_LarguraColunas'].toString().split(',').forEach((element) {
+      configWidthColummns[element.split(':')[0]] =
+          removeNonDigitAndParseToDouble(element.split(':')[1]);
+    });
   }
 
   _gererateColumns(Map<String, dynamic> objData) {
@@ -48,6 +114,7 @@ class TransformData {
           label: label,
           toolTip: label,
           fontSize: configFontSize,
+          width: configWidthColummns[key] ?? 0,
           hide: hide,
           isOrderColumn: configOrderFieldDefault == key);
       hide ? columnsHide.add(col) : columns.add(col);
@@ -68,9 +135,9 @@ class TransformData {
       rows.add(Rows(
           data: list,
           options: Options(
-              backgroundColor: _getColor(row['Config_CorFundo'].toString()),
-              color: _getColor(row['Config_CorFonte'].toString()),
-              fontSize: _getFontSize(row['Config_TamanhoFonte'].toString()))));
+              backgroundColor: getColor(row['Config_CorFundo'].toString()),
+              color: getColor(row['Config_CorFonte'].toString()),
+              fontSize: getFontSize(row['Config_TamanhoFonte'].toString()))));
     });
   }
 
@@ -94,31 +161,31 @@ class TransformData {
   }
 }
 
-_getColor(String value) {
+getColor(String value) {
   final String stringColor = value;
   RegExp hexColor = RegExp(r'^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$');
-
   if (hexColor.hasMatch(stringColor) && stringColor.toLowerCase() != "#fff") {
     return Color(int.parse(stringColor.split(":")[0].replaceAll("#", "0xFF")));
   }
+
   return null;
 }
 
-_getFontSize(String value) {
+getFontSize(String value) {
   final String tempFontSize = value.toString().replaceAll('\\D', "");
   if (tempFontSize.isNotEmpty && double.tryParse(tempFontSize) != null) {
     return double.parse(tempFontSize);
   }
-  return 14.0;
+  return 0.0;
 }
 
-//  "columns": [
-//         {
-//             "name": "Name",
-//             "label": "Label",
-//             "toolTip": "ToolTip",
-//             "isOrderColumn": false,
-//             "hide": false,
-//             "fontSize": 14
-//         }
-//     ],
+double removeNonDigitAndParseToDouble(String input) {
+  String cleaned = input.replaceAll(RegExp(r'[^0-9]'), '');
+
+  try {
+    double result = double.parse(cleaned);
+    return result;
+  } catch (e) {
+    return 0.0;
+  }
+}
