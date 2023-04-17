@@ -17,11 +17,79 @@ class RenderPanels extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: RenderPanelsHorizontal(
-        dataList: dataList,
-      )),
+          child: isHorizontal == true
+              ? RenderPanelsHorizontal(dataList: dataList)
+              : RenderPanelsVertical(
+                  dataList: dataList,
+                )),
     );
   }
+}
+
+class RenderPanelsVertical extends StatelessWidget {
+  List<TableComponentData> dataList = [];
+  RenderPanelsVertical({Key? key, required this.dataList}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    int counter = 0;
+    List<Widget> list = [];
+    dataList.toList().forEach((table) {
+      list = [...list, ..._generateTable(table, context)];
+      if (counter < dataList.length - 1) {
+        list.add(const Divider(
+          height: 1,
+          thickness: 1,
+        ));
+      }
+      counter++;
+    });
+    return Column(children: [...list]);
+  }
+}
+
+_generateTable(TableComponentData data, BuildContext context) {
+  return [
+    Consumer<ThemeModel>(builder: (context, ThemeModel theme, child) {
+      return Container(
+        alignment: Alignment.center,
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 4),
+          child: Text(
+            data.title,
+            style: TextStyle(
+                color: getColor("#4A5568"),
+                fontSize: theme.fontSizeTitlePanel,
+                fontWeight: FontWeight.bold),
+          ),
+        ),
+      );
+    }),
+    Container(
+      margin: const EdgeInsets.only(top: 6, bottom: 6),
+      child: const Divider(
+        height: 1,
+        thickness: 1,
+      ),
+    ),
+    Expanded(
+        child: LayoutBuilder(
+            builder: (context, constraints) => SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                                minWidth: MediaQuery.of(context).size.width),
+                            child: TableComponent(data: data),
+                          )),
+                    ),
+                  ],
+                )))),
+  ];
 }
 
 class RenderPanelsHorizontal extends StatelessWidget {
@@ -31,21 +99,21 @@ class RenderPanelsHorizontal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int counter = 0;
-    List<Widget> _list = [];
-    dataList.take(2).toList().forEach((table) {
-      _list.add(DataTablePanelHorizontal(
+    List<Widget> list = [];
+    dataList.toList().forEach((table) {
+      list.add(DataTablePanelHorizontal(
         data: table,
       ));
-      // if (!dataList.length.isEven && counter.isEven) {
-      if (counter < dataList.take(2).toList().length - 1) {
-        _list.add(const VerticalDivider(
-          width: 3,
+      if (counter < dataList.length - 1) {
+        list.add(const VerticalDivider(
+          width: 1,
+          thickness: 0.6,
         ));
       }
       counter++;
     });
     return Row(
-        crossAxisAlignment: CrossAxisAlignment.start, children: [..._list]);
+        crossAxisAlignment: CrossAxisAlignment.start, children: [...list]);
   }
 }
 

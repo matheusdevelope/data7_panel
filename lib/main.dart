@@ -87,6 +87,9 @@ class MyApp extends StatelessWidget {
               title: 'Painel Data7',
               theme: ThemeData(
                   primarySwatch: myColor,
+                  dataTableTheme: DataTableThemeData(
+                    headingRowHeight: 45,
+                  ),
                   textTheme: Theme.of(context)
                       .textTheme
                       .apply(

@@ -1,4 +1,5 @@
 import 'package:data7_panel/components/number_stepper.dart';
+import 'package:data7_panel/pages/panel/transform_data.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -31,12 +32,14 @@ class _BottomPanelBarState extends State<BottomPanelBar> {
         children: List<Row>.generate(
             legends.length,
             (index) => Row(mainAxisSize: MainAxisSize.min, children: [
-                  Icon(Icons.circle,
-                      color: Color(int.parse(legends[index]
-                          .split(":")[0]
-                          .replaceAll("#", "0xFF")))),
-                  Text(legends[index].split(":")[1].toString(),
-                      style: TextStyle(fontSize: fontSize)),
+                  if (legends[index].toString().contains(":"))
+                    Icon(Icons.circle,
+                        color: Color(int.parse(legends[index]
+                            .split(":")[0]
+                            .replaceAll("#", "0xFF")))),
+                  if (legends[index].toString().contains(':'))
+                    Text(legends[index].split(":")[1].toString(),
+                        style: TextStyle(fontSize: fontSize)),
                   const SizedBox(
                     width: 4.0,
                   )
@@ -52,6 +55,7 @@ class _BottomPanelBarState extends State<BottomPanelBar> {
   @override
   Widget build(BuildContext context) {
     List<String> legends = widget.legends.split(',');
+
     double step = 0.5;
 
     return Consumer<ThemeModel>(builder: (context, ThemeModel theme, child) {
@@ -66,7 +70,8 @@ class _BottomPanelBarState extends State<BottomPanelBar> {
               spacing: 8.0,
               runSpacing: 4.0,
               children: [
-                _buildListLegends(legends, context, theme.fontSizeMenuPanel),
+                if (legends.isNotEmpty)
+                  _buildListLegends(legends, context, theme.fontSizeMenuPanel),
                 IconButton(
                   padding: const EdgeInsets.all(0),
                   iconSize: theme.fontSizeMenuPanel + 8.0,

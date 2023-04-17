@@ -6,13 +6,15 @@ class TableComponentData {
   List<Columns> columnsHide = [];
   List<Rows> rows = [];
   String legendColors = '';
+  bool isHorizontal = false;
 
   TableComponentData(
       {this.title = "Panel",
       required this.columns,
       required this.rows,
       required this.columnsHide,
-      this.legendColors = ''});
+      this.legendColors = '',
+      this.isHorizontal = false});
 
   TableComponentData.fromJson(Map<String, dynamic> json) {
     if (json['columns'] != null) {
@@ -138,8 +140,8 @@ class Data {
 }
 
 class Options {
-  Color? color;
-  Color? backgroundColor;
+  String? color;
+  String? backgroundColor;
   double? fontSize;
 
   Options({this.color, this.backgroundColor, this.fontSize});
