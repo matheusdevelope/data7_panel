@@ -1,8 +1,8 @@
 import 'package:data7_panel/models/tableComponentData.dart';
-import 'package:data7_panel/pages/panel/transform_data.dart';
+import 'package:data7_panel/models/transform_data.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../providers/theme_model.dart';
+import '../providers/theme_model.dart';
 import 'custom_table.dart';
 
 class TableComponent extends StatelessWidget {

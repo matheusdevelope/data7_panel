@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../models/tableComponentData.dart';
+import 'tableComponentData.dart';
 
 class Table {
   String title;
