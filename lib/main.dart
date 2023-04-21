@@ -31,63 +31,64 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => ThemeModel(),
       child: Consumer<ThemeModel>(
-          builder: (context, ThemeModel themeNotifier, child) {
-        return LayoutBuilder(
-          builder: (_, c) {
-            final width = c.maxWidth;
-            var fontSizeFactor = 1.0;
-            final devices = [
-              {
-                "device": "Mobile devices",
-                "min": 320,
-                "max": 480,
-                "fontFactorSize": 1.0
-              },
-              {
-                "device": "iPads, Tablets",
-                "min": 481,
-                "max": 768,
-                "fontFactorSize": 1.2
-              },
-              {
-                "device": "Small screens, laptops",
-                "min": 769,
-                "max": 1024,
-                "fontFactorSize": 1.3
-              },
-              {
-                "device": "Desktops, large screens",
-                "min": 1025,
-                "max": 1300,
-                "fontFactorSize": 1.5
-              },
-              {
-                "device": "Extra large screens, TV",
-                "min": 1300,
-                "max": 1600,
-                "fontFactorSize": 1.8
-              },
-              {
-                "device": "Extra large screens, TV",
-                "min": 1601,
-                "max": 5000,
-                "fontFactorSize": 2.0
-              },
-            ];
-            devices.forEach((device) {
-              if (width >= double.parse(device['min'].toString()) &&
-                  width <= double.parse(device['max'].toString())) {
-                fontSizeFactor =
-                    double.parse(device['fontFactorSize'].toString());
-              }
-            });
+        builder: (context, ThemeModel themeNotifier, child) {
+          return LayoutBuilder(
+            builder: (_, c) {
+              final width = c.maxWidth;
+              var fontSizeFactor = 1.0;
+              final devices = [
+                {
+                  "device": "Mobile devices",
+                  "min": 320,
+                  "max": 480,
+                  "fontFactorSize": 1.0
+                },
+                {
+                  "device": "iPads, Tablets",
+                  "min": 481,
+                  "max": 768,
+                  "fontFactorSize": 1.2
+                },
+                {
+                  "device": "Small screens, laptops",
+                  "min": 769,
+                  "max": 1024,
+                  "fontFactorSize": 1.3
+                },
+                {
+                  "device": "Desktops, large screens",
+                  "min": 1025,
+                  "max": 1300,
+                  "fontFactorSize": 1.5
+                },
+                {
+                  "device": "Extra large screens, TV",
+                  "min": 1300,
+                  "max": 1600,
+                  "fontFactorSize": 1.8
+                },
+                {
+                  "device": "Extra large screens, TV",
+                  "min": 1601,
+                  "max": 5000,
+                  "fontFactorSize": 2.0
+                },
+              ];
 
-            return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              title: 'Painel Data7',
-              theme: ThemeData(
+              devices.forEach((device) {
+                if (width >= double.parse(device['min'].toString()) &&
+                    width <= double.parse(device['max'].toString())) {
+                  fontSizeFactor =
+                      double.parse(device['fontFactorSize'].toString());
+                }
+              });
+
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                title: 'Painel Data7',
+                theme: ThemeData(
                   primarySwatch: myColor,
-                  dataTableTheme: DataTableThemeData(
+                  dataTableTheme: const DataTableThemeData(
                     headingRowHeight: 45,
                   ),
                   textTheme: Theme.of(context)
@@ -97,19 +98,21 @@ class MyApp extends StatelessWidget {
                         fontSizeDelta: 2.0,
                       )
                       .copyWith(
-                          titleSmall: Theme.of(context)
-                              .textTheme
-                              .titleSmall
-                              ?.copyWith(fontWeight: FontWeight.bold)
-                              .apply(
+                        titleSmall: Theme.of(context)
+                            .textTheme
+                            .titleSmall
+                            ?.copyWith(fontWeight: FontWeight.bold)
+                            .apply(
                                 fontSizeFactor: fontSizeFactor,
-                                fontSizeDelta: 2.0,
-                              ))),
-              home: const HomePage(title: 'Painel Data7'),
-            );
-          },
-        );
-      }),
+                                fontSizeDelta: 2.0),
+                      ),
+                ),
+                home: const HomePage(title: 'Painel Data7'),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

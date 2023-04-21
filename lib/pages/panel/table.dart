@@ -20,70 +20,6 @@ class TableComponent extends StatelessWidget {
     return font;
   }
 
-  _buildCol(Columns col) {
-    return DataColumn(
-      label: Padding(
-        padding: const EdgeInsets.only(bottom: 10),
-        child: Text(
-          col.label.toString().toUpperCase(),
-          style: TextStyle(
-              color: getColor("#4A5568"),
-              fontSize: _fontSize(col.fontSize, fontSizeProvider)),
-        ),
-      ),
-      tooltip: col.toolTip,
-    );
-  }
-
-  _buildColumns() {
-    List<Columns> cols = data.columns;
-    return List<DataColumn>.generate(
-        cols.length, (index) => _buildCol(cols[index]));
-  }
-
-  _buildCells(List<Data> dataRow, double? fontSize) {
-    return List<DataCell>.generate(
-        dataRow.length,
-        (index) => DataCell(Text(dataRow[index].value.toString(),
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-                // color: color,
-                fontSize: fontSize,
-                fontWeight: FontWeight.bold))));
-  }
-
-  _buildRow(Rows dataRow, int i, BuildContext context) {
-    List<Data>? rows = dataRow.data;
-    // Color? fnColor = dataRow.options?.color;
-    if (rows != null) {
-      return DataRow(
-          color: MaterialStateProperty.resolveWith<Color?>(
-              (Set<MaterialState> states) {
-            // Color? bgColor = dataRow.options?.backgroundColor;
-
-            if (states.contains(MaterialState.selected)) {
-              return Theme.of(context).colorScheme.primary.withOpacity(0.08);
-            }
-            // if (bgColor != null) {
-            //   return bgColor;
-            // }
-            if (i.isEven) {
-              return const Color.fromRGBO(237, 242, 247, 1);
-            }
-            return null;
-          }),
-          cells: _buildCells(
-              rows, _fontSize(dataRow.options?.fontSize, fontSizeProvider)));
-    }
-  }
-
-  _buildRows(BuildContext context) {
-    List<Rows> rows = data.rows;
-    return List<DataRow>.generate(
-            rows.length, (index) => _buildRow(rows[index], index, context))
-        .toList();
-  }
-
   @override
   Widget build(BuildContext context) {
     List<CustomDataColumn> columns =
@@ -122,6 +58,7 @@ class TableComponent extends StatelessWidget {
                               0xFF000000)
                           : null,
                   cell: Text(dataRow.data![cellIndex].value.toString(),
+                      textAlign: TextAlign.start,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                           color: hexColor.hasMatch(dataRow.options?.color ?? '')
@@ -132,40 +69,36 @@ class TableComponent extends StatelessWidget {
                           fontWeight: FontWeight.bold)))));
     });
 
-    if (data.columns.isNotEmpty) {
-      return Consumer<ThemeModel>(builder: (context, ThemeModel theme, child) {
-        fontSizeProvider = theme.fontSizeDataPanel;
-        return CustomTable(
-          // title: Text('Dynamic Table'),
-          columns: columns,
-          rows: rows,
-          // headerHeight: 50,
-          // rowHeight: 40,
-          // columnWidth: 200,
-          dividerThickness: 1,
-          isIvenColor: Color(int.parse(("#EDF2F7").replaceAll("#", "0xFF"))),
-        );
-        // DataTable(
-        //     dividerThickness: 1,
-        //     columnSpacing: 24,
-        //     columns: _buildColumns(),
-        //     rows: _buildRows(context));
-      });
-    }
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const <Widget>[
-          Text(
-            'Aguardando Novos Registros...',
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(
-            height: 16,
-          ),
-          CircularProgressIndicator()
-        ],
-      ),
-    );
+    // if (data.columns.isEmpty) {
+    return Consumer<ThemeModel>(builder: (context, ThemeModel theme, child) {
+      fontSizeProvider = theme.fontSizeDataPanel;
+      return CustomTable(
+        columns: columns,
+        rows: rows,
+        dividerThickness: 1,
+        isIvenColor: Color(int.parse(("#EDF2F7").replaceAll("#", "0xFF"))),
+      );
+    });
+    // }
+    // return
+    //     // Center(
+    //     //   child:
+    //     // Column(
+    //     //   mainAxisAlignment: MainAxisAlignment.center,
+    //     //   crossAxisAlignment: CrossAxisAlignment.center,
+    //     //   children: <Widget>[
+    //     //     // Text(
+    //     //   'Aguardando Dados...',
+    //     //   textAlign: TextAlign.center,
+    //     //   style: TextStyle(fontWeight: FontWeight.bold),
+    //     // ),
+    //     Center(
+    //   // height: 60,
+    //   // width: 60,
+    //   child: CircularProgressIndicator(),
+    // ); //,
+    //     ],
+    //   ),
+    // );
   }
 }

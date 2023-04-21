@@ -10,6 +10,7 @@ class MyBottomAppBar extends StatelessWidget {
   final Function onExpandButtonPressed;
   final int selectedFontSizeIndex;
   final List<double> fontSizes;
+  final double fontSize;
   final String? legends;
 
   const MyBottomAppBar(
@@ -21,6 +22,7 @@ class MyBottomAppBar extends StatelessWidget {
       required this.onExpandButtonPressed,
       required this.selectedFontSizeIndex,
       required this.fontSizes,
+      required this.fontSize,
       this.legends})
       : super(key: key);
 
@@ -64,9 +66,9 @@ class MyBottomAppBar extends StatelessWidget {
                     legendsList, context, theme.fontSizeMenuPanel),
                 Text(
                   lastSyncTime,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: theme.fontSizeDataPanel),
                 ),
               ],
             ),

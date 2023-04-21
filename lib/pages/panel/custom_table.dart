@@ -50,7 +50,7 @@ class CustomTable extends StatelessWidget {
     final Map<int, TableColumnWidth> columnWidths = {};
 
     for (int i = 0; i < columns.length; i++) {
-      if (columns[i].width != null) {
+      if (columns[i].width != null && columns[i].width! > 0) {
         columnWidths[i] = FixedColumnWidth(columns[i].width!);
       } else if (columnWidth != null) {
         columnWidths[i] = FixedColumnWidth(columnWidth!);

@@ -14,7 +14,6 @@ class _FontSizeSelectorState extends State<FontSizeSelector> {
   List<double> _fontSizeList = [];
 
   void _updateFontSize(int index, double value) {
-    print(value);
     setState(() {
       _fontSizeList[index] = value;
     });
@@ -32,6 +31,7 @@ class _FontSizeSelectorState extends State<FontSizeSelector> {
     return Wrap(
         // mainAxisSize: MainAxisSize.min,
         // crossAxisAlignment: CrossAxisAlignment.start,
+
         children: [
           SizedBox(
             height: 20,
@@ -57,7 +57,7 @@ class _FontSizeSelectorState extends State<FontSizeSelector> {
                             ),
                           ),
                           Expanded(
-                            flex: 6,
+                            flex: 3,
                             child: Slider(
                               value: _fontSizeList[index],
                               min: selectorData.minValue,

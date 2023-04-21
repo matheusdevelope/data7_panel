@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:data7_panel/pages/panel/panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'dart:math' as math;
 
 import '../../components/dialogAlert.dart';
 import '../../providers/theme_model.dart';
@@ -94,13 +98,26 @@ class _HomePageState extends State<HomePage> {
                         child: const Text(
                           "Abrir Painel",
                           style: TextStyle(fontWeight: FontWeight.w400),
-                        ))
+                        )),
                   ],
                 ),
               ],
             ),
           ),
         ),
+        floatingActionButton: FloatingActionButton(
+            tooltip: "Sair",
+            heroTag: "Sair",
+            child: Transform.rotate(
+                angle: 180 * math.pi / 180,
+                child: const Icon(
+                  Icons.exit_to_app,
+                  color: Colors.white,
+                )),
+            onPressed: () {
+              exit(0);
+              // Navigator.of(context).pop();
+            }),
       );
     });
   }
