@@ -1,3 +1,4 @@
+import 'package:data7_panel/providers/caroussel_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
@@ -18,10 +19,12 @@ class BottomSheetMenu extends StatelessWidget {
             const SizedBox(
               height: 40,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Transform.rotate(
+            Consumer<CarousselModel>(
+                builder: (context, CarousselModel caroussel, c) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Transform.rotate(
                     angle: 180 * math.pi / 180,
                     child: IconButton(
                       padding: const EdgeInsets.all(0),
@@ -34,9 +37,40 @@ class BottomSheetMenu extends StatelessWidget {
                         Icons.exit_to_app_outlined,
                         color: Colors.red,
                       ),
-                    ))
-              ],
-            ),
+                    ),
+                  ),
+                  Expanded(child: Row()),
+                  Flexible(
+                      child: Row(
+                    children: [
+                      Flexible(
+                          // width: 200,
+                          child: CustomSlider(
+                              label: '${caroussel.autoPlayDuration / 1000}s',
+                              value:
+                                  caroussel.autoPlayDuration / 1000.toDouble(),
+                              minValue: 1,
+                              maxValue: 60 * 10,
+                              onChange: (value) {
+                                print(value);
+                                caroussel.autoPlayDuration =
+                                    value.toInt() * 1000;
+                              })),
+                      IconButton(
+                        onPressed: () {
+                          caroussel.autoplay = !caroussel.autoplay;
+                        },
+                        color: caroussel.autoplay ? Colors.blue : Colors.black,
+                        tooltip: "AutoPlay Carrossel",
+                        icon: Icon(caroussel.autoplay
+                            ? Icons.toggle_on
+                            : Icons.toggle_off),
+                      ),
+                    ],
+                  )),
+                ],
+              );
+            }),
             const Divider(),
             CustomSlider(
                 label: 'Fonte Geral:',

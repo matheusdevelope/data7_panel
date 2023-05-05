@@ -1,3 +1,6 @@
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:data7_panel/components/carroussel.dart';
+import 'package:data7_panel/providers/caroussel_model.dart';
 import 'package:data7_panel/providers/theme_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -5,9 +8,13 @@ import 'legends.dart';
 
 class CustomBottomAppBar extends StatelessWidget {
   const CustomBottomAppBar(
-      {super.key, required this.legends, required this.lastTimeSync});
+      {super.key,
+      required this.legends,
+      required this.lastTimeSync,
+      required this.controller});
   final String legends;
   final String lastTimeSync;
+  final CarouselController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +31,18 @@ class CustomBottomAppBar extends StatelessWidget {
                   flex: 1,
                   child: Legends(
                       legends: legends, fontSize: theme.fontSizeMenuPanel),
+                ),
+                Expanded(
+                  child: Consumer<CarousselModel>(
+                    builder: (context, CarousselModel caroussel, c) {
+                      return ControlsCarousel(
+                        controller: controller,
+                        activeIndex: caroussel.currentIndex,
+                        autoplay: caroussel.autoplay,
+                        items: caroussel.itensCount,
+                      );
+                    },
+                  ),
                 ),
                 Expanded(
                   flex: 1,

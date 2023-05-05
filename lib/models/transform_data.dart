@@ -25,46 +25,66 @@ class TransformData {
   List<Rows> rows = [];
 
   List<TableComponentData> tables = [];
+  List<List<TableComponentData>> carousels = [];
 
-  List<TableComponentData> parseData(List<Map<String, dynamic>> data) {
-    List<List<Map<String, dynamic>>> separated_data = [];
-    _separatePanelsData(data).forEach((key, value) {
-      separated_data.add(value);
+  List<List<TableComponentData>> parseData(List<Map<String, dynamic>> data) {
+    _separatePanelsCarousel(data).forEach((key, data) {
+      List<List<Map<String, dynamic>>> separatedData = [];
+      _separatePanelsData(data).forEach((key, value) {
+        separatedData.add(value);
+      });
+
+      separatedData.sort(
+          (a, b) => a[0]["Config_Painel"].compareTo(b[0]["Config_Painel"]));
+
+      separatedData.forEach((value) {
+        configFontSize = 0;
+        configOrderDefault = "ASC";
+        configOrderFieldDefault = "ID";
+        consfigTitlePanel = "Painel";
+        configOrientationPanel = 'VERTICAL';
+        configLegendColors = "";
+        configColumnPanelOrder = 0;
+        configWidthColummns = {};
+        configHideColumns = [];
+        columns = [];
+        columnsHide = [];
+        rows = [];
+
+        if (value.isNotEmpty) {
+          _gererateGeneralInfo(value[0]);
+          _gererateColumns(value[0]);
+          _gererateRows(value);
+          _sortRows(rows);
+        }
+        tables.add(TableComponentData(
+            title: consfigTitlePanel,
+            columns: columns,
+            rows: rows,
+            columnsHide: columnsHide,
+            legendColors: configLegendColors,
+            isHorizontal:
+                configOrientationPanel.toUpperCase() == 'HORIZONTAL'));
+      });
+      carousels.add(tables);
+      tables = [];
     });
+    return carousels;
+  }
 
-    separated_data
-        .sort((a, b) => a[0]["Config_Painel"].compareTo(b[0]["Config_Painel"]));
-
-    separated_data.forEach((value) {
-      configFontSize = 0;
-      configOrderDefault = "ASC";
-      configOrderFieldDefault = "ID";
-      consfigTitlePanel = "Painel";
-      configOrientationPanel = 'VERTICAL';
-      configLegendColors = "";
-      configColumnPanelOrder = 0;
-      configWidthColummns = {};
-      configHideColumns = [];
-      columns = [];
-      columnsHide = [];
-      rows = [];
-
-      if (value.isNotEmpty) {
-        _gererateGeneralInfo(value[0]);
-        _gererateColumns(value[0]);
-        _gererateRows(value);
-        _sortRows(rows);
+  Map<int, List<Map<String, dynamic>>> _separatePanelsCarousel(
+      List<Map<String, dynamic>> data) {
+    Map<int, List<Map<String, dynamic>>> groupedData = {};
+    data.forEach((element) {
+      int configCarousel = element['Config_Carrossel'] ?? 1;
+      if (groupedData.containsKey(configCarousel)) {
+        groupedData[configCarousel]!.add(element);
+      } else {
+        groupedData[configCarousel] = [element];
       }
-      tables.add(TableComponentData(
-          title: consfigTitlePanel,
-          columns: columns,
-          rows: rows,
-          columnsHide: columnsHide,
-          legendColors: configLegendColors,
-          isHorizontal: configOrientationPanel.toUpperCase() == 'HORIZONTAL'));
     });
-
-    return tables;
+    // print(groupedData);
+    return groupedData;
   }
 
   Map<int, List<Map<String, dynamic>>> _separatePanelsData(
