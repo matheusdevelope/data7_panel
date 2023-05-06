@@ -17,6 +17,7 @@ class CustomSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
+      height: 40,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,

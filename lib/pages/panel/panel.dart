@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:data7_panel/components/carousel.dart';
 import 'package:data7_panel/models/tableComponentData.dart';
 import 'package:data7_panel/models/transform_data.dart';
 import 'package:data7_panel/providers/caroussel_model.dart';
@@ -13,7 +14,6 @@ import '../../components/bottom_app_bar.dart';
 import '../../components/bottom_sheet_menu.dart';
 import '../../components/dialog_alert.dart';
 import '../../components/loading_animated.dart';
-import '../../components/render_panel.dart';
 
 class PanelPage extends StatefulWidget {
   const PanelPage({super.key, required this.url});
@@ -29,7 +29,7 @@ class _PanelPageState extends State<PanelPage> {
   bool _isOpenDialog = false;
   int _manualAttemptsReconnect = 0;
   String _lastTimeSync = '';
-  List<List<TableComponentData>> dataPanel = [];
+  List<CarouselData> dataPanel = [];
   bool opened = false;
   String _message = "";
   late IO.Socket socket;
@@ -55,7 +55,7 @@ class _PanelPageState extends State<PanelPage> {
       dataPanel = TransformData().parseData(data.cast<Map<String, dynamic>>());
       setState(() {
         if (dataPanel.isNotEmpty) {
-          _legends = dataPanel[0][0].legendColors;
+          _legends = dataPanel[0].panels[0].legendColors;
         }
       });
     });
@@ -168,7 +168,14 @@ class _PanelPageState extends State<PanelPage> {
       });
       if (event.logicalKey.keyId == LogicalKeyboardKey.escape.keyId &&
           escPressedCount == 1) {
+        // if (isExpanded) {
+        //   setState(() {
+        //     isExpanded = false;
+        //   });
+        //   _initFocusToKeyEvent();
+        // } else {
         Navigator.of(context, rootNavigator: true).pop();
+        // }
       }
       return KeyEventResult.handled;
     });
@@ -199,9 +206,8 @@ class _PanelPageState extends State<PanelPage> {
             ? LoadingAnimated(
                 message: _message,
               )
-            : RenderPanels(
-                dataList: dataPanel,
-                isHorizontal: dataPanel[0][0].isHorizontal,
+            : Carousel(
+                data: dataPanel,
                 controller: _controller,
               ),
         bottomNavigationBar: CustomBottomAppBar(
@@ -209,7 +215,7 @@ class _PanelPageState extends State<PanelPage> {
           lastTimeSync: _lastTimeSync,
           controller: _controller,
         ),
-        floatingActionButton: FloatingActionButton(
+        floatingActionButton: FloatingActionButton.small(
           onPressed: _onPressFloatingButtom,
           tooltip: _connected ? "Painel Conectado" : "Reconectar",
           backgroundColor: Colors.white,
@@ -217,7 +223,7 @@ class _PanelPageState extends State<PanelPage> {
               ? const CircularProgressIndicator()
               : Icon(
                   Icons.connected_tv_outlined,
-                  size: 40,
+                  size: 30,
                   color: _connected ? Colors.green : Colors.red,
                 ),
         ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'tableComponentData.dart';
 
 class Table {
@@ -26,78 +25,89 @@ class TransformData {
 
   List<TableComponentData> tables = [];
   List<List<TableComponentData>> carousels = [];
+  late List<CarouselData> carouselsData = [];
 
-  List<List<TableComponentData>> parseData(List<Map<String, dynamic>> data) {
-    _separatePanelsCarousel(data).forEach((key, data) {
-      List<List<Map<String, dynamic>>> separatedData = [];
-      _separatePanelsData(data).forEach((key, value) {
-        separatedData.add(value);
-      });
+  List<CarouselData> parseData(List<Map<String, dynamic>> data) {
+    data.sort((a, b) => a["Config_Carrossel"].compareTo(b["Config_Carrossel"]));
+    _separatePanelsCarousel(data).forEach(
+      (key, data) {
+        List<List<Map<String, dynamic>>> separatedData = [];
+        _separatePanelsData(data).forEach((key, value) {
+          separatedData.add(value);
+        });
 
-      separatedData.sort(
-          (a, b) => a[0]["Config_Painel"].compareTo(b[0]["Config_Painel"]));
+        separatedData.sort(
+            (a, b) => a[0]["Config_Painel"].compareTo(b[0]["Config_Painel"]));
 
-      separatedData.forEach((value) {
-        configFontSize = 0;
-        configOrderDefault = "ASC";
-        configOrderFieldDefault = "ID";
-        consfigTitlePanel = "Painel";
-        configOrientationPanel = 'VERTICAL';
-        configLegendColors = "";
-        configColumnPanelOrder = 0;
-        configWidthColummns = {};
-        configHideColumns = [];
-        columns = [];
-        columnsHide = [];
-        rows = [];
+        for (var value in separatedData) {
+          configFontSize = 0;
+          configOrderDefault = "ASC";
+          configOrderFieldDefault = "ID";
+          consfigTitlePanel = "Painel";
+          configOrientationPanel = 'VERTICAL';
+          configLegendColors = "";
+          configColumnPanelOrder = 0;
+          configWidthColummns = {};
+          configHideColumns = [];
+          columns = [];
+          columnsHide = [];
+          rows = [];
 
-        if (value.isNotEmpty) {
-          _gererateGeneralInfo(value[0]);
-          _gererateColumns(value[0]);
-          _gererateRows(value);
-          _sortRows(rows);
+          if (value.isNotEmpty) {
+            _gererateGeneralInfo(value[0]);
+            _gererateColumns(value[0]);
+            _gererateRows(value);
+            _sortRows(rows);
+          }
+          tables.add(
+            TableComponentData(
+                title: consfigTitlePanel,
+                columns: columns,
+                rows: rows,
+                columnsHide: columnsHide,
+                legendColors: configLegendColors,
+                isHorizontal:
+                    configOrientationPanel.toUpperCase() == 'HORIZONTAL'),
+          );
         }
-        tables.add(TableComponentData(
-            title: consfigTitlePanel,
-            columns: columns,
-            rows: rows,
-            columnsHide: columnsHide,
-            legendColors: configLegendColors,
-            isHorizontal:
-                configOrientationPanel.toUpperCase() == 'HORIZONTAL'));
-      });
-      carousels.add(tables);
-      tables = [];
-    });
-    return carousels;
+        carousels.add(tables);
+        carouselsData.add(
+          CarouselData(
+              id: key,
+              duration: separatedData?[0]?[0]?['Config_DuracaoCarrossel'] ?? 0,
+              panels: tables),
+        );
+        tables = [];
+      },
+    );
+    return carouselsData;
   }
 
   Map<int, List<Map<String, dynamic>>> _separatePanelsCarousel(
       List<Map<String, dynamic>> data) {
     Map<int, List<Map<String, dynamic>>> groupedData = {};
-    data.forEach((element) {
+    for (var element in data) {
       int configCarousel = element['Config_Carrossel'] ?? 1;
       if (groupedData.containsKey(configCarousel)) {
         groupedData[configCarousel]!.add(element);
       } else {
         groupedData[configCarousel] = [element];
       }
-    });
-    // print(groupedData);
+    }
     return groupedData;
   }
 
   Map<int, List<Map<String, dynamic>>> _separatePanelsData(
       List<Map<String, dynamic>> data) {
     Map<int, List<Map<String, dynamic>>> groupedData = {};
-    data.forEach((element) {
+    for (var element in data) {
       int configPainel = element['Config_Painel'] ?? 1;
       if (groupedData.containsKey(configPainel)) {
         groupedData[configPainel]!.add(element);
       } else {
         groupedData[configPainel] = [element];
       }
-    });
+    }
     return groupedData;
   }
 
@@ -145,7 +155,7 @@ class TransformData {
   _gererateColumns(Map<String, dynamic> objData) {
     List<String> keys = objData.keys.toList();
     keys.sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
-    keys.forEach((key) {
+    for (var key in keys) {
       final String label =
           key.substring(key.indexOf('_') > 0 ? key.indexOf('_') + 1 : 0);
       final hide = configHideColumns.contains(key) || key.startsWith('Config_');
@@ -159,11 +169,11 @@ class TransformData {
           hide: hide,
           isOrderColumn: configOrderFieldDefault == key);
       hide ? columnsHide.add(col) : columns.add(col);
-    });
+    }
   }
 
   _gererateRows(List<Map<String, dynamic>> data) {
-    data.forEach((row) {
+    for (var row in data) {
       List<Data> list = [];
       List<Data> listHide = [];
       row.keys.toList().forEach((key) {
@@ -180,7 +190,7 @@ class TransformData {
                   getColorString(row['Config_CorFundo'].toString()),
               color: getColorString(row['Config_CorFonte'].toString()),
               fontSize: getFontSize(row['Config_TamanhoFonte'].toString()))));
-    });
+    }
   }
 
   _sortRows(List<Rows> rows) {

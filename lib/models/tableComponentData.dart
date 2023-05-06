@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
 
+class CarouselData {
+  int id;
+  int duration;
+  List<TableComponentData> panels;
+  CarouselData(
+      {required this.id, required this.duration, required this.panels});
+}
+
 class TableComponentData {
   String title = 'Panel';
   List<Columns> columns = [];

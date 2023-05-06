@@ -17,6 +17,7 @@ class Legends extends StatelessWidget {
           children: [
             if (listLegends[index].toString().contains(":"))
               Icon(Icons.circle,
+                  size: fontSize,
                   color: Color(int.parse(listLegends[index]
                       .split(":")[0]
                       .replaceAll("#", "0xFF")))),

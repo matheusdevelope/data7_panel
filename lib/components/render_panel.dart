@@ -1,4 +1,3 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:data7_panel/models/tableComponentData.dart';
 import 'package:data7_panel/components/table.dart';
 import 'package:data7_panel/providers/theme_model.dart';
@@ -6,35 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/transform_data.dart';
-import 'carroussel.dart';
-
-class RenderPanels extends StatefulWidget {
-  List<List<TableComponentData>> dataList = [];
-  bool? isHorizontal = false;
-  final CarouselController controller;
-  RenderPanels(
-      {super.key,
-      required this.dataList,
-      required this.controller,
-      this.isHorizontal});
-
-  @override
-  State<RenderPanels> createState() => _RenderPanels();
-}
-
-class _RenderPanels extends State<RenderPanels> {
-  @override
-  Widget build(BuildContext context) {
-    final items = widget.dataList.map((data) {
-      return widget.isHorizontal == true
-          ? RenderPanelsHorizontal(dataList: data)
-          : RenderPanelsVertical(
-              dataList: data,
-            );
-    }).toList();
-    return Carousel(items: items, controller: widget.controller);
-  }
-}
 
 class RenderPanelsVertical extends StatelessWidget {
   List<TableComponentData> dataList = [];

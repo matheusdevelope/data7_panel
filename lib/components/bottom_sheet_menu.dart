@@ -1,3 +1,4 @@
+import 'package:data7_panel/components/custom_increase.dart';
 import 'package:data7_panel/providers/caroussel_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +18,7 @@ class BottomSheetMenu extends StatelessWidget {
           alignment: WrapAlignment.center,
           children: [
             const SizedBox(
-              height: 40,
+              height: 50,
             ),
             Consumer<CarousselModel>(
                 builder: (context, CarousselModel caroussel, c) {
@@ -41,33 +42,41 @@ class BottomSheetMenu extends StatelessWidget {
                   ),
                   Expanded(child: Row()),
                   Flexible(
-                      child: Row(
-                    children: [
-                      Flexible(
-                          // width: 200,
-                          child: CustomSlider(
-                              label: '${caroussel.autoPlayDuration / 1000}s',
-                              value:
-                                  caroussel.autoPlayDuration / 1000.toDouble(),
-                              minValue: 1,
-                              maxValue: 60 * 10,
-                              onChange: (value) {
-                                print(value);
-                                caroussel.autoPlayDuration =
-                                    value.toInt() * 1000;
-                              })),
-                      IconButton(
-                        onPressed: () {
-                          caroussel.autoplay = !caroussel.autoplay;
-                        },
-                        color: caroussel.autoplay ? Colors.blue : Colors.black,
-                        tooltip: "AutoPlay Carrossel",
-                        icon: Icon(caroussel.autoplay
-                            ? Icons.toggle_on
-                            : Icons.toggle_off),
-                      ),
-                    ],
-                  )),
+                    child: Wrap(
+                      alignment: WrapAlignment.center,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      // crossAxisAlignment: CrossAxisAlignment.center,
+                      // mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        // Flexible(
+                        //     child:
+                        CustomIncrease(
+                            label: '${caroussel.autoPlayDuration}s',
+                            value: caroussel.autoPlayDuration.toDouble(),
+                            minValue: 1,
+                            maxValue: 60 * 10,
+                            onChange: (value) {
+                              caroussel.autoPlayDuration = value.toInt();
+                            },
+                            fontSize: theme.fontSizeMenuPanel),
+                        // ),
+                        IconButton(
+                          iconSize: theme.fontSizeMenuPanel + 12,
+                          onPressed: () {
+                            caroussel.autoplay = !caroussel.autoplay;
+                          },
+                          color:
+                              caroussel.autoplay ? Colors.blue : Colors.black,
+                          tooltip: "AutoPlay Carrossel",
+                          icon: Icon(
+                            caroussel.autoplay
+                                ? Icons.toggle_on
+                                : Icons.toggle_off,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               );
             }),
