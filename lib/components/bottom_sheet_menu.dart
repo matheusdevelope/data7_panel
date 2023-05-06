@@ -20,66 +20,68 @@ class BottomSheetMenu extends StatelessWidget {
             const SizedBox(
               height: 50,
             ),
-            Consumer<CarousselModel>(
+            SizedBox(
+              child: Consumer<CarousselModel>(
                 builder: (context, CarousselModel caroussel, c) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Transform.rotate(
-                    angle: 180 * math.pi / 180,
-                    child: IconButton(
-                      padding: const EdgeInsets.all(0),
-                      iconSize: theme.fontSizeMenuPanel + 8.0,
-                      tooltip: 'Voltar',
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      icon: const Icon(
-                        Icons.exit_to_app_outlined,
-                        color: Colors.red,
-                      ),
-                    ),
-                  ),
-                  Expanded(child: Row()),
-                  Flexible(
-                    child: Wrap(
-                      alignment: WrapAlignment.center,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      // crossAxisAlignment: CrossAxisAlignment.center,
-                      // mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        // Flexible(
-                        //     child:
-                        CustomIncrease(
-                            label: '${caroussel.autoPlayDuration}s',
-                            value: caroussel.autoPlayDuration.toDouble(),
-                            minValue: 1,
-                            maxValue: 60 * 10,
-                            onChange: (value) {
-                              caroussel.autoPlayDuration = value.toInt();
-                            },
-                            fontSize: theme.fontSizeMenuPanel),
-                        // ),
-                        IconButton(
-                          iconSize: theme.fontSizeMenuPanel + 12,
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Transform.rotate(
+                        angle: 180 * math.pi / 180,
+                        child: IconButton(
+                          padding: const EdgeInsets.all(0),
+                          iconSize: theme.fontSizeMenuPanel + 8.0,
+                          tooltip: 'Voltar',
                           onPressed: () {
-                            caroussel.autoplay = !caroussel.autoplay;
+                            Navigator.of(context).pop();
                           },
-                          color:
-                              caroussel.autoplay ? Colors.blue : Colors.black,
-                          tooltip: "AutoPlay Carrossel",
-                          icon: Icon(
-                            caroussel.autoplay
-                                ? Icons.toggle_on
-                                : Icons.toggle_off,
+                          icon: const Icon(
+                            Icons.exit_to_app_outlined,
+                            color: Colors.red,
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ],
-              );
-            }),
+                      ),
+                      Expanded(child: Row()),
+                      Flexible(
+                        child: Wrap(
+                          alignment: WrapAlignment.center,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          // crossAxisAlignment: CrossAxisAlignment.center,
+                          // mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            CustomIncrease(
+                              label: '${caroussel.autoPlayDuration}s',
+                              value: caroussel.autoPlayDuration.toDouble(),
+                              minValue: 1,
+                              maxValue: 60 * 10,
+                              onChange: (value) {
+                                caroussel.autoPlayDuration = value.toInt();
+                              },
+                              fontSize: theme.fontSizeMenuPanel,
+                            ),
+                            IconButton(
+                              iconSize: theme.fontSizeMenuPanel + 12,
+                              onPressed: () {
+                                caroussel.autoplay = !caroussel.autoplay;
+                              },
+                              color: caroussel.autoplay
+                                  ? Colors.blue
+                                  : Colors.black,
+                              tooltip: "AutoPlay Carrossel",
+                              icon: Icon(
+                                caroussel.autoplay
+                                    ? Icons.toggle_on
+                                    : Icons.toggle_off,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
             const Divider(),
             CustomSlider(
                 label: 'Fonte Geral:',

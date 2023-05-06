@@ -18,6 +18,6 @@ class CarouselPreferences {
 
   Future<int> getIntervalAutoPlay() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    return sharedPreferences.getInt('@interval_autoplay') ?? 5000;
+    return sharedPreferences.getInt('@interval_autoplay') ?? 5;
   }
 }
