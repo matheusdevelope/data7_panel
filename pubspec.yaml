@@ -23,7 +23,10 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
-  msix: ^3.10.1
+  # msix: ^3.10.1
+  flutter_launcher_icons: ^0.13.1
+  # flutter_app_name: ^0.1.0
+
 flutter:
   uses-material-design: true
   assets:
@@ -31,7 +34,44 @@ flutter:
 
 msix_config:
   display_name: Painel Data7
-  publisher_display_name: Matheus Teixeira
+  publisher_display_name: Se7e Sistemas Sinop
   identity_name: com.data7panel
-  msix_version: 1.0.0.0
-#  logo_path: C:\path\to\logo.png
+  msix_version: 1.0.0
+  logo_path: assets.icon.png
+
+# icons_launcher:
+#   image_path: 'assets/icon.png'
+#   platforms:
+#     android:
+#       enable: true
+#     ios:
+#       enable: true
+#     windows:
+#       enable: true
+#     web:
+#       enable: true
+#     linux:
+#       enable: true
+#     macos:
+#       enable: true
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "assets/icon.png"
+    # background_color: "#hexcode"
+    # theme_color: "#hexcode"
+  windows:
+    generate: true
+    image_path: "assets/icon.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "assets/icon.png"
+
+flutter_app_name:
+  name: "Painel Data7"

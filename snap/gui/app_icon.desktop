@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Painel Data7
+Comment=Painel Data7 launcher icon
+Exec=app_icon
+Icon=app_icon.png
+Terminal=false
+Type=Application
+Categories=Entertainment;

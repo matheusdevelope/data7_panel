@@ -2,9 +2,9 @@
     package="com.example.data7_panel">
     <uses-permission android:name="android.permission.INTERNET"/> 
    <application
-        android:label="data7_panel"
+        android:label="Painel Data7"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/launcher_icon"
         android:usesCleartextTraffic="true"
         >
         <activity
