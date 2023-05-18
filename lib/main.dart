@@ -1,11 +1,14 @@
 import 'package:data7_panel/pages/home/home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 import 'custom_theme.dart';
 import 'providers/theme_model.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   Wakelock.enable();
   runApp(const MyApp());
 }
@@ -15,21 +18,26 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => ThemeModel(),
-      child: Consumer<ThemeModel>(
-        builder: (context, _, c) {
-          return LayoutBuilder(
-            builder: (_, c) {
-              return MaterialApp(
-                debugShowCheckedModeBanner: false,
-                title: 'Painel Data7',
-                theme: CustomTheme.getTheme(context, c.maxWidth),
-                home: const HomePage(title: 'Painel Data7'),
-              );
-            },
-          );
-        },
+    return Shortcuts(
+      shortcuts: <LogicalKeySet, Intent>{
+        LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
+      },
+      child: ChangeNotifierProvider(
+        create: (_) => ThemeModel(),
+        child: Consumer<ThemeModel>(
+          builder: (context, _, c) {
+            return LayoutBuilder(
+              builder: (_, c) {
+                return MaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  title: 'Painel Data7',
+                  theme: CustomTheme.getTheme(context, c.maxWidth),
+                  home: const HomePage(title: 'Painel Data7'),
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }

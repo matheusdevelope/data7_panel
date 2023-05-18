@@ -19,7 +19,6 @@ class Carousel extends StatelessWidget {
               dataList: data.panels,
             );
     }).toList();
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

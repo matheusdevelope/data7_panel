@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:data7_panel/components/carousel.dart';
 import 'package:data7_panel/models/tableComponentData.dart';
@@ -5,7 +6,6 @@ import 'package:data7_panel/models/transform_data.dart';
 import 'package:data7_panel/providers/caroussel_model.dart';
 import 'package:data7_panel/services/socket.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:intl/intl.dart';
@@ -41,14 +41,16 @@ class _PanelPageState extends State<PanelPage> {
 
   String _legends = '';
 
-  final FocusNode _focusNode = FocusNode();
-  late FocusAttachment _focusAttachment;
-
   int escPressedCount = 0;
 
   late CustomDialogAlert Alert;
 
+  final AudioPlayer audioPlayer = AudioPlayer();
+
   final CarouselController _controller = CarouselController();
+
+  int rowsCountCarousels = 0;
+
   void _refreshData(dynamic data) {
     setState(() {
       _lastTimeSync = inputFormat.format(DateTime.now()).toString();
@@ -59,6 +61,7 @@ class _PanelPageState extends State<PanelPage> {
         }
       });
     });
+    // _countRows();
   }
 
   void _initSocketConnection() {
@@ -158,28 +161,16 @@ class _PanelPageState extends State<PanelPage> {
   }
 
   void _onPressFloatingButtom() {
-    _connected ? toggleFontSizeSelector() : _reconnect();
+    _connected
+        ? toggleFontSizeSelector()
+        : _openDialogAlert(_manualAttemptsReconnect);
   }
 
-  void _initFocusToKeyEvent() {
-    _focusAttachment = _focusNode.attach(context, onKeyEvent: (node, event) {
-      setState(() {
-        escPressedCount++;
-      });
-      if (event.logicalKey.keyId == LogicalKeyboardKey.escape.keyId &&
-          escPressedCount == 1) {
-        // if (isExpanded) {
-        //   setState(() {
-        //     isExpanded = false;
-        //   });
-        //   _initFocusToKeyEvent();
-        // } else {
-        Navigator.of(context, rootNavigator: true).pop();
-        // }
-      }
-      return KeyEventResult.handled;
-    });
-    _focusNode.requestFocus();
+  void _playSound() async {
+    try {
+      await audioPlayer.stop();
+      await audioPlayer.resume();
+    } catch (e) {}
   }
 
   @override
@@ -187,18 +178,33 @@ class _PanelPageState extends State<PanelPage> {
     super.initState();
     _initSocketConnection();
     _initAlertDialog();
-    _initFocusToKeyEvent();
+    audioPlayer.setSourceAsset('notification.mp3');
   }
 
   @override
   void dispose() {
     newSocket.disconnect();
+    audioPlayer.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    _focusAttachment.reparent();
+    int qtd = 0;
+    for (var data in dataPanel) {
+      for (var panel in data.panels) {
+        qtd += panel.rows.length;
+      }
+    }
+    if (rowsCountCarousels < qtd) {
+      _playSound();
+    }
+    if (rowsCountCarousels != qtd) {
+      setState(() {
+        rowsCountCarousels = qtd;
+      });
+    }
+
     return ChangeNotifierProvider(
       create: (_) => CarousselModel(),
       child: Scaffold(

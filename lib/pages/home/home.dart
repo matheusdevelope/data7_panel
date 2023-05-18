@@ -73,64 +73,54 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeModel>(
-        builder: (context, ThemeModel themeNotifier, child) {
-      return Scaffold(
-        body: Center(
-          child: Container(
-            margin: const EdgeInsets.all(24),
-            constraints: const BoxConstraints(minWidth: 300, maxWidth: 700),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 8 * 2),
-                  child: Text(
-                    'Painel Data7',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Column(
-                  children: <Widget>[
-                    TextField(
-                      controller: textController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Endereço do Servidor',
-                        contentPadding: EdgeInsets.all(8),
+      builder: (context, ThemeModel themeNotifier, child) {
+        return Scaffold(
+          body: Center(
+            child: Container(
+              margin: const EdgeInsets.all(24),
+              constraints: const BoxConstraints(minWidth: 300, maxWidth: 700),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 8 * 2),
+                    child: Text(
+                      'Painel Data7',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: const Size.fromHeight(50), // NEW
+                  ),
+                  Column(
+                    children: <Widget>[
+                      TextField(
+                        // autofocus: true,
+                        textInputAction: TextInputAction.next,
+                        controller: textController,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Endereço do Servidor',
+                          contentPadding: EdgeInsets.all(8),
                         ),
-                        onPressed: _saveAndOpenPanel,
-                        child: const Text(
-                          "Abrir Painel",
-                          style: TextStyle(fontWeight: FontWeight.w400),
-                        )),
-                  ],
-                ),
-              ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        floatingActionButton: FloatingActionButton(
-            tooltip: "Sair",
-            heroTag: "Sair",
-            child: Transform.rotate(
-                angle: 180 * math.pi / 180,
-                child: const Icon(
-                  Icons.exit_to_app,
-                  color: Colors.white,
-                )),
-            onPressed: () {
-              exit(0);
-              // Navigator.of(context).pop();
-            }),
-      );
-    });
+          floatingActionButton: FloatingActionButton(
+            tooltip: "Abrir Painel",
+            heroTag: "Abrir Painel",
+            backgroundColor: Colors.white,
+            onPressed: _saveAndOpenPanel,
+            child: const Icon(
+              Icons.exit_to_app,
+              color: Color(0xFF006B98),
+            ),
+          ),
+        );
+      },
+    );
   }
 }

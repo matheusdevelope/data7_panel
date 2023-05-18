@@ -5,7 +5,7 @@
 #define MyAppVersion "1.0.0"
 #define MyAppPublisher "Se7e Sistemas Sinop"
 #define MyAppURL "http://www.se7esistemas.com.br/"
-#define MyAppExeName "Painel Data7.exe"
+#define MyAppExeName "data7_panel.exe"
 #define MyIcon "C:\Dev\Projects\Flutter\data7_panel\assets\icon.ico"
 
 [Setup]
