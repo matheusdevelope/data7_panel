@@ -5,7 +5,8 @@
 #define MyAppVersion "1.0.0"
 #define MyAppPublisher "Se7e Sistemas Sinop"
 #define MyAppURL "http://www.se7esistemas.com.br/"
-#define MyAppExeName "data7_panel.exe"
+#define MyAppExeName "Painel Data7.exe"
+#define MyIcon "C:\Dev\Projects\Flutter\data7_panel\assets\icon.ico"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
@@ -42,8 +43,10 @@ Source: "C:\Dev\Projects\Flutter\data7_panel\build\windows\runner\Release\data\*
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
-Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\{#MyAppExeName}"
+Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{group}\Uninstall My Program"; Filename: "{uninstallexe}"; IconFilename: "{app}\{#MyAppExeName}"
+Name: "{userdesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
