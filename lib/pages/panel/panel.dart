@@ -4,9 +4,11 @@ import 'package:data7_panel/components/carousel.dart';
 import 'package:data7_panel/models/tableComponentData.dart';
 import 'package:data7_panel/models/transform_data.dart';
 import 'package:data7_panel/providers/caroussel_model.dart';
+import 'package:data7_panel/services/audio.dart';
 import 'package:data7_panel/services/socket.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:intl/intl.dart';
 
@@ -50,6 +52,7 @@ class _PanelPageState extends State<PanelPage> {
   final CarouselController _controller = CarouselController();
 
   int rowsCountCarousels = 0;
+  String currentAudioPath = '';
 
   void _refreshData(dynamic data) {
     setState(() {
@@ -169,8 +172,21 @@ class _PanelPageState extends State<PanelPage> {
   void _playSound() async {
     try {
       await audioPlayer.stop();
-      await audioPlayer.resume();
+      if (currentAudioPath.isNotEmpty) {
+        await audioPlayer.play(DeviceFileSource(currentAudioPath));
+      } else {
+        await audioPlayer.play(DeviceFileSource(
+            await NotificationHelper.getCurrentNotificationAudioPath()));
+      }
     } catch (e) {}
+  }
+
+  _setNotificationSong() async {
+    String tempCurrentAudioPath =
+        await NotificationHelper.getCurrentNotificationAudioPath();
+    setState(() {
+      currentAudioPath = tempCurrentAudioPath;
+    });
   }
 
   @override
@@ -178,7 +194,7 @@ class _PanelPageState extends State<PanelPage> {
     super.initState();
     _initSocketConnection();
     _initAlertDialog();
-    audioPlayer.setSourceAsset('notification.mp3');
+    _setNotificationSong();
   }
 
   @override

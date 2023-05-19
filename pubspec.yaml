@@ -18,6 +18,8 @@ dependencies:
   lottie: ^2.3.2
   carousel_slider: ^4.2.1
   audioplayers: ^4.0.1
+  file_picker: ^5.2.10
+  path_provider: ^2.0.15
   
 
 dev_dependencies:
@@ -30,8 +32,8 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/loading.json
-    - assets/notification.mp3
+    - assets\loading.json
+    - assets\songs\notification.mp3
 
 flutter_launcher_icons:
   android: "launcher_icon"
