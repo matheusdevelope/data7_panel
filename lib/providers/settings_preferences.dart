@@ -3,6 +3,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SettingsPreferences {
   static NotificationsSettingsPreferences notifications =
       NotificationsSettingsPreferences();
+  static DatabaseConnectionPreferences database =
+      DatabaseConnectionPreferences();
+  static PanelPreferences panel = PanelPreferences();
+  static ServiceWindowsPreferences winService = ServiceWindowsPreferences();
 }
 
 class NotificationsSettingsPreferences {
@@ -13,7 +17,7 @@ class NotificationsSettingsPreferences {
 
   getEnabled() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    return sharedPreferences.getBool(NotificationsSettingsKeys.enabled);
+    return sharedPreferences.getBool(NotificationsSettingsKeys.enabled) ?? true;
   }
 
   setFile(String value) async {
@@ -45,4 +49,151 @@ class NotificationsSettingsKeys {
   static String enabled = '$pre.enabled';
   static String file = '$pre.file';
   static String volume = '$pre.volume';
+}
+
+class DatabaseConnectionPreferences {
+  setRdbms(String value) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString(DatabaseConnectionSettingsKeys.rdbms, value);
+  }
+
+  setUser(String value) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString(DatabaseConnectionSettingsKeys.user, value);
+  }
+
+  setPass(String value) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString(DatabaseConnectionSettingsKeys.pass, value);
+  }
+
+  setServer(String value) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString(DatabaseConnectionSettingsKeys.server, value);
+  }
+
+  setPort(String value) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString(DatabaseConnectionSettingsKeys.port, value);
+  }
+
+  setDatabaseName(String value) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString(
+        DatabaseConnectionSettingsKeys.databaseName, value);
+  }
+
+  getRdbms() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString(DatabaseConnectionSettingsKeys.rdbms) ??
+        '';
+  }
+
+  getUser() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString(DatabaseConnectionSettingsKeys.user) ??
+        '';
+  }
+
+  getPass() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString(DatabaseConnectionSettingsKeys.pass) ??
+        '';
+  }
+
+  getServer() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString(DatabaseConnectionSettingsKeys.server) ??
+        '';
+  }
+
+  getPort() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString(DatabaseConnectionSettingsKeys.port) ??
+        '';
+  }
+
+  getDatabaseName() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences
+            .getString(DatabaseConnectionSettingsKeys.databaseName) ??
+        '';
+  }
+}
+
+class DatabaseConnectionSettingsKeys {
+  static const pre = "@DatabaseConectionSettingsPreferences";
+  static String rdbms = '$pre.rdbms';
+  static String user = '$pre.user';
+  static String pass = '$pre.pass';
+  static String server = '$pre.server';
+  static String port = '$pre.port';
+  static String databaseName = '$pre.databaseName';
+}
+
+class PanelPreferences {
+  setQuery(String value) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString(PanelSettingsKeys.query, value);
+  }
+
+  getQuery() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString(PanelSettingsKeys.query) ?? '';
+  }
+
+  setInterval(int value) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setInt(PanelSettingsKeys.interval, value);
+  }
+
+  getInterval() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getInt(PanelSettingsKeys.interval) ?? 5;
+  }
+
+  setTypeInteval(String value) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString(PanelSettingsKeys.typeInteval, value);
+  }
+
+  getTypeInteval() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString(PanelSettingsKeys.typeInteval) ?? 'sec';
+  }
+}
+
+class PanelSettingsKeys {
+  static const pre = "@PanelSettingsPreferences";
+  static String query = '$pre.query';
+  static String interval = '$pre.interval';
+  static String typeInteval = '$pre.typeInteval';
+}
+
+class ServiceWindowsPreferences {
+  setName(String value) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString(ServiceWindowsSettingsKeys.name, value);
+  }
+
+  getName() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString(ServiceWindowsSettingsKeys.name) ?? '';
+  }
+
+  setStatus(String value) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString(ServiceWindowsSettingsKeys.status, value);
+  }
+
+  getStatus() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString(ServiceWindowsSettingsKeys.status) ?? "";
+  }
+}
+
+class ServiceWindowsSettingsKeys {
+  static const pre = "@ServiceWindowsSettingsPreferences";
+  static String name = '$pre.name';
+  static String status = '$pre.status';
 }

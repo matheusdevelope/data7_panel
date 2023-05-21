@@ -94,3 +94,155 @@ class NotificationsSettings {
     return this;
   }
 }
+
+class DatabaseConnectionSettings {
+  late String _rdbms;
+  late String _user;
+  late String _pass;
+  late String _server;
+  late String _port;
+  late String _databaseName;
+
+  late DatabaseConnectionPreferences _pref;
+
+  String get rdbms => _rdbms;
+  String get user => _user;
+  String get pass => _pass;
+  String get server => _server;
+  String get port => _port;
+  String get databaseName => _databaseName;
+  DatabaseConnectionSettings() {
+    _rdbms = '';
+    _user = '';
+    _pass = '';
+    _server = '';
+    _port = '';
+    _databaseName = '';
+    _pref = SettingsPreferences.database;
+    _getPreferences();
+  }
+
+  set rdbms(String value) {
+    _rdbms = value;
+    _pref.setRdbms(value);
+  }
+
+  set user(String value) {
+    _user = value;
+    _pref.setUser(value);
+  }
+
+  set pass(String value) {
+    _pass = value;
+    _pref.setPass(value);
+  }
+
+  set server(String value) {
+    _server = value;
+    _pref.setServer(value);
+  }
+
+  set port(String value) {
+    _port = value;
+    _pref.setPort(value);
+  }
+
+  set databaseName(String value) {
+    _databaseName = value;
+    _pref.setDatabaseName(value);
+  }
+
+  _getPreferences() async {
+    _rdbms = await _pref.getRdbms();
+    _user = await _pref.getUser();
+    _pass = await _pref.getPass();
+    _server = await _pref.getServer();
+    _port = await _pref.getPort();
+    _databaseName = await _pref.getDatabaseName();
+  }
+
+  Future<DatabaseConnectionSettings> initialize() async {
+    await _getPreferences();
+    return this;
+  }
+}
+
+class PanelSettings {
+  late String _query;
+  late int _interval;
+  late String _typeInterval;
+
+  late PanelPreferences _pref;
+
+  String get query => _query;
+  int get interval => _interval;
+  String get typeInterval => _typeInterval;
+  PanelSettings() {
+    _query = '';
+    _interval = 5;
+    _typeInterval = '';
+    _pref = SettingsPreferences.panel;
+    _getPreferences();
+  }
+
+  set query(String value) {
+    _query = value;
+    _pref.setQuery(value);
+  }
+
+  set interval(int value) {
+    _interval = value;
+    _pref.setInterval(value);
+  }
+
+  set typeInterval(String value) {
+    _typeInterval = value;
+    _pref.setTypeInteval(value);
+  }
+
+  _getPreferences() async {
+    _query = await _pref.getQuery();
+    _interval = await _pref.getInterval();
+  }
+
+  Future<PanelSettings> initialize() async {
+    await _getPreferences();
+    return this;
+  }
+}
+
+class WinServiceSettings {
+  late String _name;
+  late String _status;
+
+  late ServiceWindowsPreferences _pref;
+
+  String get query => _name;
+  String get status => _status;
+  WinServiceSettings() {
+    _name = '';
+    _status = '';
+    _pref = SettingsPreferences.winService;
+    _getPreferences();
+  }
+
+  set name(String value) {
+    _name = value;
+    _pref.setName(value);
+  }
+
+  set status(String value) {
+    _status = value;
+    _pref.setStatus(value);
+  }
+
+  _getPreferences() async {
+    _name = await _pref.getName();
+    _status = await _pref.getStatus();
+  }
+
+  Future<WinServiceSettings> initialize() async {
+    await _getPreferences();
+    return this;
+  }
+}
