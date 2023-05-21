@@ -38,7 +38,7 @@ final devices = [
     "device": "Extra large screens, TV",
     "min": 1601,
     "max": 5000,
-    "fontFactorSize": 2.0
+    "fontFactorSize": 1.8 //2.0
   },
 ];
 
@@ -52,6 +52,8 @@ class CustomTheme {
         fontSizeFactor = double.parse(device['fontFactorSize'].toString());
       }
     }
+    double iconSize = 24 * (fontSizeFactor);
+    IconThemeData iconTheme = IconThemeData(size: iconSize, color: myColor);
     return ThemeData(
       primarySwatch: myColor,
       dataTableTheme: const DataTableThemeData(
@@ -70,6 +72,30 @@ class CustomTheme {
                 ?.copyWith(fontWeight: FontWeight.bold)
                 .apply(fontSizeFactor: fontSizeFactor, fontSizeDelta: 2.0),
           ),
+      iconTheme: iconTheme,
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        selectedIconTheme: iconTheme,
+        unselectedIconTheme: iconTheme.copyWith(size: iconSize),
+        selectedLabelStyle: TextStyle(
+          fontSize: Theme.of(context)
+                  .bottomNavigationBarTheme
+                  .selectedLabelStyle
+                  ?.fontSize ??
+              16 * fontSizeFactor,
+        ),
+        unselectedLabelStyle: TextStyle(
+          fontSize: Theme.of(context)
+                  .bottomNavigationBarTheme
+                  .selectedLabelStyle
+                  ?.fontSize ??
+              16 * (fontSizeFactor * 0.8),
+        ),
+      ),
+      iconButtonTheme: IconButtonThemeData(
+        style: ButtonStyle(
+            iconSize: MaterialStateProperty.all(iconSize),
+            iconColor: MaterialStatePropertyAll(myColor)),
+      ),
     );
   }
 }

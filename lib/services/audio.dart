@@ -1,62 +1,66 @@
-import 'dart:io';
-import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:path/path.dart' as p;
+import 'package:audioplayers/audioplayers.dart';
+import 'package:data7_panel/custom_theme.dart';
 
-class NotificationHelper {
-  static String notificationDefault = 'notification.mp3';
-
-  // static loadFilesFromAssetsToLocalResources(BuildContext context) async {
-  //   var assetsFile =
-  //       await DefaultAssetBundle.of(context).loadString('AssetManifest.json');
-  //   final Map<String, dynamic> manifestMap = json.decode(assetsFile);
-  //   // print(manifestMap);
-  // }
-
-  static Future<String> writeToFile(ByteData data, String path) async {
-    final buffer = data.buffer;
-    await Directory(p.dirname(path)).create(recursive: true);
-    File file = await File(path).writeAsBytes(
-        buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
-    return file.path;
+class AudioHelper {
+  static final AudioHelper _instance = AudioHelper._internal();
+  factory AudioHelper() {
+    return _instance;
   }
+  AudioHelper._internal();
 
-  static Future<String> getCurrentNotificationAudioPath() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String currentAudioPath = prefs.getString('current_notification') ?? '';
-    if (currentAudioPath.isEmpty) {
-      String filename = 'notification.mp3';
-      ByteData bytes = await rootBundle.load("assets/songs/notification.mp3");
-      currentAudioPath =
-          await NotificationHelper.saveAudioDefaultAssetsIntoAppData(
-              bytes, filename);
+  bool initializeded = false;
+  bool isPlaying = false;
+  bool isPaused = false;
+  String currentFile = '';
+
+  late AudioPlayer audioPlayer;
+  initialize() {
+    if (!initializeded) {
+      initializeded = true;
+      audioPlayer = AudioPlayer();
+      audioPlayer.onPlayerStateChanged.listen((PlayerState state) {
+        if (state == PlayerState.stopped) {
+          isPlaying = false;
+          isPaused = false;
+        }
+        if (state == PlayerState.paused) {
+          isPaused = true;
+          isPlaying = false;
+        }
+        if (state == PlayerState.playing) {
+          isPlaying = true;
+          isPaused = false;
+        }
+      });
     }
-    return currentAudioPath;
+    return this;
   }
 
-  static Future<String> saveAudioDefaultAssetsIntoAppData(
-      ByteData bytes, String filename) async {
-    String path = '${await NotificationHelper.getNotificationsDir()}$filename';
-    return NotificationHelper.writeToFile(bytes, path);
+  playPause(String path, {bool stopAll = true, double volume = 1}) {
+    if (isPlaying && path == currentFile) return pause();
+    return play(path, volume: volume, stopAll: stopAll);
   }
 
-  static Future<String> saveAudioIntoAppData(String path) async {
-    File file = File(path);
-    String filePath =
-        await NotificationHelper.getNotificationsDir() + p.basename(path);
-    file.copySync(filePath);
-    return filePath;
+  play(String path, {bool stopAll = true, double volume = 1}) {
+    initialize();
+    if (stopAll && isPlaying) audioPlayer.stop();
+    currentFile = path;
+    isPlaying = true;
+    audioPlayer.play(DeviceFileSource(path), volume: volume);
   }
 
-  static Future<String> getNotificationsDir() async {
-    return '${(await getApplicationSupportDirectory()).path}/songs/';
+  resume() {
+    initialize();
+    if (isPaused) audioPlayer.resume();
   }
 
-  static Future<List<String>> loadAvailableNotifications() async {
-    List<FileSystemEntity> list =
-        Directory(await NotificationHelper.getNotificationsDir())
-            .listSync(recursive: true, followLinks: false);
-    return list.map((e) => e.path).toList();
+  pause() {
+    initialize();
+    audioPlayer.pause();
+  }
+
+  stop() {
+    initialize();
+    audioPlayer.stop();
   }
 }

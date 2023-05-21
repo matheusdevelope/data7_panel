@@ -107,6 +107,7 @@ class ControlsCarousel extends StatelessWidget {
           : [
               IconButton(
                 iconSize: fontSize,
+                color: Colors.black,
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () {
                   controller.previousPage();
@@ -129,9 +130,7 @@ class ControlsCarousel extends StatelessWidget {
                       iconSize: (fontSize ?? 24) - 4,
                       icon: Icon(
                         Icons.circle,
-                        color: activeIndex == index
-                            ? Colors.blueAccent
-                            : Colors.grey[200],
+                        color: activeIndex == index ? null : Colors.grey[200],
                       ),
                     ),
                   ),
@@ -139,6 +138,7 @@ class ControlsCarousel extends StatelessWidget {
               ),
               IconButton(
                 iconSize: fontSize,
+                color: Colors.black,
                 icon: const Icon(Icons.arrow_forward),
                 onPressed: () {
                   controller.nextPage();

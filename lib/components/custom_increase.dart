@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 class CustomIncrease extends StatefulWidget {
@@ -41,7 +42,7 @@ class _CustomIncreaseState extends State<CustomIncrease> {
           ),
         Container(
           // color: Colors.white,
-          padding: EdgeInsets.all(2),
+          padding: const EdgeInsets.all(2),
           // decoration: BoxDecoration(
           //   border: Border.all(
           //     color: Colors.grey.shade400,
@@ -78,7 +79,7 @@ class _CustomIncreaseState extends State<CustomIncrease> {
                       widget.onChange(widget.value - 1);
                     }
                   },
-                  icon: const Icon(Icons.remove),
+                  icon: const Icon(Icons.remove, color: Colors.black),
                 ),
               ),
               Text(
@@ -110,7 +111,7 @@ class _CustomIncreaseState extends State<CustomIncrease> {
                       widget.onChange(widget.value + 1);
                     }
                   },
-                  icon: const Icon(Icons.add),
+                  icon: const Icon(Icons.add, color: Colors.black),
                 ),
               ),
             ],
@@ -118,5 +119,122 @@ class _CustomIncreaseState extends State<CustomIncrease> {
         )
       ],
     ));
+  }
+}
+
+class NumberInputCarousel extends StatefulWidget {
+  final int minValue;
+  final int maxValue;
+  final int? initialValue;
+  final Function(int) onChange;
+
+  NumberInputCarousel({
+    required this.minValue,
+    required this.maxValue,
+    this.initialValue,
+    required this.onChange,
+  });
+
+  @override
+  _NumberInputCarouselState createState() => _NumberInputCarouselState();
+}
+
+class _NumberInputCarouselState extends State<NumberInputCarousel> {
+  CarouselController controller = CarouselController();
+  late int _value;
+  Timer? timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _value = widget.initialValue ?? widget.minValue;
+  }
+
+  void _onCarouselChange(int index, CarouselPageChangedReason reason) {
+    setState(() {
+      _value = index + widget.minValue;
+      widget.onChange(_value);
+    });
+  }
+
+  void _onLongPress(bool nextPage) {
+    setState(
+      () {
+        timer = Timer.periodic(const Duration(milliseconds: 60), (timer) {
+          nextPage ? controller.nextPage() : controller.previousPage();
+        });
+      },
+    );
+  }
+
+  void _onLongPressEnd(LongPressEndDetails _) {
+    setState(
+      () {
+        timer!.cancel();
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: (Theme.of(context).iconTheme.size ?? 24) * 3,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CarouselSlider.builder(
+            itemCount: widget.maxValue - widget.minValue + 1,
+            carouselController: controller,
+            options: CarouselOptions(
+                height: Theme.of(context).iconTheme.size,
+                enableInfiniteScroll: false,
+                initialPage: _value - widget.minValue,
+                viewportFraction: 0.3,
+                onPageChanged: _onCarouselChange,
+                enlargeCenterPage: true),
+            itemBuilder: (context, index, realIndex) {
+              final number = index + widget.minValue;
+              final isSelected = number == _value;
+              final textStyle = isSelected
+                  ? const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    )
+                  : const TextStyle(
+                      color: Colors.grey,
+                    );
+
+              return Container(
+                padding: EdgeInsets.zero,
+                child: Text(
+                  number.toString(),
+                  style: textStyle,
+                ),
+              );
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GestureDetector(
+                  onTap: () => controller.previousPage(),
+                  onLongPress: () => _onLongPress(false),
+                  onLongPressEnd: _onLongPressEnd,
+                  child: const Icon(Icons.remove_circle_outline),
+                ),
+                GestureDetector(
+                  onTap: () => controller.nextPage(),
+                  onLongPress: () => _onLongPress(true),
+                  onLongPressEnd: _onLongPressEnd,
+                  child: const Icon(Icons.add_circle_outline),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
   }
 }

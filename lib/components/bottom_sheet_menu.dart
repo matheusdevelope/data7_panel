@@ -55,7 +55,7 @@ class BottomSheetMenu extends StatelessWidget {
                       onPressed: () {
                         caroussel.autoplay = !caroussel.autoplay;
                       },
-                      color: caroussel.autoplay ? Colors.blue : Colors.black,
+                      color: caroussel.autoplay ? null : Colors.black,
                       tooltip: "Ativo",
                       icon: Icon(
                         caroussel.autoplay ? Icons.toggle_on : Icons.toggle_off,

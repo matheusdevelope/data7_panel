@@ -1,14 +1,13 @@
 import 'dart:io';
+
 import 'package:data7_panel/components/dialog_alert.dart';
 import 'package:data7_panel/pages/panel/panel.dart';
+import 'package:data7_panel/pages/windows_service/windows_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'dart:math' as math;
-
 import '../../providers/theme_model.dart';
+import '../configuration/configuration.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
@@ -23,6 +22,7 @@ class _HomePageState extends State<HomePage> {
   TextEditingController textController =
       TextEditingController(text: 'http://192.168.0.1:3546');
   CustomDialogAlert alert = CustomDialogAlert();
+  int currentTab = 0;
 
   void _saveAndOpenPanel() {
     if (textController.text.isNotEmpty && textController.text.length > 10) {
@@ -43,9 +43,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-        overlays: [SystemUiOverlay.bottom]);
-
     super.initState();
     getData();
   }
@@ -73,52 +70,102 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeModel>(
-      builder: (context, ThemeModel themeNotifier, child) {
+      builder: (context, ThemeModel theme, child) {
         return Scaffold(
-          body: Center(
-            child: Container(
-              margin: const EdgeInsets.all(24),
-              constraints: const BoxConstraints(minWidth: 300, maxWidth: 700),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const Padding(
-                    padding: EdgeInsets.only(bottom: 8 * 2),
-                    child: Text(
-                      'Painel Data7',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
+          body: currentTab == 0
+              ? Center(
+                  child: Container(
+                    margin: const EdgeInsets.all(24),
+                    constraints:
+                        const BoxConstraints(minWidth: 300, maxWidth: 700),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 8 * 2),
+                          child: Text(
+                            'Painel Data7',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Column(
+                          children: <Widget>[
+                            TextField(
+                              textInputAction: TextInputAction.next,
+                              controller: textController,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Endereço do Servidor',
+                                contentPadding: EdgeInsets.all(8),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  Column(
-                    children: <Widget>[
-                      TextField(
-                        // autofocus: true,
-                        textInputAction: TextInputAction.next,
-                        controller: textController,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Endereço do Servidor',
-                          contentPadding: EdgeInsets.all(8),
-                        ),
-                      ),
-                    ],
+                )
+              : currentTab == 1
+                  ? const Configurations()
+                  : currentTab == 2
+                      ? const WindowsService()
+                      : null,
+          floatingActionButton: currentTab == 0
+              ? FloatingActionButton(
+                  tooltip: "Abrir Painel",
+                  heroTag: "Abrir Painel",
+                  backgroundColor: Colors.white,
+                  onPressed: _saveAndOpenPanel,
+                  child: const Icon(
+                    Icons.exit_to_app,
+                    color: Color(0xFF006B98),
                   ),
-                ],
-              ),
-            ),
-          ),
-          floatingActionButton: FloatingActionButton(
-            tooltip: "Abrir Painel",
-            heroTag: "Abrir Painel",
-            backgroundColor: Colors.white,
-            onPressed: _saveAndOpenPanel,
-            child: const Icon(
-              Icons.exit_to_app,
-              color: Color(0xFF006B98),
-            ),
-          ),
+                )
+              : null,
+          bottomNavigationBar: BottomNavigationBar(
+              currentIndex: currentTab,
+              // unselectedFontSize: theme.fontSizeMenuPanel,
+              // selectedFontSize: theme.fontSizeMenuPanel + 2,
+              onTap: (value) {
+                setState(() {
+                  currentTab = value;
+                });
+              },
+              items: [
+                const BottomNavigationBarItem(
+                  label: "Home",
+                  activeIcon: Icon(
+                    Icons.home,
+                  ),
+                  icon: Icon(
+                    Icons.home,
+                    color: Colors.grey,
+                  ),
+                ),
+                const BottomNavigationBarItem(
+                  label: "Configurações",
+                  activeIcon: Icon(
+                    Icons.settings,
+                  ),
+                  icon: Icon(
+                    Icons.settings,
+                    color: Colors.grey,
+                  ),
+                ),
+                if (Platform.isWindows)
+                  const BottomNavigationBarItem(
+                    label: "Serviço Windows",
+                    activeIcon: Icon(
+                      Icons.install_desktop,
+                    ),
+                    icon: Icon(
+                      Icons.install_desktop,
+                      color: Colors.grey,
+                    ),
+                  )
+              ]),
         );
       },
     );
