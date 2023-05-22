@@ -139,7 +139,8 @@ class PanelPreferences {
 
   getQuery() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    return sharedPreferences.getString(PanelSettingsKeys.query) ?? '';
+    return sharedPreferences.getString(PanelSettingsKeys.query) ??
+        'SELECT * FROM view_QueRetornaOsDadosDoPainel';
   }
 
   setInterval(int value) async {
@@ -161,6 +162,16 @@ class PanelPreferences {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getString(PanelSettingsKeys.typeInteval) ?? 'sec';
   }
+
+  setOpenAutomatic(bool value) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setBool(PanelSettingsKeys.openAutomatic, value);
+  }
+
+  getOpenAutomatic() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getBool(PanelSettingsKeys.openAutomatic) ?? true;
+  }
 }
 
 class PanelSettingsKeys {
@@ -168,6 +179,7 @@ class PanelSettingsKeys {
   static String query = '$pre.query';
   static String interval = '$pre.interval';
   static String typeInteval = '$pre.typeInteval';
+  static String openAutomatic = '$pre.openAutomatic';
 }
 
 class ServiceWindowsPreferences {
@@ -178,7 +190,8 @@ class ServiceWindowsPreferences {
 
   getName() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    return sharedPreferences.getString(ServiceWindowsSettingsKeys.name) ?? '';
+    return sharedPreferences.getString(ServiceWindowsSettingsKeys.name) ??
+        'Data7Panel';
   }
 
   setStatus(String value) async {
@@ -190,10 +203,21 @@ class ServiceWindowsPreferences {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getString(ServiceWindowsSettingsKeys.status) ?? "";
   }
+
+  setPort(int value) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setInt(ServiceWindowsSettingsKeys.port, value);
+  }
+
+  getPort() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getInt(ServiceWindowsSettingsKeys.port) ?? 3546;
+  }
 }
 
 class ServiceWindowsSettingsKeys {
   static const pre = "@ServiceWindowsSettingsPreferences";
   static String name = '$pre.name';
   static String status = '$pre.status';
+  static String port = '$pre.port';
 }

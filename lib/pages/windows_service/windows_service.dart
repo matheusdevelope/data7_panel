@@ -1,9 +1,10 @@
+import 'package:data7_panel/components/download_box.dart';
 import 'package:data7_panel/components/outilined_buttom.dart';
 import 'package:data7_panel/components/settings/settings.dart';
 import 'package:data7_panel/components/settings/settings_textfield.dart';
+import 'package:data7_panel/pages/windows_service/mount_window_service.dart';
+import 'package:data7_panel/services/powershel.dart';
 import 'package:flutter/material.dart';
-
-import '../../components/dropdown.dart';
 
 class WindowsService extends StatefulWidget {
   const WindowsService({
@@ -14,12 +15,20 @@ class WindowsService extends StatefulWidget {
 }
 
 class _WindowsServiceState extends State<WindowsService> {
-  bool refresh = false;
+  String serviceStatus = "Desconhecido";
+  Future<void> initializeValues() async {
+    await Settings.notifications.initialize();
+    await Settings.db.initialize();
+    await Settings.panel.initialize();
+    await Settings.winService.initialize();
+    serviceStatus =
+        (await WindowsServicePs(Settings.winService.name).status()).name;
+  }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Settings.notifications.initialize(),
+      future: initializeValues(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
@@ -27,7 +36,7 @@ class _WindowsServiceState extends State<WindowsService> {
           return const Text('Erro ao carregar as configurações');
         } else {
           return Padding(
-            padding: const EdgeInsets.all(4),
+            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
             child: ListView(
               children: [
                 SettingsGroup(
@@ -41,60 +50,57 @@ class _WindowsServiceState extends State<WindowsService> {
                         SettingsItem(
                           child: SettingRowDropDown(
                             title: "RDBMS:",
-                            items: const {
-                              "mssql": "SQL Server",
-                              "sybase": "Sybase SQL Anywhere"
-                            },
-                            selectedValue: "mssql",
+                            items: Settings.db.availableRdbms,
+                            selectedValue: Settings.db.rdbms,
                             onChange: (value) {
-                              print(value);
+                              Settings.db.rdbms = value;
                             },
                           ),
                         ),
                         SettingsItem(
                           child: SettingRowTextField(
                             title: "Usuário:",
-                            initialValue: "",
+                            initialValue: Settings.db.user,
                             onChange: (value) {
-                              print(value);
+                              Settings.db.user = value;
                             },
                           ),
                         ),
                         SettingsItem(
                           child: SettingRowTextField(
                             title: "Senha:",
-                            initialValue: "",
+                            initialValue: Settings.db.pass,
                             isPassword: true,
                             onChange: (value) {
-                              print(value);
+                              Settings.db.pass = value;
                             },
                           ),
                         ),
                         SettingsItem(
                           child: SettingRowTextField(
                             title: "Servidor",
-                            initialValue: "",
+                            initialValue: Settings.db.server,
                             onChange: (value) {
-                              print(value);
+                              Settings.db.server = value;
                             },
                           ),
                         ),
                         SettingsItem(
                           child: SettingRowTextField(
                             title: "Porta",
-                            initialValue: "",
+                            initialValue: Settings.db.port,
                             inputType: TextInputType.number,
                             onChange: (value) {
-                              print(value);
+                              Settings.db.port = value;
                             },
                           ),
                         ),
                         SettingsItem(
                           child: SettingRowTextField(
                             title: "Base de Dados",
-                            initialValue: "",
+                            initialValue: Settings.db.databaseName,
                             onChange: (value) {
-                              print(value);
+                              Settings.db.databaseName = value;
                             },
                           ),
                         ),
@@ -111,24 +117,10 @@ class _WindowsServiceState extends State<WindowsService> {
                             title: "Consulta SQL:",
                             subtitle:
                                 'Lebre-se de otimizar sua consulta.\nNão é necessário declarar as colunas, apenas o (SELECT * FROM) já é suficiente.',
-                            initialValue: "",
+                            initialValue: Settings.panel.query,
                             maxLines: 5,
                             onChange: (value) {
-                              print(value);
-                            },
-                          ),
-                        ),
-                        SettingsItem(
-                          child: SettingRowDropDown(
-                            title: "Tipo de Intervalo:",
-                            items: const {
-                              "sec": "Segundo(s)",
-                              "min": "Minuto(s)",
-                              "hour": "Hora(s)"
-                            },
-                            selectedValue: "sec",
-                            onChange: (value) {
-                              print(value);
+                              Settings.panel.query = value;
                             },
                           ),
                         ),
@@ -137,12 +129,22 @@ class _WindowsServiceState extends State<WindowsService> {
                             title: "Intervalo de Atualização:",
                             subtitle:
                                 "Tenha em mente que dependendo da query, o intervalo pode não ser suficiente.",
-                            initialValue: 5,
+                            initialValue: Settings.panel.interval,
                             minValue: 1,
                             maxValue: 60,
                             // maxLines: 5,
                             onChange: (value) {
-                              print(value);
+                              Settings.panel.interval = value;
+                            },
+                          ),
+                        ),
+                        SettingsItem(
+                          child: SettingRowDropDown(
+                            title: "Tipo de Intervalo:",
+                            items: Settings.panel.availableTypes,
+                            selectedValue: Settings.panel.typeInterval,
+                            onChange: (value) {
+                              Settings.panel.typeInterval = value;
                             },
                           ),
                         ),
@@ -150,43 +152,152 @@ class _WindowsServiceState extends State<WindowsService> {
                     )
                   ],
                 ),
-                SettingsGroup(title: "Serviço Windows", children: [
-                  SettingsCategory(
-                    child: [
-                      SettingsItem(
-                        child: SettingRowTextField(
-                          title: 'Nome do Serviço',
-                          initialValue: '',
-                          onChange: (value) {},
+                SettingsGroup(
+                  title: "Serviço Windows",
+                  children: [
+                    SettingsCategory(
+                      child: [
+                        SettingsItem(
+                          child: SettingRowTextField(
+                            title: 'Nome do Serviço',
+                            subtitle:
+                                "Para a alterar o serviço deve ser reinstalado.",
+                            enabled:
+                                serviceStatus == StatusService.unistalled.name,
+                            initialValue: Settings.winService.name,
+                            onChange: (value) {
+                              Settings.winService.name = value;
+                            },
+                          ),
                         ),
-                      ),
-                      SettingsItem(
-                        child: CustomOutilinedButton(
+                        CustomOutilinedButton(
                           label: "Instalar Serviço",
-                          onPress: () {},
+                          enabled:
+                              serviceStatus == StatusService.unistalled.name,
+                          onPress: () async {
+                            String command = await FileWindowService()
+                                .create(context, Settings.winService.name, {
+                              'server_port':
+                                  Settings.winService.port.toString(),
+                              'database': Settings.db.rdbms,
+                              'host': Settings.db.server,
+                              'port': Settings.db.port,
+                              'dbname': Settings.db.databaseName,
+                              'user': Settings.db.user,
+                              'pass': Settings.db.pass,
+                              'query': '"${Settings.panel.query}"',
+                              'time_refresh': (Settings.panel.typeInterval ==
+                                          'min'
+                                      ? (Settings.panel.interval * 60 * 1000)
+                                      : Settings.panel.typeInterval == 'hour'
+                                          ? Settings.panel.interval *
+                                              60 *
+                                              60 *
+                                              1000
+                                          : Settings.panel.interval * 1000)
+                                  .toString(),
+                            });
+                            await WindowsServicePs(Settings.winService.name)
+                                .create(command);
+                            // 'C:\\servico\\srvstart.exe install Data7DispatchPanel -c C:\\servico\\SRVSTART.ini',
+                            // );
+                            StatusLoop().startLoop(Settings.winService.name,
+                                (status) {
+                              setState(() {
+                                serviceStatus = status.name;
+                              });
+                            });
+                          },
                         ),
-                      ),
-                      SettingsItem(
-                        child: CustomOutilinedButton(
+                        CustomOutilinedButton(
                           label: "Iniciar Serviço",
-                          onPress: () {},
+                          enabled:
+                              serviceStatus == StatusService.stopped.name ||
+                                  serviceStatus == StatusService.paused.name,
+                          onPress: () async {
+                            await FileWindowService()
+                                .create(context, Settings.winService.name, {
+                              'server_port':
+                                  Settings.winService.port.toString(),
+                              'database': Settings.db.rdbms,
+                              'host': Settings.db.server,
+                              'port': Settings.db.port,
+                              'dbname': Settings.db.databaseName,
+                              'user': Settings.db.user,
+                              'pass': Settings.db.pass,
+                              'query': '"${Settings.panel.query}"',
+                              'time_refresh': (Settings.panel.typeInterval ==
+                                          'min'
+                                      ? (Settings.panel.interval * 60 * 1000)
+                                      : Settings.panel.typeInterval == 'hour'
+                                          ? Settings.panel.interval *
+                                              60 *
+                                              60 *
+                                              1000
+                                          : Settings.panel.interval * 1000)
+                                  .toString(),
+                            });
+                            await WindowsServicePs(Settings.winService.name)
+                                .start();
+                            StatusLoop().startLoop(Settings.winService.name,
+                                (status) {
+                              setState(() {
+                                serviceStatus = status.name;
+                              });
+                            });
+                          },
                         ),
-                      ),
-                      SettingsItem(
-                        child: CustomOutilinedButton(
+                        CustomOutilinedButton(
                           label: "Parar Serviço",
-                          onPress: () {},
+                          enabled: serviceStatus == StatusService.running.name,
+                          onPress: () async {
+                            await WindowsServicePs(Settings.winService.name)
+                                .stop();
+                            StatusLoop().startLoop(Settings.winService.name,
+                                (status) {
+                              setState(() {
+                                serviceStatus = status.name;
+                              });
+                            });
+                          },
                         ),
-                      ),
-                      SettingsItem(
-                        child: CustomOutilinedButton(
+                        CustomOutilinedButton(
                           label: "Desinstalar Serviço",
-                          onPress: () {},
+                          enabled: serviceStatus == StatusService.stopped.name,
+                          onPress: () async {
+                            await WindowsServicePs(Settings.winService.name)
+                                .delete();
+                            StatusLoop().startLoop(Settings.winService.name,
+                                (status) {
+                              setState(() {
+                                serviceStatus = status.name;
+                              });
+                            });
+                          },
                         ),
-                      ),
-                    ],
-                  )
-                ])
+                        CustomOutilinedButton(
+                          label: "Status Serviço: $serviceStatus",
+                          enabled: true,
+                          onPress: () async {
+                            StatusLoop().startLoop(
+                              Settings.winService.name,
+                              (status) {
+                                setState(() {
+                                  serviceStatus = status.name;
+                                });
+                              },
+                            );
+                          },
+                        ),
+                        DownloadBox(
+                            title: "Arquivos de Serviço",
+                            subtitle:
+                                "Esse processo só vai ocorrer no primeiro uso ou quando houverem novas versões disponíveis.",
+                            onDownload: (progress) {}),
+                      ],
+                    )
+                  ],
+                )
               ],
             ),
           );

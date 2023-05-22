@@ -11,17 +11,18 @@ class SettingRowNumber extends StatefulWidget {
   final int? initialValue;
   final int minValue;
   final int maxValue;
+  final bool useCarousel;
 
-  SettingRowNumber({
-    required this.title,
-    this.subtitle,
-    this.icon,
-    this.iconStyle,
-    required this.onChange,
-    this.initialValue,
-    required this.minValue,
-    required this.maxValue,
-  });
+  SettingRowNumber(
+      {required this.title,
+      this.subtitle,
+      this.icon,
+      this.iconStyle,
+      required this.onChange,
+      this.initialValue,
+      required this.minValue,
+      required this.maxValue,
+      this.useCarousel = true});
 
   @override
   _SettingRowNumberState createState() => _SettingRowNumberState();
@@ -72,6 +73,7 @@ class _SettingRowNumberState extends State<SettingRowNumber> {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   NumberInputCarousel(
+                    useCarousel: widget.useCarousel,
                     initialValue: widget.initialValue,
                     minValue: widget.minValue,
                     maxValue: widget.maxValue,
@@ -81,7 +83,6 @@ class _SettingRowNumberState extends State<SettingRowNumber> {
               )
             ],
           ),
-
           leading: widget.icon != null
               ? (widget.iconStyle != null && widget.iconStyle!.withBackground!)
                   ? Container(
@@ -104,20 +105,6 @@ class _SettingRowNumberState extends State<SettingRowNumber> {
                       ),
                     )
               : null,
-          // subtitle: widget.subtitle != null ? Text(widget.subtitle!) : null,
-          // trailing:
-          //  Expanded(
-          //   child: Column(
-          //     children: [
-          //     NumberInputCarousel(
-          //   initialValue: widget.initialValue,
-          //   minValue: widget.minValue,
-          //   maxValue: widget.maxValue,
-          //   onChange: widget.onChange,
-          // ),
-          //     ],
-          //   ),
-          // ),
         ),
       ],
     );

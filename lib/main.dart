@@ -25,13 +25,15 @@ class MyApp extends StatelessWidget {
       child: ChangeNotifierProvider(
         create: (_) => ThemeModel(),
         child: Consumer<ThemeModel>(
-          builder: (context, _, c) {
+          builder: (context, them, c) {
             return LayoutBuilder(
               builder: (_, c) {
                 return MaterialApp(
                   debugShowCheckedModeBanner: false,
                   title: 'Painel Data7',
-                  theme: CustomTheme.getTheme(context, c.maxWidth),
+                  theme: them.useAdaptiveTheme
+                      ? CustomTheme.getTheme(context, c.maxWidth)
+                      : ThemeData.light(),
                   home: const HomePage(title: 'Painel Data7'),
                 );
               },

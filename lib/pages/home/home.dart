@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:data7_panel/components/dialog_alert.dart';
 import 'package:data7_panel/pages/panel/panel.dart';
 import 'package:data7_panel/pages/windows_service/windows_service.dart';
+import 'package:data7_panel/providers/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -49,19 +50,23 @@ class _HomePageState extends State<HomePage> {
 
   getData() async {
     prefs = await SharedPreferences.getInstance();
+    await Settings.panel.initialize();
     setState(
       () {
         String? value = prefs.getString('local_url');
         if (value != null) {
           textController.text = value;
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                return PanelPage(url: value);
-              },
-            ),
-          );
+
+          if (Settings.panel.openAutomatic) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return PanelPage(url: value);
+                },
+              ),
+            );
+          }
         }
       },
     );
@@ -125,47 +130,48 @@ class _HomePageState extends State<HomePage> {
                 )
               : null,
           bottomNavigationBar: BottomNavigationBar(
-              currentIndex: currentTab,
-              // unselectedFontSize: theme.fontSizeMenuPanel,
-              // selectedFontSize: theme.fontSizeMenuPanel + 2,
-              onTap: (value) {
-                setState(() {
-                  currentTab = value;
-                });
-              },
-              items: [
+            currentIndex: currentTab,
+            // unselectedFontSize: theme.fontSizeMenuPanel,
+            // selectedFontSize: theme.fontSizeMenuPanel + 2,
+            onTap: (value) {
+              setState(() {
+                currentTab = value;
+              });
+            },
+            items: [
+              const BottomNavigationBarItem(
+                label: "Home",
+                activeIcon: Icon(
+                  Icons.home,
+                ),
+                icon: Icon(
+                  Icons.home,
+                  color: Colors.grey,
+                ),
+              ),
+              const BottomNavigationBarItem(
+                label: "Configurações",
+                activeIcon: Icon(
+                  Icons.settings,
+                ),
+                icon: Icon(
+                  Icons.settings,
+                  color: Colors.grey,
+                ),
+              ),
+              if (Platform.isWindows)
                 const BottomNavigationBarItem(
-                  label: "Home",
+                  label: "Serviço Windows",
                   activeIcon: Icon(
-                    Icons.home,
+                    Icons.install_desktop,
                   ),
                   icon: Icon(
-                    Icons.home,
+                    Icons.install_desktop,
                     color: Colors.grey,
                   ),
-                ),
-                const BottomNavigationBarItem(
-                  label: "Configurações",
-                  activeIcon: Icon(
-                    Icons.settings,
-                  ),
-                  icon: Icon(
-                    Icons.settings,
-                    color: Colors.grey,
-                  ),
-                ),
-                if (Platform.isWindows)
-                  const BottomNavigationBarItem(
-                    label: "Serviço Windows",
-                    activeIcon: Icon(
-                      Icons.install_desktop,
-                    ),
-                    icon: Icon(
-                      Icons.install_desktop,
-                      color: Colors.grey,
-                    ),
-                  )
-              ]),
+                )
+            ],
+          ),
         );
       },
     );

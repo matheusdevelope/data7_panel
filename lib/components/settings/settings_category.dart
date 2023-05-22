@@ -1,10 +1,9 @@
 import 'package:data7_panel/components/settings/icon_style.dart';
-import 'package:data7_panel/components/settings/settings_item.dart';
 import 'package:flutter/material.dart';
 
 class SettingsCategory extends StatefulWidget {
   final String? title;
-  final List<SettingsItem> child;
+  final List<Widget> child;
   final String? subtitle;
   final IconData? icon;
   final IconStyle? iconStyle;

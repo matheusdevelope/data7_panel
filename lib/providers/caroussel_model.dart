@@ -49,4 +49,9 @@ class CarousselModel extends ChangeNotifier {
     _autoPlayDuration = await _preferences.getIntervalAutoPlay();
     notifyListeners();
   }
+
+  Future<CarousselModel> initialize() async {
+    await _getPreferences();
+    return this;
+  }
 }

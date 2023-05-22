@@ -20,6 +20,8 @@ dependencies:
   audioplayers: ^4.0.1
   file_picker: ^5.2.10
   path_provider: ^2.0.15
+  win32: ^3.1.4
+  dio: ^5.1.2
   
 
 dev_dependencies:
@@ -34,6 +36,10 @@ flutter:
   assets:
     - assets\loading.json
     - assets\songs\notification.mp3
+    - assets\service_runner\logger.dll
+    - assets\service_runner\srvstart.dll
+    - assets\service_runner\srvstart.exe
+    - assets\service_runner\svc.exe
 
 flutter_launcher_icons:
   android: "launcher_icon"

@@ -1,9 +1,16 @@
+import 'package:data7_panel/providers/caroussel_model.dart';
 import 'package:data7_panel/providers/settings_preferences.dart';
+import 'package:data7_panel/providers/theme_model.dart';
 import 'package:data7_panel/services/NotificationHelper.dart';
 import 'package:file_picker/file_picker.dart';
 
 class Settings {
+  static ThemeModel theme = ThemeModel();
+  static PanelSettings panel = PanelSettings();
+  static CarousselModel carrossel = CarousselModel();
   static NotificationsSettings notifications = NotificationsSettings();
+  static DatabaseConnectionSettings db = DatabaseConnectionSettings();
+  static WinServiceSettings winService = WinServiceSettings();
 }
 
 class NotificationsSettings {
@@ -102,6 +109,10 @@ class DatabaseConnectionSettings {
   late String _server;
   late String _port;
   late String _databaseName;
+  final Map<String, String> _availableRdbms = {
+    "mssql": "SQL Server",
+    "sybase": "Sybase SQL Anywhere"
+  };
 
   late DatabaseConnectionPreferences _pref;
 
@@ -111,6 +122,7 @@ class DatabaseConnectionSettings {
   String get server => _server;
   String get port => _port;
   String get databaseName => _databaseName;
+  Map<String, String> get availableRdbms => _availableRdbms;
   DatabaseConnectionSettings() {
     _rdbms = '';
     _user = '';
@@ -154,6 +166,9 @@ class DatabaseConnectionSettings {
 
   _getPreferences() async {
     _rdbms = await _pref.getRdbms();
+    if (_rdbms.isEmpty) {
+      _rdbms = _availableRdbms.keys.first;
+    }
     _user = await _pref.getUser();
     _pass = await _pref.getPass();
     _server = await _pref.getServer();
@@ -171,16 +186,24 @@ class PanelSettings {
   late String _query;
   late int _interval;
   late String _typeInterval;
-
+  late bool _openAutomatic;
+  final Map<String, String> _availableTypes = {
+    "sec": "Segundo(s)",
+    "min": "Minuto(s)",
+    "hour": "Hora(s)"
+  };
   late PanelPreferences _pref;
 
   String get query => _query;
   int get interval => _interval;
   String get typeInterval => _typeInterval;
+  bool get openAutomatic => _openAutomatic;
+  Map<String, String> get availableTypes => _availableTypes;
   PanelSettings() {
     _query = '';
     _interval = 5;
     _typeInterval = '';
+    _openAutomatic = true;
     _pref = SettingsPreferences.panel;
     _getPreferences();
   }
@@ -200,9 +223,16 @@ class PanelSettings {
     _pref.setTypeInteval(value);
   }
 
+  set openAutomatic(bool value) {
+    _openAutomatic = value;
+    _pref.setOpenAutomatic(value);
+  }
+
   _getPreferences() async {
     _query = await _pref.getQuery();
     _interval = await _pref.getInterval();
+    _typeInterval = await _pref.getTypeInteval();
+    _openAutomatic = await _pref.getOpenAutomatic();
   }
 
   Future<PanelSettings> initialize() async {
@@ -214,14 +244,17 @@ class PanelSettings {
 class WinServiceSettings {
   late String _name;
   late String _status;
+  late int _port;
 
   late ServiceWindowsPreferences _pref;
 
-  String get query => _name;
+  String get name => _name;
   String get status => _status;
+  int get port => _port;
   WinServiceSettings() {
     _name = '';
     _status = '';
+    _port = 3546;
     _pref = SettingsPreferences.winService;
     _getPreferences();
   }
@@ -236,9 +269,15 @@ class WinServiceSettings {
     _pref.setStatus(value);
   }
 
+  set port(int value) {
+    _port = value;
+    _pref.setPort(value);
+  }
+
   _getPreferences() async {
     _name = await _pref.getName();
     _status = await _pref.getStatus();
+    _port = await _pref.getPort();
   }
 
   Future<WinServiceSettings> initialize() async {

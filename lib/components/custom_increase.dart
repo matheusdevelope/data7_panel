@@ -9,7 +9,7 @@ class CustomIncrease extends StatefulWidget {
   final double minValue;
   final double maxValue;
   final Function(double) onChange;
-  final double fontSize;
+  final double? fontSize;
   CustomIncrease({
     super.key,
     this.label = '',
@@ -17,7 +17,7 @@ class CustomIncrease extends StatefulWidget {
     required this.minValue,
     required this.maxValue,
     required this.onChange,
-    required this.fontSize,
+    this.fontSize,
   });
 
   @override
@@ -41,17 +41,16 @@ class _CustomIncreaseState extends State<CustomIncrease> {
                 fontSize: widget.fontSize, fontWeight: FontWeight.bold),
           ),
         Container(
-          // color: Colors.white,
           padding: const EdgeInsets.all(2),
-          // decoration: BoxDecoration(
-          //   border: Border.all(
-          //     color: Colors.grey.shade400,
-          //     style: BorderStyle.solid,
-          //     width: 0.5,
-          //   ),
-          //   color: Colors.white,
-          //   borderRadius: BorderRadius.circular(4),
-          // ),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey,
+              style: BorderStyle.solid,
+              width: 0.5,
+            ),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(4),
+          ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -127,12 +126,14 @@ class NumberInputCarousel extends StatefulWidget {
   final int maxValue;
   final int? initialValue;
   final Function(int) onChange;
+  final bool useCarousel;
 
   NumberInputCarousel({
     required this.minValue,
     required this.maxValue,
     this.initialValue,
     required this.onChange,
+    this.useCarousel = true,
   });
 
   @override
@@ -160,9 +161,12 @@ class _NumberInputCarouselState extends State<NumberInputCarousel> {
   void _onLongPress(bool nextPage) {
     setState(
       () {
-        timer = Timer.periodic(const Duration(milliseconds: 60), (timer) {
-          nextPage ? controller.nextPage() : controller.previousPage();
-        });
+        timer = Timer.periodic(
+          const Duration(milliseconds: 50),
+          (timer) {
+            _value = nextPage ? _value + 1 : _value - 1;
+          },
+        );
       },
     );
   }
@@ -173,10 +177,23 @@ class _NumberInputCarouselState extends State<NumberInputCarousel> {
         timer!.cancel();
       },
     );
+    controller.jumpToPage(_value);
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!widget.useCarousel) {
+      return CustomIncrease(
+        value: _value.toDouble(),
+        minValue: widget.minValue.toDouble(),
+        maxValue: widget.maxValue.toDouble(),
+        onChange: (value) {
+          setState(() {
+            _value = value.toInt();
+          });
+        },
+      );
+    }
     return SizedBox(
       width: (Theme.of(context).iconTheme.size ?? 24) * 3,
       child: Column(

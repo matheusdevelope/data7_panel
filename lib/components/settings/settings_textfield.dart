@@ -13,7 +13,7 @@ class SettingRowTextField extends StatefulWidget {
   final bool isPassword;
   final TextInputType? inputType;
   final int? maxLines;
-
+  final bool? enabled;
   SettingRowTextField(
       {required this.title,
       this.subtitle,
@@ -24,15 +24,28 @@ class SettingRowTextField extends StatefulWidget {
       this.placeholder = '',
       this.isPassword = false,
       this.inputType,
-      this.maxLines = 1});
+      this.maxLines = 1,
+      this.enabled});
 
   @override
   _SettingRowTextFieldState createState() => _SettingRowTextFieldState();
 }
 
 class _SettingRowTextFieldState extends State<SettingRowTextField> {
+  late TextEditingController textController;
+  bool inicialized = false;
+  void _setInitialValue() {
+    if (!inicialized) {
+      setState(() {
+        textController = TextEditingController(text: widget.initialValue);
+        inicialized = true;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    _setInitialValue();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -84,6 +97,8 @@ class _SettingRowTextFieldState extends State<SettingRowTextField> {
                     )
               : null,
           subtitle: TextField(
+            enabled: widget.enabled,
+            controller: textController,
             onChanged: widget.onChange,
             textInputAction: TextInputAction.next,
             obscureText: widget.isPassword,
@@ -97,7 +112,7 @@ class _SettingRowTextFieldState extends State<SettingRowTextField> {
                 border: const OutlineInputBorder(),
                 labelText: widget.placeholder,
                 contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4)),
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 0)),
           ),
           // widget.subtitle != null ? Text(widget.subtitle!) : null,
         ),

@@ -67,11 +67,28 @@ class _SettingRowSliderState extends State<SettingRowSlider> {
       children: [
         ListTile(
           contentPadding: const EdgeInsets.all(4),
-          title: Text(
-            widget.title,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
+          title: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.title,
+                textAlign: TextAlign.start,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              if (widget.subtitle != null)
+                Text(
+                  widget.subtitle!,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                      // overflow: TextOverflow.ellipsis,
+                      color: Colors.grey,
+                      fontSize:
+                          Theme.of(context).textTheme.bodyMedium?.fontSize),
+                ),
+            ],
           ),
           leading: widget.icon != null
               ? (widget.iconStyle != null && widget.iconStyle!.withBackground!)
