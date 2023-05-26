@@ -16,22 +16,23 @@ class SettingRowDropDown extends StatefulWidget {
   final Function(String)? onRightButtonPress;
   final Function(String)? onRightLongButtonPress;
   final Future<Map<String, String>> Function()? onAdd;
+  final bool? enabled;
 
-  SettingRowDropDown({
-    required this.title,
-    this.subtitle,
-    this.icon,
-    this.iconStyle,
-    required this.onChange,
-    required this.items,
-    this.itemsDefault,
-    required this.selectedValue,
-    this.onLeftButtonPress,
-    this.onLeftLongButtonPress,
-    this.onRightButtonPress,
-    this.onRightLongButtonPress,
-    this.onAdd,
-  });
+  SettingRowDropDown(
+      {required this.title,
+      this.subtitle,
+      this.icon,
+      this.iconStyle,
+      required this.onChange,
+      required this.items,
+      this.itemsDefault,
+      required this.selectedValue,
+      this.onLeftButtonPress,
+      this.onLeftLongButtonPress,
+      this.onRightButtonPress,
+      this.onRightLongButtonPress,
+      this.onAdd,
+      this.enabled});
 
   @override
   _SettingRowDropDownState createState() => _SettingRowDropDownState();
@@ -74,6 +75,7 @@ class _SettingRowDropDownState extends State<SettingRowDropDown> {
                     )
               : null,
           subtitle: CustomDropdown(
+            enabled: widget.enabled,
             items: widget.items,
             itemsDefault: widget.itemsDefault,
             selectedValue: widget.selectedValue,

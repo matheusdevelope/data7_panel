@@ -14,6 +14,8 @@ class SettingRowTextField extends StatefulWidget {
   final TextInputType? inputType;
   final int? maxLines;
   final bool? enabled;
+  final bool? required;
+
   SettingRowTextField(
       {required this.title,
       this.subtitle,
@@ -25,7 +27,8 @@ class SettingRowTextField extends StatefulWidget {
       this.isPassword = false,
       this.inputType,
       this.maxLines = 1,
-      this.enabled});
+      this.enabled,
+      this.required});
 
   @override
   _SettingRowTextFieldState createState() => _SettingRowTextFieldState();
@@ -41,6 +44,20 @@ class _SettingRowTextFieldState extends State<SettingRowTextField> {
         inicialized = true;
       });
     }
+  }
+
+  String? get _errorText {
+    final text = textController.value.text;
+    if (widget.required == true && text.trim().isEmpty) {
+      return 'Esse campo é obrigatório, verifique.';
+    }
+    return null;
+  }
+
+  @override
+  void dispose() {
+    textController.dispose();
+    super.dispose();
   }
 
   @override
@@ -96,25 +113,31 @@ class _SettingRowTextFieldState extends State<SettingRowTextField> {
                       ),
                     )
               : null,
-          subtitle: TextField(
-            enabled: widget.enabled,
-            controller: textController,
-            onChanged: widget.onChange,
-            textInputAction: TextInputAction.next,
-            obscureText: widget.isPassword,
-            keyboardType: widget.inputType,
-            maxLines: widget.isPassword ? 1 : widget.maxLines,
-            inputFormatters: [
-              if (widget.inputType == TextInputType.number)
-                FilteringTextInputFormatter.digitsOnly
-            ],
-            decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                labelText: widget.placeholder,
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 0)),
+          subtitle: ValueListenableBuilder(
+            valueListenable: textController,
+            builder: (context, TextEditingValue value, __) {
+              widget.onChange(value.text);
+              return TextField(
+                controller: textController,
+                enabled: widget.enabled,
+                textInputAction: TextInputAction.next,
+                obscureText: widget.isPassword,
+                keyboardType: widget.inputType,
+                maxLines: widget.isPassword ? 1 : widget.maxLines,
+                inputFormatters: [
+                  if (widget.inputType == TextInputType.number)
+                    FilteringTextInputFormatter.digitsOnly
+                ],
+                style: TextStyle(
+                    color: widget.enabled == false ? Colors.grey : null),
+                decoration: InputDecoration(
+                  labelText: widget.placeholder,
+                  errorText: _errorText,
+                  enabled: widget.enabled ?? true,
+                ),
+              );
+            },
           ),
-          // widget.subtitle != null ? Text(widget.subtitle!) : null,
         ),
       ],
     );

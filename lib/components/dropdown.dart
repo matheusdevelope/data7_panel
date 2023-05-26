@@ -10,18 +10,19 @@ class CustomDropdown extends StatefulWidget {
   final Function(String)? onRightButtonPress;
   final Function(String)? onRightLongButtonPress;
   final Future<Map<String, String>> Function()? onAdd;
+  final bool? enabled;
 
-  CustomDropdown({
-    required this.items,
-    this.itemsDefault,
-    required this.selectedValue,
-    required this.onChange,
-    this.onLeftButtonPress,
-    this.onLeftLongButtonPress,
-    this.onRightButtonPress,
-    this.onRightLongButtonPress,
-    this.onAdd,
-  });
+  CustomDropdown(
+      {required this.items,
+      this.itemsDefault,
+      required this.selectedValue,
+      required this.onChange,
+      this.onLeftButtonPress,
+      this.onLeftLongButtonPress,
+      this.onRightButtonPress,
+      this.onRightLongButtonPress,
+      this.onAdd,
+      this.enabled});
 
   @override
   _CustomDropdownState createState() => _CustomDropdownState();
@@ -72,6 +73,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
         items: [
           for (var entry in widget.items.entries)
             DropdownMenuItem(
+              enabled: widget.enabled ?? true,
               value: entry.key,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

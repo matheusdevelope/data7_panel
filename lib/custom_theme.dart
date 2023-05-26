@@ -53,7 +53,7 @@ class CustomTheme {
       }
     }
     double iconSize = 24 * (fontSizeFactor);
-    IconThemeData iconTheme = IconThemeData(size: iconSize, color: myColor);
+    IconThemeData iconTheme = IconThemeData(size: iconSize, color: Colors.blue);
     return ThemeData(
       primarySwatch: myColor,
       dataTableTheme: const DataTableThemeData(

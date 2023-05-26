@@ -33,7 +33,8 @@ class MyApp extends StatelessWidget {
                   title: 'Painel Data7',
                   theme: them.useAdaptiveTheme
                       ? CustomTheme.getTheme(context, c.maxWidth)
-                      : ThemeData.light(),
+                      : ThemeData.light().copyWith(
+                          iconTheme: const IconThemeData(color: Colors.blue)),
                   home: const HomePage(title: 'Painel Data7'),
                 );
               },

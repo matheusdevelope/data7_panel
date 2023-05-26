@@ -12,6 +12,7 @@ class SettingRowNumber extends StatefulWidget {
   final int minValue;
   final int maxValue;
   final bool useCarousel;
+  final bool? enabled;
 
   SettingRowNumber(
       {required this.title,
@@ -22,7 +23,8 @@ class SettingRowNumber extends StatefulWidget {
       this.initialValue,
       required this.minValue,
       required this.maxValue,
-      this.useCarousel = true});
+      this.useCarousel = true,
+      this.enabled});
 
   @override
   _SettingRowNumberState createState() => _SettingRowNumberState();
@@ -73,12 +75,12 @@ class _SettingRowNumberState extends State<SettingRowNumber> {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   NumberInputCarousel(
-                    useCarousel: widget.useCarousel,
-                    initialValue: widget.initialValue,
-                    minValue: widget.minValue,
-                    maxValue: widget.maxValue,
-                    onChange: widget.onChange,
-                  ),
+                      useCarousel: widget.useCarousel,
+                      initialValue: widget.initialValue,
+                      minValue: widget.minValue,
+                      maxValue: widget.maxValue,
+                      onChange: widget.onChange,
+                      enabled: widget.enabled),
                 ],
               )
             ],

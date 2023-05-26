@@ -127,14 +127,14 @@ class NumberInputCarousel extends StatefulWidget {
   final int? initialValue;
   final Function(int) onChange;
   final bool useCarousel;
-
-  NumberInputCarousel({
-    required this.minValue,
-    required this.maxValue,
-    this.initialValue,
-    required this.onChange,
-    this.useCarousel = true,
-  });
+  final bool? enabled;
+  NumberInputCarousel(
+      {required this.minValue,
+      required this.maxValue,
+      this.initialValue,
+      required this.onChange,
+      this.useCarousel = true,
+      this.enabled});
 
   @override
   _NumberInputCarouselState createState() => _NumberInputCarouselState();
@@ -159,25 +159,29 @@ class _NumberInputCarouselState extends State<NumberInputCarousel> {
   }
 
   void _onLongPress(bool nextPage) {
-    setState(
-      () {
-        timer = Timer.periodic(
-          const Duration(milliseconds: 50),
-          (timer) {
-            _value = nextPage ? _value + 1 : _value - 1;
-          },
-        );
-      },
-    );
+    if (widget.enabled ?? true) {
+      setState(
+        () {
+          timer = Timer.periodic(
+            const Duration(milliseconds: 50),
+            (timer) {
+              _value = nextPage ? _value + 1 : _value - 1;
+            },
+          );
+        },
+      );
+    }
   }
 
   void _onLongPressEnd(LongPressEndDetails _) {
-    setState(
-      () {
-        timer!.cancel();
-      },
-    );
-    controller.jumpToPage(_value);
+    if (widget.enabled ?? true) {
+      setState(
+        () {
+          timer!.cancel();
+        },
+      );
+      controller.jumpToPage(_value);
+    }
   }
 
   @override
@@ -205,6 +209,9 @@ class _NumberInputCarouselState extends State<NumberInputCarousel> {
             options: CarouselOptions(
                 height: Theme.of(context).iconTheme.size,
                 enableInfiniteScroll: false,
+                scrollPhysics: (widget.enabled ?? true) == false
+                    ? const NeverScrollableScrollPhysics()
+                    : null,
                 initialPage: _value - widget.minValue,
                 viewportFraction: 0.3,
                 onPageChanged: _onCarouselChange,
@@ -236,16 +243,34 @@ class _NumberInputCarouselState extends State<NumberInputCarousel> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GestureDetector(
-                  onTap: () => controller.previousPage(),
+                  onTap: () {
+                    if (widget.enabled ?? true) {
+                      controller.previousPage();
+                    }
+                  },
                   onLongPress: () => _onLongPress(false),
                   onLongPressEnd: _onLongPressEnd,
-                  child: const Icon(Icons.remove_circle_outline),
+                  child: Icon(
+                    Icons.remove_circle_outline,
+                    color: (widget.enabled ?? true) == false
+                        ? Colors.grey
+                        : Theme.of(context).iconTheme.color,
+                  ),
                 ),
                 GestureDetector(
-                  onTap: () => controller.nextPage(),
+                  onTap: () {
+                    if (widget.enabled ?? true) {
+                      controller.nextPage();
+                    }
+                  },
                   onLongPress: () => _onLongPress(true),
                   onLongPressEnd: _onLongPressEnd,
-                  child: const Icon(Icons.add_circle_outline),
+                  child: Icon(
+                    Icons.add_circle_outline,
+                    color: (widget.enabled ?? true) == false
+                        ? Colors.grey
+                        : Theme.of(context).iconTheme.color,
+                  ),
                 )
               ],
             ),

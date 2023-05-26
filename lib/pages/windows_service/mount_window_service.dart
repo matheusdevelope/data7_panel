@@ -13,8 +13,10 @@ class FileWindowService {
     List<String> filesServiceAssets = getServiceRunnerPaths(manifest);
     List<String> filesServiceRunner =
         await saveFilesIntoServiceRunner(filesServiceAssets);
-    File srvStart = File("${(await getServiceRunnerDir())}/SRVSTART.ini");
-    Directory serviceDir = Directory('${await getServiceRunnerDir()}/service/');
+    File srvStart =
+        File("${(await FileWindowService.getServiceRunnerDir())}/SRVSTART.ini");
+    Directory serviceDir =
+        Directory('${await FileWindowService.getServiceRunnerDir()}/service/');
     String pathService = serviceDir.listSync().first.path;
     String params = ' ';
     configParams.forEach((key, value) {
@@ -30,12 +32,20 @@ class FileWindowService {
     return command;
   }
 
+  static getServiceExecutable() async {
+    Directory serviceDir = Directory(
+        '${await FileWindowService.getServiceRunnerDir()}\\service\\');
+    String pathService = serviceDir.listSync().first.path;
+    return pathService ?? '';
+  }
+
   Future<List<String>> saveFilesIntoServiceRunner(
       List<String> filesServiceAssets) async {
     List<String> files = [];
     for (var element in filesServiceAssets) {
       ByteData bytes = await rootBundle.load(element);
-      String path = '${await getServiceRunnerDir()}${p.basename(element)}';
+      String path =
+          '${await FileWindowService.getServiceRunnerDir()}${p.basename(element)}';
       File file = File(path);
       if (file.existsSync()) {
         files.add(file.path);
@@ -46,8 +56,8 @@ class FileWindowService {
     return files;
   }
 
-  Future<String> getServiceRunnerDir() async {
-    return '${(await getApplicationSupportDirectory()).path}/service_runner/';
+  static Future<String> getServiceRunnerDir() async {
+    return '${(await getApplicationSupportDirectory()).path}\\service_runner\\';
   }
 
   static Future<String> writeToFile(ByteData data, String path) async {
