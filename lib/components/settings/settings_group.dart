@@ -18,24 +18,21 @@ class SettingsGroup extends StatefulWidget {
 class _SettingsGroupState extends State<SettingsGroup> {
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 100),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0, top: 16.0),
-            child: Text(
-              widget.title,
-              style: TextStyle(
-                fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
-                fontWeight: FontWeight.bold,
-              ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 16.0, top: 16.0),
+          child: Text(
+            widget.title,
+            style: TextStyle(
+              fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          ...widget.children
-        ],
-      ),
+        ),
+        ...widget.children
+      ],
     );
   }
 }

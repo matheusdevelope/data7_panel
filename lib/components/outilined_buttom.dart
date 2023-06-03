@@ -16,14 +16,17 @@ class CustomOutilinedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(4),
-      child: OutlinedButton(
-        style: buttonStyle,
-        onPressed: enabled == false ? null : onPress,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(label),
-          ],
+      child: Container(
+        width: double.infinity,
+        color: Colors.transparent,
+        child: OutlinedButton(
+          style: buttonStyle,
+          onPressed: enabled == false ? null : onPress,
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            // softWrap: true,
+          ),
         ),
       ),
     );

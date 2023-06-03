@@ -74,26 +74,25 @@ class _HomePageState extends State<HomePage> {
     return Consumer<ThemeModel>(
       builder: (context, ThemeModel theme, child) {
         return Scaffold(
-          body: currentTab == 0
-              ? Center(
-                  child: Container(
-                    margin: const EdgeInsets.all(24),
-                    constraints:
-                        const BoxConstraints(minWidth: 300, maxWidth: 700),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        const Padding(
-                          padding: EdgeInsets.only(bottom: 8 * 2),
-                          child: Text(
-                            'Painel Data7',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Column(
+          body: Center(
+            child: Container(
+                constraints:
+                    const BoxConstraints(minWidth: 300, maxWidth: 1000),
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: currentTab == 0
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
+                            const Padding(
+                              padding: EdgeInsets.only(bottom: 8 * 2),
+                              child: Text(
+                                'Painel Data7',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                             TextField(
                               textInputAction: TextInputAction.next,
                               controller: textController,
@@ -104,20 +103,14 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                           ],
-                        ),
-                      ],
-                    ),
-                  ),
-                )
-              : Center(
-                  child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 1000),
-                      child: currentTab == 1
+                        )
+                      : currentTab == 1
                           ? const Configurations()
                           : currentTab == 2
-                              ? ServicePanel()
-                              : null),
-                ),
+                              ? const ServicePanel()
+                              : null,
+                )),
+          ),
           floatingActionButton: currentTab == 0
               ? FloatingActionButton(
                   tooltip: "Abrir Painel",

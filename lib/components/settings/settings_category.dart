@@ -46,7 +46,7 @@ class _SettingsCategoryState extends State<SettingsCategory> {
                 }
               },
               title: Padding(
-                padding: EdgeInsets.only(left: widget.icon != null ? 2 : 8),
+                padding: EdgeInsets.only(left: widget.icon != null ? 0 : 8),
                 child: Text(
                   widget.title!,
                   style: const TextStyle(
@@ -56,28 +56,30 @@ class _SettingsCategoryState extends State<SettingsCategory> {
                 ),
               ),
               leading: widget.icon != null
-                  ? (widget.iconStyle != null &&
-                          widget.iconStyle!.withBackground!)
-                      ? Container(
-                          decoration: BoxDecoration(
-                            color: widget.iconStyle!.backgroundColor,
-                            borderRadius: BorderRadius.circular(
-                                widget.iconStyle!.borderRadius!),
-                          ),
-                          padding: const EdgeInsets.all(4),
-                          child: Icon(
-                            widget.icon,
-                            // size: widget.iconStyle.size,
-                            color: widget.iconStyle!.iconsColor,
-                          ),
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.all(5),
-                          child: Icon(
-                            widget.icon,
-                            // size: SettingsScreenUtils.settingsGroupIconSize,
-                          ),
-                        )
+                  ? Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: (widget.iconStyle != null &&
+                              widget.iconStyle!.withBackground!)
+                          ? Container(
+                              decoration: BoxDecoration(
+                                color: widget.iconStyle!.backgroundColor,
+                                borderRadius: BorderRadius.circular(
+                                    widget.iconStyle!.borderRadius!),
+                              ),
+                              padding: const EdgeInsets.all(4),
+                              child: Icon(
+                                widget.icon,
+                                // size: widget.iconStyle.size,
+                                color: widget.iconStyle!.iconsColor,
+                              ),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.all(5),
+                              child: Icon(
+                                widget.icon,
+                                // size: SettingsScreenUtils.settingsGroupIconSize,
+                              ),
+                            ))
                   : null,
               subtitle: widget.subtitle != null ? Text(widget.subtitle!) : null,
               trailing: widget.expansible != null && widget.expansible!

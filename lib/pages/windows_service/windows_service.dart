@@ -8,9 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class WindowsServiceManagerUI extends StatefulWidget {
-  WindowsServiceManagerUI({
-    super.key,
-  });
+  const WindowsServiceManagerUI({super.key});
   @override
   State<WindowsServiceManagerUI> createState() =>
       _WindowsServiceManagerUIState();
@@ -115,17 +113,13 @@ class _WindowsServiceManagerUIState extends State<WindowsServiceManagerUI> {
 
   @override
   Widget build(BuildContext context) {
-    // initializeValues();
-
-    return Consumer<WinServiceSettings>(
-      builder: (context, settings, c) {
-        initializeValues(settings);
-        return SizedBox(
-          width: 500,
-          height: 500,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-            child: ListView(
+    return ListView(
+      children: [
+        Consumer<WinServiceSettings>(
+          builder: (context, settings, c) {
+            initializeValues(settings);
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SettingsGroup(
                   title: "Serviço Windows",
@@ -219,10 +213,10 @@ class _WindowsServiceManagerUIState extends State<WindowsServiceManagerUI> {
                   ],
                 )
               ],
-            ),
-          ),
-        );
-      },
+            );
+          },
+        ),
+      ],
     );
   }
 }

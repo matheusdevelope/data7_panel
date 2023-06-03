@@ -17,20 +17,16 @@ class _ServicePanelConfigsState extends State<ServicePanelConfigs> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<WinServiceSettings>(
-      builder: (context, settings, c) {
-        bool allowEdit = settings.status == StatusService.stopped ||
-            settings.status == StatusService.unistalled;
-
-        return SizedBox(
-          width: 500,
-          height: 500,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-            child: ListView(
+    return ListView(
+      children: [
+        Consumer<WinServiceSettings>(
+          builder: (context, settings, c) {
+            bool allowEdit = settings.status == StatusService.stopped ||
+                settings.status == StatusService.unistalled;
+            return Column(
               children: [
                 SettingsGroup(
-                  title: 'Configurações Painel - ${settings.status}',
+                  title: 'Configurações Painel',
                   children: [
                     SettingsCategory(
                       title: 'Dados de Conexão',
@@ -155,10 +151,12 @@ class _ServicePanelConfigsState extends State<ServicePanelConfigs> {
                   ],
                 ),
               ],
-            ),
-          ),
-        );
-      },
+            );
+            //   ),
+            // );
+          },
+        ),
+      ],
     );
   }
 }
