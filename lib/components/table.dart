@@ -39,7 +39,7 @@ class TableComponent extends StatelessWidget {
 
     List<CustomDataRow> rows = List.generate(data.rows.length, (index) {
       final dataRow = data.rows[index];
-      RegExp hexColor = RegExp(r'^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$');
+      RegExp hexColor = RegExp(r'^#?([0-9a-fA-F]{6})$');
 
       return CustomDataRow(
           cells: List.generate(

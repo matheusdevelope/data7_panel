@@ -1,4 +1,6 @@
+import 'package:data7_panel/components/settings/settings.dart';
 import 'package:flutter/material.dart';
+import 'options_from_url.dart';
 import 'tableComponentData.dart';
 
 class Table {
@@ -27,8 +29,15 @@ class TransformData {
   List<List<TableComponentData>> carousels = [];
   late List<CarouselData> carouselsData = [];
 
-  List<CarouselData> parseData(List<Map<String, dynamic>> data) {
-    data.sort((a, b) => a["Config_Carrossel"].compareTo(b["Config_Carrossel"]));
+  List<CarouselData> parseData(List<Map<String, dynamic>> pdata) {
+    List<Map<String, dynamic>> data =
+        Settings.panel.colsOptions.filters.isNotEmpty
+            ? filterList(list: pdata, colOptions: Settings.panel.colsOptions)
+            : pdata;
+    String keyToSort = "Config_Carrossel";
+    data.sort((a, b) => a.containsKey(keyToSort) && b.containsKey(keyToSort)
+        ? a[keyToSort].compareTo(b[keyToSort])
+        : 0);
     _separatePanelsCarousel(data).forEach(
       (key, data) {
         List<List<Map<String, dynamic>>> separatedData = [];
@@ -74,13 +83,25 @@ class TransformData {
         carouselsData.add(
           CarouselData(
               id: key,
-              duration: separatedData?[0]?[0]?['Config_DuracaoCarrossel'] ?? 0,
+              duration: separatedData[0][0]['Config_DuracaoCarrossel'] ?? 0,
               panels: tables),
         );
         tables = [];
       },
     );
     return carouselsData;
+  }
+
+  List<Map<String, dynamic>> filterList(
+      {required List<Map<String, dynamic>> list,
+      required ColumnsOptions colOptions}) {
+    return list.where((objeto) {
+      bool filterPass = true;
+      for (var filter in colOptions.filters) {
+        filterPass = filter.filter?.test(objeto) ?? true;
+      }
+      return filterPass;
+    }).toList();
   }
 
   Map<int, List<Map<String, dynamic>>> _separatePanelsCarousel(
