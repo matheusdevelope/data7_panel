@@ -1,11 +1,10 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:data7_panel/components/carousel.dart';
 import 'package:data7_panel/models/tableComponentData.dart';
 import 'package:data7_panel/models/transform_data.dart';
 import 'package:data7_panel/providers/caroussel_model.dart';
 import 'package:data7_panel/providers/settings_model.dart';
-import 'package:data7_panel/services/NotificationHelper.dart';
+import 'package:data7_panel/services/audio.dart';
 import 'package:data7_panel/services/socket.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -47,7 +46,7 @@ class _PanelPageState extends State<PanelPage> {
 
   late CustomDialogAlert Alert;
 
-  final AudioPlayer audioPlayer = AudioPlayer();
+  final AudioHelper audioPlayer = AudioHelper();
 
   final CarouselController _controller = CarouselController();
 
@@ -174,11 +173,11 @@ class _PanelPageState extends State<PanelPage> {
       if ((await Settings.notifications.initialize()).enabled) {
         await audioPlayer.stop();
         if (currentAudioPath.isNotEmpty) {
-          await audioPlayer.play(DeviceFileSource(currentAudioPath),
+          await audioPlayer.play(currentAudioPath,
               volume: (await Settings.notifications.initialize()).volume);
         } else {
-          await audioPlayer.play(DeviceFileSource(
-              (await Settings.notifications.initialize()).file));
+          await audioPlayer
+              .play((await Settings.notifications.initialize()).file);
         }
       }
     } catch (e) {}
@@ -203,7 +202,6 @@ class _PanelPageState extends State<PanelPage> {
   @override
   void dispose() {
     newSocket.disconnect();
-    audioPlayer.dispose();
     super.dispose();
   }
 
