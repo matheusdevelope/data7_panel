@@ -61,6 +61,7 @@ class _ServicePanelConfigsState extends State<ServicePanelConfigs> {
                             enabled: allowEdit,
                             initialValue: Settings.db.pass,
                             isPassword: true,
+                            required: true,
                             onChange: (value) {
                               Settings.db.pass = value;
                             },
@@ -70,6 +71,7 @@ class _ServicePanelConfigsState extends State<ServicePanelConfigs> {
                           child: SettingRowTextField(
                             title: "Servidor",
                             enabled: allowEdit,
+                            required: true,
                             initialValue: Settings.db.server,
                             onChange: (value) {
                               Settings.db.server = value;
@@ -80,6 +82,7 @@ class _ServicePanelConfigsState extends State<ServicePanelConfigs> {
                           child: SettingRowTextField(
                             title: "Porta",
                             enabled: allowEdit,
+                            required: true,
                             initialValue: Settings.db.port,
                             inputType: TextInputType.number,
                             onChange: (value) {
@@ -91,6 +94,7 @@ class _ServicePanelConfigsState extends State<ServicePanelConfigs> {
                           child: SettingRowTextField(
                             title: "Base de Dados",
                             enabled: allowEdit,
+                            required: true,
                             initialValue: Settings.db.databaseName,
                             onChange: (value) {
                               Settings.db.databaseName = value;
@@ -112,6 +116,12 @@ class _ServicePanelConfigsState extends State<ServicePanelConfigs> {
                                 'Lebre-se de otimizar sua consulta.\nNão é necessário declarar as colunas, apenas o (SELECT * FROM) já é suficiente.',
                             placeholder: 'Query SQL',
                             enabled: allowEdit,
+                            required: true,
+                            validations: [
+                              (value) => value.trim().length > 5
+                                  ? null
+                                  : "A query precisa ter pelo menos 5 caracteres.",
+                            ],
                             initialValue: Settings.panel.query,
                             maxLines: 5,
                             onChange: (value) {
@@ -126,6 +136,7 @@ class _ServicePanelConfigsState extends State<ServicePanelConfigs> {
                                 "Tenha em mente que dependendo da query, o intervalo pode não ser suficiente.",
 
                             enabled: allowEdit,
+
                             initialValue: Settings.panel.interval,
                             minValue: 1,
                             maxValue: 60,

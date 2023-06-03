@@ -15,7 +15,7 @@ class SettingRowTextField extends StatefulWidget {
   final int? maxLines;
   final bool? enabled;
   final bool? required;
-  final List<String? Function(String)>? validations;
+  final List<String? Function(String value)>? validations;
 
   SettingRowTextField(
       {required this.title,
@@ -60,7 +60,7 @@ class _SettingRowTextFieldState extends State<SettingRowTextField> {
     if (widget.validations != null) {
       for (var i = 0; i < widget.validations!.length; i++) {
         String? ret = widget.validations![i](text.trim());
-        if (ret != null) return ret;
+        if (ret != null && ret.isNotEmpty) return ret;
       }
     }
 
