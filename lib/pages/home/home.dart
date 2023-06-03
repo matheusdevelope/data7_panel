@@ -2,11 +2,10 @@ import 'dart:io';
 
 import 'package:data7_panel/components/dialog_alert.dart';
 import 'package:data7_panel/pages/panel/panel.dart';
-import 'package:data7_panel/pages/windows_service/windows_service.dart';
+import 'package:data7_panel/pages/windows_service/index.dart';
 import 'package:data7_panel/providers/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../providers/theme_model.dart';
 import '../configuration/configuration.dart';
 
@@ -19,7 +18,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late SharedPreferences prefs;
   TextEditingController textController =
       TextEditingController(text: 'http://192.168.0.1:3546');
   CustomDialogAlert alert = CustomDialogAlert();
@@ -27,7 +25,7 @@ class _HomePageState extends State<HomePage> {
 
   void _saveAndOpenPanel() {
     if (textController.text.isNotEmpty && textController.text.length > 10) {
-      prefs.setString('local_url', textController.text);
+      Settings.panel.url = textController.text;
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -49,24 +47,23 @@ class _HomePageState extends State<HomePage> {
   }
 
   getData() async {
-    prefs = await SharedPreferences.getInstance();
     await Settings.panel.initialize();
     setState(
       () {
-        String? value = prefs.getString('local_url');
-        if (value != null) {
+        String value = Settings.panel.url;
+        if (value.isNotEmpty) {
           textController.text = value;
+        }
 
-          if (Settings.panel.openAutomatic) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) {
-                  return PanelPage(url: value);
-                },
-              ),
-            );
-          }
+        if (Settings.panel.openAutomatic) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return PanelPage(url: value);
+              },
+            ),
+          );
         }
       },
     );
@@ -102,7 +99,7 @@ class _HomePageState extends State<HomePage> {
                               controller: textController,
                               decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
-                                labelText: 'Endereço do Servidor',
+                                labelText: 'URL Servidor',
                                 contentPadding: EdgeInsets.all(8),
                               ),
                             ),
@@ -112,11 +109,15 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 )
-              : currentTab == 1
-                  ? const Configurations()
-                  : currentTab == 2
-                      ? const WindowsService()
-                      : null,
+              : Center(
+                  child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 1000),
+                      child: currentTab == 1
+                          ? const Configurations()
+                          : currentTab == 2
+                              ? ServicePanel()
+                              : null),
+                ),
           floatingActionButton: currentTab == 0
               ? FloatingActionButton(
                   tooltip: "Abrir Painel",

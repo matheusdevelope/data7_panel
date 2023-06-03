@@ -132,6 +132,16 @@ class DatabaseConnectionSettingsKeys {
 }
 
 class PanelPreferences {
+  setUrl(String value) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString(PanelSettingsKeys.url, value);
+  }
+
+  getUrl() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString(PanelSettingsKeys.url) ?? "";
+  }
+
   setQuery(String value) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setString(PanelSettingsKeys.query, value);
@@ -139,8 +149,7 @@ class PanelPreferences {
 
   getQuery() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    return sharedPreferences.getString(PanelSettingsKeys.query) ??
-        'SELECT * FROM view_QueRetornaOsDadosDoPainel';
+    return sharedPreferences.getString(PanelSettingsKeys.query);
   }
 
   setInterval(int value) async {
@@ -176,6 +185,7 @@ class PanelPreferences {
 
 class PanelSettingsKeys {
   static const pre = "@PanelSettingsPreferences";
+  static String url = '$pre.url';
   static String query = '$pre.query';
   static String interval = '$pre.interval';
   static String typeInteval = '$pre.typeInteval';

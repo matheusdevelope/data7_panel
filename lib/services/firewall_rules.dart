@@ -37,21 +37,14 @@ class FirewallRule {
 
   add({FirewallDirection? pDirection}) async {
     FirewallDirection? _direction = pDirection ?? direction;
-    String command = '""New-NetFirewallRule '
-        ' -DisplayName '
-        "'"
-        '$displayName'
-        "'"
-        ' '
-        '-Program '
-        "'"
-        '$program'
-        "'"
-        ' -RemoteAddress LocalSubnet '
+    String command =
+        'New-NetFirewallRule -DisplayName ${shellArgument(displayName, quote: "'")} -Program ${shellArgument(program, quote: "'")} '
+        // '-RemoteAddress LocalSubnet '
         '${action != null ? '-Action ${shellArgument(action!.name)}' : ''} '
         '${_direction != null ? '-Direction ${shellArgument(_direction.name)}' : ''} '
         '${protocol != null ? '-Protocol ${shellArgument(protocol!.name)}' : ''} '
-        '${localPort != null ? '-LocalPort $localPort' : ''} ""';
+        // '${localPort != null ? '-LocalPort $localPort' : ''} '
+        ;
     try {
       await PowerShell.runAs(command);
       return true;
@@ -62,8 +55,7 @@ class FirewallRule {
 
   remove() async {
     String command =
-        '""Remove-NetFirewallRule -DisplayName ' "'" '$displayName' "'" '""';
-
+        'Remove-NetFirewallRule -DisplayName ${shellArgument(displayName, quote: "'")}';
     try {
       await PowerShell.runAs(command);
       return true;
@@ -88,7 +80,7 @@ class FirewallRule {
 
   static removeRule(String displayName) async {
     String command =
-        '""Remove-NetFirewallRule -DisplayName ' "'" '$displayName' "'" '""';
+        'Remove-NetFirewallRule -DisplayName ${shellArgument(displayName, quote: "'")}';
     try {
       await PowerShell.runAs(command);
       return true;
@@ -98,11 +90,8 @@ class FirewallRule {
   }
 
   static Future<FirewallRule?> getRule(String displayName) async {
-    String command = '""Get-NetFirewallRule -DisplayName '
-        "'"
-        '$displayName'
-        "'"
-        ' | ConvertTo-Json""';
+    String command =
+        'Get-NetFirewallRule -DisplayName ${shellArgument(displayName, quote: "'")} | ConvertTo-Json';
     String output = await PowerShell.runAs(command);
     if (output.isNotEmpty) {
       try {

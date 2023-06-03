@@ -1,16 +1,25 @@
+import 'package:data7_panel/models/options_from_url.dart';
 import 'package:data7_panel/providers/caroussel_model.dart';
 import 'package:data7_panel/providers/settings_preferences.dart';
 import 'package:data7_panel/providers/theme_model.dart';
 import 'package:data7_panel/services/NotificationHelper.dart';
+import 'package:data7_panel/services/windows_service.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 
-class Settings {
+class Settings extends ChangeNotifier {
   static ThemeModel theme = ThemeModel();
   static PanelSettings panel = PanelSettings();
   static CarousselModel carrossel = CarousselModel();
   static NotificationsSettings notifications = NotificationsSettings();
   static DatabaseConnectionSettings db = DatabaseConnectionSettings();
   static WinServiceSettings winService = WinServiceSettings();
+
+  late WinServiceSettings _winService;
+  WinServiceSettings get pWinService => _winService;
+  Settings() {
+    _winService = WinServiceSettings();
+  }
 }
 
 class NotificationsSettings {
@@ -183,6 +192,8 @@ class DatabaseConnectionSettings {
 }
 
 class PanelSettings {
+  late String _url;
+  late ColumnsOptions _colsOptions;
   late String _query;
   late int _interval;
   late String _typeInterval;
@@ -193,19 +204,27 @@ class PanelSettings {
     "hour": "Hora(s)"
   };
   late PanelPreferences _pref;
-
+  String get url => _url;
+  ColumnsOptions get colsOptions => _colsOptions;
   String get query => _query;
   int get interval => _interval;
   String get typeInterval => _typeInterval;
   bool get openAutomatic => _openAutomatic;
   Map<String, String> get availableTypes => _availableTypes;
   PanelSettings() {
+    _url = '';
+    _colsOptions = ColumnsOptions(url: '');
     _query = '';
     _interval = 5;
     _typeInterval = '';
     _openAutomatic = true;
     _pref = SettingsPreferences.panel;
     _getPreferences();
+  }
+  set url(String value) {
+    _url = value;
+    _colsOptions = ColumnsOptions(url: value);
+    _pref.setUrl(value);
   }
 
   set query(String value) {
@@ -229,7 +248,10 @@ class PanelSettings {
   }
 
   _getPreferences() async {
-    _query = await _pref.getQuery();
+    _url = await _pref.getUrl();
+    _colsOptions = ColumnsOptions(url: _url);
+    _query = await _pref.getQuery() ??
+        "SELECT * FROM view_QueRetornaOsDadosDoPainel";
     _interval = await _pref.getInterval();
     _typeInterval = await _pref.getTypeInteval();
     _openAutomatic = await _pref.getOpenAutomatic();
@@ -241,20 +263,23 @@ class PanelSettings {
   }
 }
 
-class WinServiceSettings {
+class WinServiceSettings extends ChangeNotifier {
   late String _name;
-  late String _status;
+  late StatusService _status;
   late int _port;
+  late String _executable;
 
   late ServiceWindowsPreferences _pref;
 
   String get name => _name;
-  String get status => _status;
+  StatusService get status => _status;
   int get port => _port;
+  String get executable => _executable;
   WinServiceSettings() {
     _name = '';
-    _status = '';
+    _status = StatusService.pending;
     _port = 3546;
+    _executable = '';
     _pref = SettingsPreferences.winService;
     _getPreferences();
   }
@@ -262,22 +287,33 @@ class WinServiceSettings {
   set name(String value) {
     _name = value;
     _pref.setName(value);
+    notifyListeners();
   }
 
-  set status(String value) {
+  set status(StatusService value) {
     _status = value;
-    _pref.setStatus(value);
+    _pref.setStatus(value.name);
+    notifyListeners();
   }
 
   set port(int value) {
     _port = value;
     _pref.setPort(value);
+    notifyListeners();
   }
 
   _getPreferences() async {
     _name = await _pref.getName();
-    _status = await _pref.getStatus();
+    String tempStatus = await _pref.getStatus();
+    for (var element in StatusService.values) {
+      if (element.name == tempStatus) {
+        _status = element;
+      }
+    }
     _port = await _pref.getPort();
+    _executable = await FileWindowService.getServiceExecutable();
+
+    notifyListeners();
   }
 
   Future<WinServiceSettings> initialize() async {

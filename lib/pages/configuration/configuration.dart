@@ -74,7 +74,7 @@ class _ConfigurationsState extends State<Configurations> {
                                 title:
                                     'Duração Padrão dos Carrosseis (Segundos)',
                                 subtitle:
-                                    'Esse valor será ignorado caso na fonte de dados do esteja informada a duração manualmente.',
+                                    'Esse valor será ignorado caso na fonte de dados do painel esteja informada a duração manualmente.',
                                 useCarousel: false,
                                 minValue: 1,
                                 maxValue: 60 * 60,

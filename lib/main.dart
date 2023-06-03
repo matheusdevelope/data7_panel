@@ -1,4 +1,5 @@
 import 'package:data7_panel/pages/home/home.dart';
+import 'package:data7_panel/providers/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -23,23 +24,26 @@ class MyApp extends StatelessWidget {
         LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
       },
       child: ChangeNotifierProvider(
-        create: (_) => ThemeModel(),
-        child: Consumer<ThemeModel>(
-          builder: (context, them, c) {
-            return LayoutBuilder(
-              builder: (_, c) {
-                return MaterialApp(
-                  debugShowCheckedModeBanner: false,
-                  title: 'Painel Data7',
-                  theme: them.useAdaptiveTheme
-                      ? CustomTheme.getTheme(context, c.maxWidth)
-                      : ThemeData.light().copyWith(
-                          iconTheme: const IconThemeData(color: Colors.blue)),
-                  home: const HomePage(title: 'Painel Data7'),
-                );
-              },
-            );
-          },
+        create: (_) => WinServiceSettings(),
+        child: ChangeNotifierProvider(
+          create: (_) => ThemeModel(),
+          child: Consumer<ThemeModel>(
+            builder: (context, them, c) {
+              return LayoutBuilder(
+                builder: (_, c) {
+                  return MaterialApp(
+                    debugShowCheckedModeBanner: false,
+                    title: 'Painel Data7',
+                    theme: them.useAdaptiveTheme
+                        ? CustomTheme.getTheme(context, c.maxWidth)
+                        : ThemeData.light().copyWith(
+                            iconTheme: const IconThemeData(color: Colors.blue)),
+                    home: const HomePage(title: 'Painel Data7'),
+                  );
+                },
+              );
+            },
+          ),
         ),
       ),
     );
