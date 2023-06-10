@@ -13,8 +13,6 @@ class ServicePanelConfigs extends StatefulWidget {
 }
 
 class _ServicePanelConfigsState extends State<ServicePanelConfigs> {
-  late StatusService serviceStatus = StatusService.startPending;
-
   @override
   Widget build(BuildContext context) {
     return ListView(

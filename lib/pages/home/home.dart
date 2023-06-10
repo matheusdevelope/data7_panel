@@ -55,6 +55,7 @@ class _HomePageState extends State<HomePage> {
           textController.text = value;
         }
 
+        ///This block crashes on windows server 2012
         if (Settings.panel.openAutomatic) {
           Navigator.push(
             context,

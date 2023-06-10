@@ -17,16 +17,11 @@ class WindowsServiceManagerUI extends StatefulWidget {
 class _WindowsServiceManagerUIState extends State<WindowsServiceManagerUI> {
   bool loading = true;
   bool executableSync = false;
-  StatusService serviceStatus = StatusService.startPending;
   bool initialized = false;
 
   Future<void> initializeValues(WinServiceSettings settings) async {
     if (!initialized) {
-      serviceStatus = (await WindowsServicePs(settings.name).status());
-      setState(() {
-        initialized = true;
-        loading = false;
-      });
+      _getStatus(settings);
     }
   }
 
@@ -97,15 +92,15 @@ class _WindowsServiceManagerUIState extends State<WindowsServiceManagerUI> {
   }
 
   _getStatus(WinServiceSettings settings) async {
-    setState(() {
-      loading = true;
-    });
     StatusLoop().startLoop(
       settings.name,
       (status) {
         settings.status = status;
         setState(() {
           loading = false;
+          if (!initialized) {
+            initialized = true;
+          }
         });
       },
     );
@@ -156,6 +151,21 @@ class _WindowsServiceManagerUIState extends State<WindowsServiceManagerUI> {
                             ],
                             onChange: (value) {
                               settings.name = value;
+                            },
+                          ),
+                        ),
+                        SettingsItem(
+                          child: SettingRowTextField(
+                            title: 'Porta HTTP',
+                            subtitle: "Porta exposta pelo serviço windows.",
+                            enabled:
+                                settings.status == StatusService.unistalled ||
+                                    settings.status == StatusService.stopped,
+                            initialValue: settings.port.toString(),
+                            required: true,
+                            inputType: TextInputType.number,
+                            onChange: (value) {
+                              settings.port = int.parse(value);
                             },
                           ),
                         ),

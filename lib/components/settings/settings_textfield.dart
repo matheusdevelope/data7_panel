@@ -37,13 +37,14 @@ class SettingRowTextField extends StatefulWidget {
 }
 
 class _SettingRowTextFieldState extends State<SettingRowTextField> {
-  late TextEditingController textController;
+  late TextEditingController textController = TextEditingController();
   bool inicialized = false;
   String? errorText;
   void _setInitialValue() {
     if (!inicialized) {
+      // print(widget.initialValue);
+      textController.text = widget.initialValue;
       setState(() {
-        textController = TextEditingController(text: widget.initialValue);
         errorText = _errorText;
         if (widget.initialValue.isNotEmpty) {
           inicialized = true;
@@ -87,86 +88,73 @@ class _SettingRowTextFieldState extends State<SettingRowTextField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ListTile(
-            contentPadding: const EdgeInsets.all(4),
-            title: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.title,
-                  textAlign: TextAlign.start,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+          contentPadding: const EdgeInsets.all(4),
+          title: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.title,
+                textAlign: TextAlign.start,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
                 ),
-                if (widget.subtitle != null)
-                  Text(
-                    widget.subtitle!,
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                        // overflow: TextOverflow.ellipsis,
-                        color: Colors.grey,
-                        fontSize:
-                            Theme.of(context).textTheme.bodyMedium?.fontSize),
-                  ),
-              ],
-            ),
-            leading: widget.icon != null
-                ? (widget.iconStyle != null &&
-                        widget.iconStyle!.withBackground!)
-                    ? Container(
-                        decoration: BoxDecoration(
-                          color: widget.iconStyle!.backgroundColor,
-                          borderRadius: BorderRadius.circular(
-                            widget.iconStyle!.borderRadius!,
-                          ),
-                        ),
-                        padding: const EdgeInsets.all(5),
-                        child: Icon(
-                          widget.icon,
-                          color: widget.iconStyle!.iconsColor,
-                        ),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.all(5),
-                        child: Icon(
-                          widget.icon,
-                        ),
-                      )
-                : null,
-            subtitle:
-
-                // ValueListenableBuilder(
-                //   valueListenable: textController,
-                //   builder: (context, TextEditingValue value, __) {
-                //     if (value.text != widget.initialValue && value.text.isNotEmpty) {
-                //       widget.onChange(value.text);
-                //     }
-                //     return
-
-                TextField(
-              controller: textController,
-              onChanged: _onChange,
-              enabled: widget.enabled,
-              textInputAction: TextInputAction.next,
-              obscureText: widget.isPassword,
-              keyboardType: widget.inputType,
-              maxLines: widget.isPassword ? 1 : widget.maxLines,
-              inputFormatters: [
-                if (widget.inputType == TextInputType.number)
-                  FilteringTextInputFormatter.digitsOnly
-              ],
-              style: TextStyle(
-                  color: widget.enabled == false ? Colors.grey : null),
-              decoration: InputDecoration(
-                labelText: widget.placeholder,
-                errorText: errorText,
-                enabled: widget.enabled ?? true,
               ),
-            ) //;
-            //   },
-            // ),
+              if (widget.subtitle != null)
+                Text(
+                  widget.subtitle!,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                      // overflow: TextOverflow.ellipsis,
+                      color: Colors.grey,
+                      fontSize:
+                          Theme.of(context).textTheme.bodyMedium?.fontSize),
+                ),
+            ],
+          ),
+          leading: widget.icon != null
+              ? (widget.iconStyle != null && widget.iconStyle!.withBackground!)
+                  ? Container(
+                      decoration: BoxDecoration(
+                        color: widget.iconStyle!.backgroundColor,
+                        borderRadius: BorderRadius.circular(
+                          widget.iconStyle!.borderRadius!,
+                        ),
+                      ),
+                      padding: const EdgeInsets.all(5),
+                      child: Icon(
+                        widget.icon,
+                        color: widget.iconStyle!.iconsColor,
+                      ),
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: Icon(
+                        widget.icon,
+                      ),
+                    )
+              : null,
+          subtitle: TextField(
+            controller: textController,
+            onChanged: _onChange,
+            enabled: widget.enabled,
+            textInputAction: TextInputAction.next,
+            obscureText: widget.isPassword,
+            keyboardType: widget.inputType,
+            maxLines: widget.isPassword ? 1 : widget.maxLines,
+            inputFormatters: [
+              if (widget.inputType == TextInputType.number)
+                FilteringTextInputFormatter.digitsOnly
+            ],
+            style:
+                TextStyle(color: widget.enabled == false ? Colors.grey : null),
+            decoration: InputDecoration(
+              labelText: widget.placeholder,
+              errorText: errorText,
+              enabled: widget.enabled ?? true,
             ),
+          ),
+        ),
       ],
     );
   }
