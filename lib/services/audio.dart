@@ -1,6 +1,4 @@
-import 'package:audioplayers/audioplayers.dart';
-
-//import 'package:data7_panel/services/audio_teste.dart';
+import 'package:media_kit/media_kit.dart';
 
 class AudioHelper {
   static final AudioHelper _instance = AudioHelper._internal();
@@ -14,25 +12,11 @@ class AudioHelper {
   bool isPaused = false;
   String currentFile = '';
 
-  late AudioPlayer audioPlayer;
-  initialize() {
+  late Player audioPlayer;
+  initialize() async {
     if (!initializeded) {
       initializeded = true;
-      audioPlayer = AudioPlayer();
-      audioPlayer.onPlayerStateChanged.listen((PlayerState state) {
-        if (state == PlayerState.stopped) {
-          isPlaying = false;
-          isPaused = false;
-        }
-        if (state == PlayerState.paused) {
-          isPaused = true;
-          isPlaying = false;
-        }
-        if (state == PlayerState.playing) {
-          isPlaying = true;
-          isPaused = false;
-        }
-      });
+      audioPlayer = Player();
     }
     return this;
   }
@@ -42,26 +26,34 @@ class AudioHelper {
     return play(path, volume: volume, stopAll: stopAll);
   }
 
-  play(String path, {bool stopAll = true, double volume = 1}) {
+  play(String path, {bool stopAll = true, double volume = 1}) async {
     initialize();
-    if (stopAll && isPlaying) audioPlayer.stop();
+    if (stopAll && isPlaying) await audioPlayer.stop();
     currentFile = path;
+    await audioPlayer.open(Media(path));
+    await audioPlayer.play();
     isPlaying = true;
-    audioPlayer.play(DeviceFileSource(path), volume: volume);
+    isPaused = false;
   }
 
-  resume() {
-    initialize();
-    if (isPaused) audioPlayer.resume();
+  resume() async {
+    await initialize();
+    if (isPaused) await audioPlayer.play();
+    isPlaying = true;
+    isPaused = false;
   }
 
-  pause() {
-    initialize();
-    audioPlayer.pause();
+  pause() async {
+    await initialize();
+    await audioPlayer.pause();
+    isPaused = true;
+    isPlaying = false;
   }
 
-  stop() {
-    initialize();
-    audioPlayer.stop();
+  stop() async {
+    await initialize();
+    await audioPlayer.stop();
+    isPlaying = false;
+    isPaused = false;
   }
 }

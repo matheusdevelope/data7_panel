@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
 
 class GitHubReleaseChecker {
   final String repoUrl;
@@ -37,7 +38,9 @@ class GitHubReleaseChecker {
         final fileName = asset['name'];
         Dio dio = Dio();
         Directory dir = await getApplicationSupportDirectory();
+        dir.createSync(recursive: true);
         String path = '${dir.path}/service_runner/service/$fileName';
+        Directory(p.dirname(path)).createSync(recursive: true);
         if (!File(path).existsSync()) {
           dio.download(
             downloadUrl,

@@ -42,13 +42,10 @@ class _SettingRowTextFieldState extends State<SettingRowTextField> {
   String? errorText;
   void _setInitialValue() {
     if (!inicialized) {
-      // print(widget.initialValue);
       textController.text = widget.initialValue;
       setState(() {
         errorText = _errorText;
-        if (widget.initialValue.isNotEmpty) {
-          inicialized = true;
-        }
+        inicialized = true;
       });
     }
   }

@@ -19,9 +19,10 @@ class _WindowsServiceManagerUIState extends State<WindowsServiceManagerUI> {
   bool executableSync = false;
   bool initialized = false;
 
-  Future<void> initializeValues(WinServiceSettings settings) async {
+  Future<void> initializeValues() async {
     if (!initialized) {
-      _getStatus(settings);
+      await Settings.winService.initialize();
+      _getStatus(Settings.winService);
     }
   }
 
@@ -107,12 +108,20 @@ class _WindowsServiceManagerUIState extends State<WindowsServiceManagerUI> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      initializeValues();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListView(
       children: [
         Consumer<WinServiceSettings>(
           builder: (context, settings, c) {
-            initializeValues(settings);
+            // initializeValues(settings);
             return Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -133,42 +142,47 @@ class _WindowsServiceManagerUIState extends State<WindowsServiceManagerUI> {
                             }
                           },
                         ),
-                        SettingsItem(
-                          child: SettingRowTextField(
-                            title: 'Nome do Serviço',
-                            subtitle:
-                                "Para a alterar o serviço deve ser reinstalado.",
-                            enabled:
-                                settings.status == StatusService.unistalled,
-                            initialValue: settings.name,
-                            required: true,
-                            validations: [
-                              (value) {
-                                if (value.contains(' ')) {
-                                  return "O nome do serviço não pode conter espaços.";
-                                }
-                              }
-                            ],
-                            onChange: (value) {
-                              settings.name = value;
-                            },
-                          ),
-                        ),
-                        SettingsItem(
-                          child: SettingRowTextField(
-                            title: 'Porta HTTP',
-                            subtitle: "Porta exposta pelo serviço windows.",
-                            enabled:
-                                settings.status == StatusService.unistalled ||
-                                    settings.status == StatusService.stopped,
-                            initialValue: settings.port.toString(),
-                            required: true,
-                            inputType: TextInputType.number,
-                            onChange: (value) {
-                              settings.port = int.parse(value);
-                            },
-                          ),
-                        ),
+                        settings.name.isEmpty
+                            ? const Text("Loading...")
+                            : SettingsItem(
+                                child: SettingRowTextField(
+                                  title: 'Nome do Serviço',
+                                  subtitle:
+                                      "Para a alterar o serviço deve ser reinstalado.",
+                                  enabled: settings.status ==
+                                      StatusService.unistalled,
+                                  initialValue: settings.name,
+                                  required: true,
+                                  validations: [
+                                    (value) {
+                                      if (value.contains(' ')) {
+                                        return "O nome do serviço não pode conter espaços.";
+                                      }
+                                    }
+                                  ],
+                                  onChange: (value) {
+                                    settings.name = value;
+                                  },
+                                ),
+                              ),
+                        settings.port.toString().isEmpty
+                            ? const Text("Loading...")
+                            : SettingsItem(
+                                child: SettingRowTextField(
+                                  title: 'Porta HTTP',
+                                  subtitle:
+                                      "Porta exposta pelo serviço windows.",
+                                  enabled: settings.status ==
+                                          StatusService.unistalled ||
+                                      settings.status == StatusService.stopped,
+                                  initialValue: settings.port.toString(),
+                                  required: true,
+                                  inputType: TextInputType.number,
+                                  onChange: (value) {
+                                    settings.port = int.parse(value);
+                                  },
+                                ),
+                              ),
                         CustomOutilinedButton(
                           label: "Instalar Serviço",
                           enabled: !loading &&

@@ -124,7 +124,10 @@ class FileWindowService {
   static getServiceExecutable() async {
     Directory serviceDir = Directory(
         '${await FileWindowService.getServiceRunnerDir()}\\service\\');
-
+    serviceDir.createSync(recursive: true);
+    if (serviceDir.listSync().isEmpty) {
+      return "";
+    }
     return serviceDir.listSync().first.path;
   }
 
@@ -146,7 +149,11 @@ class FileWindowService {
   }
 
   static Future<String> getServiceRunnerDir() async {
-    return '${(await getApplicationSupportDirectory()).path}\\service_runner\\';
+    final Directory dir = Directory(
+        '${(await getApplicationSupportDirectory()).path}\\service_runner\\');
+    dir.createSync(recursive: true);
+
+    return dir.path;
   }
 
   static Future<String> writeToFile(ByteData data, String path) async {

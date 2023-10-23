@@ -43,8 +43,7 @@ class FirewallRule {
         '${action != null ? '-Action ${shellArgument(action!.name)}' : ''} '
         '${_direction != null ? '-Direction ${shellArgument(_direction.name)}' : ''} '
         '${protocol != null ? '-Protocol ${shellArgument(protocol!.name)}' : ''} '
-        // '${localPort != null ? '-LocalPort $localPort' : ''} '
-        ;
+        '${localPort != null ? '-LocalPort $localPort' : ''} ';
     try {
       await PowerShell.runAs(command);
       return true;

@@ -29,6 +29,7 @@ class _HomePageState extends State<HomePage> {
       Navigator.push(
         context,
         MaterialPageRoute(
+          maintainState: true,
           builder: (context) {
             return PanelPage(url: textController.text);
           },
@@ -40,34 +41,27 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  getData() async {
+    await Settings.panel.initialize();
+    String value = Settings.panel.url;
+    setState(() {
+      if (value.isNotEmpty) {
+        textController.text = value;
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     getData();
-  }
-
-  getData() async {
-    await Settings.panel.initialize();
-    setState(
-      () {
-        String value = Settings.panel.url;
-        if (value.isNotEmpty) {
-          textController.text = value;
-        }
-
-        ///This block crashes on windows server 2012
-        if (Settings.panel.openAutomatic) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                return PanelPage(url: value);
-              },
-            ),
-          );
-        }
-      },
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (Settings.panel.openAutomatic) {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return PanelPage(url: Settings.panel.url);
+        }));
+      }
+    });
   }
 
   @override
