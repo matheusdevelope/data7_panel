@@ -5,6 +5,9 @@
 // import 'package:data7_panel/pages/windows_service/index.dart';
 // import 'package:data7_panel/providers/settings_model.dart';
 // import '../configuration/configuration.dart';
+import 'package:data7_panel/dependecy_injection.dart';
+import 'package:data7_panel/domain/repository/panel_repository.dart';
+import 'package:data7_panel/infra/api/Http/http_client.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/theme_model.dart';
@@ -69,43 +72,71 @@ class _HomePageState extends State<HomePage> {
     return Consumer<ThemeModel>(
       builder: (context, ThemeModel theme, child) {
         return Scaffold(
-          body: Center(child: Text("Hello Word")
-              //   Container(
-              //       constraints:
-              //           const BoxConstraints(minWidth: 300, maxWidth: 1000),
-              //       child: Padding(
-              //         padding: const EdgeInsets.all(8),
-              //         child: currentTab == 0
-              //             ? Column(
-              //                 mainAxisAlignment: MainAxisAlignment.center,
-              //                 children: <Widget>[
-              //                   const Padding(
-              //                     padding: EdgeInsets.only(bottom: 8 * 2),
-              //                     child: Text(
-              //                       'Painel Data7',
-              //                       style: TextStyle(
-              //                         fontWeight: FontWeight.bold,
-              //                       ),
-              //                     ),
-              //                   ),
-              //                   TextField(
-              //                     textInputAction: TextInputAction.next,
-              //                     controller: textController,
-              //                     decoration: const InputDecoration(
-              //                       border: OutlineInputBorder(),
-              //                       labelText: 'URL Servidor',
-              //                       contentPadding: EdgeInsets.all(8),
-              //                     ),
-              //                   ),
-              //                 ],
-              //               )
-              //             : currentTab == 1
-              //                 ? const Configurations()
-              //                 : currentTab == 2
-              //                     ? const ServicePanel()
-              //                     : null,
-              //       )),
+          body: Stack(
+            alignment: Alignment.center,
+            children: [
+              TextButton(
+                  onPressed: () async {
+                    final repo = DI.get<IPanelRepository>(
+                        param1: 'http://localhost:3000');
+                    final ret = await repo.list();
+                    ret.forEach((element) {
+                      print(element.toJson());
+                    });
+                  },
+                  child: const Text("Lista Paineis")),
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  child: Text(
+                    "v0.0.1",
+                    style: TextStyle(
+                      color: Colors.grey.shade400,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
               ),
+            ],
+
+            //   Container(
+            //       constraints:
+            //           const BoxConstraints(minWidth: 300, maxWidth: 1000),
+            //       child: Padding(
+            //         padding: const EdgeInsets.all(8),
+            //         child: currentTab == 0
+            //             ? Column(
+            //                 mainAxisAlignment: MainAxisAlignment.center,
+            //                 children: <Widget>[
+            //                   const Padding(
+            //                     padding: EdgeInsets.only(bottom: 8 * 2),
+            //                     child: Text(
+            //                       'Painel Data7',
+            //                       style: TextStyle(
+            //                         fontWeight: FontWeight.bold,
+            //                       ),
+            //                     ),
+            //                   ),
+            //                   TextField(
+            //                     textInputAction: TextInputAction.next,
+            //                     controller: textController,
+            //                     decoration: const InputDecoration(
+            //                       border: OutlineInputBorder(),
+            //                       labelText: 'URL Servidor',
+            //                       contentPadding: EdgeInsets.all(8),
+            //                     ),
+            //                   ),
+            //                 ],
+            //               )
+            //             : currentTab == 1
+            //                 ? const Configurations()
+            //                 : currentTab == 2
+            //                     ? const ServicePanel()
+            //                     : null,
+            //       )),
+          ),
           //   floatingActionButton: currentTab == 0
           //       ? FloatingActionButton(
           //           tooltip: "Abrir Painel",
