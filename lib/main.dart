@@ -1,12 +1,12 @@
-import 'package:data7_panel/pages/home/home.dart';
-import 'package:data7_panel/providers/settings_model.dart';
+import 'package:data7_panel/old/pages/home/home.dart';
+import 'package:data7_panel/old/providers/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 import 'custom_theme.dart';
-import 'providers/theme_model.dart';
+import 'old/providers/theme_model.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
