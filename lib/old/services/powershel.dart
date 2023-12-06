@@ -13,12 +13,14 @@ class PowerShell {
           quote: '"')
     ];
     String cmd = "$powerShellCommand ${powerShellArguments.join(" ")}";
-
     try {
       var ret = await Process.run(
         cmd,
         [],
       );
+      if (ret.stderr.toString().isNotEmpty) {
+        throw ret.stderr.toString();
+      }
       return ret.stdout.toString();
     } catch (e) {
       rethrow;
@@ -36,6 +38,9 @@ class PowerShell {
         stdoutEncoding: const SystemEncoding(),
         stderrEncoding: const SystemEncoding(),
       );
+      if (ret.stderr.toString().isNotEmpty) {
+        throw ret.stderr.toString();
+      }
       return ret.stdout.toString();
     } catch (e) {
       return e.toString();
