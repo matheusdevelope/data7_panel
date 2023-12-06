@@ -1,5 +1,5 @@
 import 'package:data7_panel/dependecy_injection.dart';
-import 'package:data7_panel/old/pages/home/home.dart';
+import 'package:data7_panel/example_windows_firewall_consume.dart';
 import 'package:data7_panel/old/providers/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,11 +17,11 @@ void main() async {
   MediaKit.ensureInitialized();
   await Wakelock.enable();
   Dependencies.init();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,14 +38,24 @@ class MyApp extends StatelessWidget {
               return LayoutBuilder(
                 builder: (_, c) {
                   return MaterialApp(
-                    debugShowCheckedModeBanner: false,
-                    title: 'Painel Data7',
-                    theme: them.useAdaptiveTheme
-                        ? CustomTheme.getTheme(context, c.maxWidth)
-                        : ThemeData.light().copyWith(
-                            iconTheme: const IconThemeData(color: Colors.blue)),
-                    home: const HomePage(title: 'Painel Data7'),
-                  );
+                      debugShowCheckedModeBanner: false,
+                      title: 'Painel Data7',
+                      theme: them.useAdaptiveTheme
+                          ? CustomTheme.getTheme(context, c.maxWidth)
+                          : ThemeData.light().copyWith(
+                              iconTheme:
+                                  const IconThemeData(color: Colors.blue),
+                            ),
+                      home: Scaffold(
+                        body: Center(
+                          child: Column(
+                            children: [
+                              // Text('Hello World'),
+                              WinFirewalConsumer(),
+                            ],
+                          ),
+                        ),
+                      ));
                 },
               );
             },
