@@ -1,8 +1,8 @@
-import 'package:data7_panel/infra/services/Interfaces/audio.dart';
+import 'package:data7_panel/infra/services/Interfaces/audio_player.dart';
 import 'package:data7_panel/infra/services/Models/audio.dart';
 import 'package:media_kit/media_kit.dart';
 
-class MediaKitAudioAdapter implements IAudio {
+class MediaKitAudioAdapter implements IAudioPlayer {
   final Player _player = Player();
   Audio? _currentAudio;
   MediaKitAudioAdapter();
@@ -14,12 +14,11 @@ class MediaKitAudioAdapter implements IAudio {
   Audio? get currentAudio => _currentAudio;
 
   @override
-  play(Audio audio) async {
-    _player.setVolume(audio.volume);
+  play({required Audio audio, double? volume, bool? stopAll}) async {
+    if (volume != null) await setVolume(volume);
     _currentAudio = audio;
-    if (audio.stopAll) {
-      await _player.stop();
-    }
+    if (stopAll == true) await _player.stop();
+
     if (_currentAudio?.path == audio.path) {
       await _player.play();
       return;
@@ -34,12 +33,12 @@ class MediaKitAudioAdapter implements IAudio {
 
   @override
   playPause(Audio audio) async {
-    isPlaying ? await pause() : await play(audio);
+    isPlaying ? await pause() : await play(audio: audio);
   }
 
   @override
   resumePause(Audio audio) async {
-    isPlaying ? await pause() : await play(audio);
+    isPlaying ? await pause() : await play(audio: audio);
   }
 
   @override
@@ -51,5 +50,10 @@ class MediaKitAudioAdapter implements IAudio {
   stop() async {
     await _player.stop();
     _currentAudio = null;
+  }
+
+  @override
+  setVolume(double volume) async {
+    await _player.setVolume(volume);
   }
 }
