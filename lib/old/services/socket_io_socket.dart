@@ -1,7 +1,5 @@
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-typedef void EventCallback(dynamic data);
-
 class SocketIOClient {
   static final SocketIOClient _instance = SocketIOClient._internal();
 
@@ -151,7 +149,7 @@ class SocketIOClient {
     }
   }
 
-  void listen(String eventName, EventCallback callback) {
+  void listen(String eventName, callback) {
     if (_socket != null) {
       _socket!.on(eventName, callback);
     }
