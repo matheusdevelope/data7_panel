@@ -1,6 +1,7 @@
 import 'package:data7_panel/dependecy_injection.dart';
 import 'package:data7_panel/example_windows_firewall_consume.dart';
-import 'package:data7_panel/old/providers/settings_model.dart';
+import 'package:data7_panel/providers/WindowsService/windows_service_model.dart';
+import 'package:data7_panel/providers/theme/theme_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
@@ -8,7 +9,6 @@ import 'package:media_kit/media_kit.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 import 'custom_theme.dart';
-import 'old/providers/theme_model.dart';
 
 GetIt getIt = GetIt.instance;
 void main() async {
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
       },
       child: ChangeNotifierProvider(
-        create: (_) => WinServiceSettings(),
+        create: (_) => WindowsServiceProvider(),
         child: ChangeNotifierProvider(
           create: (_) => ThemeModel(),
           child: Consumer<ThemeModel>(

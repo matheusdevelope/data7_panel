@@ -1,7 +1,6 @@
-//theme_model.dart
+import 'package:data7_panel/providers/Theme/theme_preferences.dart';
+import 'package:data7_panel/providers/Settings/settings_preferences.dart';
 import 'package:flutter/material.dart';
-
-import 'theme_preferences.dart';
 
 class ThemeModel extends ChangeNotifier {
   late double _fontSize;
@@ -22,7 +21,7 @@ class ThemeModel extends ChangeNotifier {
     _fontSizeDataPanel = 14;
     _fontSizeMenuPanel = 14;
     _useAdaptiveTheme = true;
-    _preferences = ThemePreferences();
+    _preferences = SettingsPreferences.theme;
     getPreferences();
   }
 

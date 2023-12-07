@@ -1,8 +1,9 @@
+import 'package:data7_panel/providers/Settings/settings_preferences.dart';
 import 'package:flutter/material.dart';
 
 import 'carousel_preferences.dart';
 
-class CarousselModel extends ChangeNotifier {
+class CarouselModel extends ChangeNotifier {
   late int _currentIndex;
   late int _itensCount;
   late bool _autoplay;
@@ -13,12 +14,12 @@ class CarousselModel extends ChangeNotifier {
   bool get autoplay => _autoplay;
   int get autoPlayDuration => _autoPlayDuration;
 
-  CarousselModel() {
+  CarouselModel() {
     _currentIndex = 0;
     _itensCount = 0;
     _autoplay = true;
     _autoPlayDuration = 1000;
-    _preferences = CarouselPreferences();
+    _preferences = SettingsPreferences.carousel;
     _getPreferences();
   }
 
@@ -50,7 +51,7 @@ class CarousselModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<CarousselModel> initialize() async {
+  Future<CarouselModel> initialize() async {
     await _getPreferences();
     return this;
   }
