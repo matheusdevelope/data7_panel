@@ -1,7 +1,7 @@
-import 'package:data7_panel/UI/pages/connection/connection.dart';
 import 'package:data7_panel/UI/pages/home/bottom_navigation.dart';
-import 'package:data7_panel/UI/pages/settings/settings.dart';
-import 'package:data7_panel/UI/pages/windows_service/windows_service.dart';
+import 'package:data7_panel/UI/pages/settings%20copy/settings.dart';
+import 'package:data7_panel/UI/pages/windows_service%20copy/windows_service.dart';
+import 'package:data7_panel/UI/screens/panel/panel.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
