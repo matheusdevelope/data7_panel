@@ -1,5 +1,7 @@
+import 'package:data7_panel/UI/pages/home/home.dart';
+import 'package:data7_panel/UI/pages/panel/panel.dart';
 import 'package:data7_panel/dependecy_injection.dart';
-import 'package:data7_panel/providers/WindowsService/windows_service_model.dart';
+import 'package:data7_panel/providers/Settings/settings_model.dart';
 import 'package:data7_panel/providers/theme/theme_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +12,7 @@ import 'package:wakelock/wakelock.dart';
 import 'custom_theme.dart';
 
 GetIt getIt = GetIt.instance;
+Settings settings = Settings();
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
@@ -18,6 +21,7 @@ void main() async {
   MediaKit.ensureInitialized();
   await Wakelock.enable();
   Dependencies.init();
+  await settings.initialize();
   // await WindowsServiceDownloader.execute(
   //     httpClient: DI.get<IHttpClient>(),
   //     user: 'matheusdevelope',
@@ -35,36 +39,30 @@ class MyApp extends StatelessWidget {
         LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
       },
       child: ChangeNotifierProvider(
-        create: (_) => WindowsServiceProvider(),
-        child: ChangeNotifierProvider(
-          create: (_) => ThemeModel(),
-          child: Consumer<ThemeModel>(
-            builder: (context, them, c) {
-              return LayoutBuilder(
-                builder: (_, c) {
-                  return MaterialApp(
-                    debugShowCheckedModeBanner: false,
-                    title: 'Painel Data7',
-                    theme: them.useAdaptiveTheme
-                        ? CustomTheme.getTheme(context, c.maxWidth)
-                        : ThemeData.light().copyWith(
-                            iconTheme: const IconThemeData(color: Colors.blue),
-                          ),
-                    navigatorKey: navigatorKey,
-                    home: const Scaffold(
-                      body: Center(
-                        child: Column(
-                          children: [
-                            Text('Hello World'),
-                          ],
+        create: (_) => settings.theme,
+        child: Consumer<ThemeModel>(
+          builder: (context, theme, _) {
+            return LayoutBuilder(
+              builder: (_, constraints) {
+                return MaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  title: 'Painel Data7',
+                  theme: theme.useAdaptiveTheme
+                      ? CustomTheme.getTheme(context, constraints.maxWidth)
+                      : ThemeData.light().copyWith(
+                          iconTheme: const IconThemeData(color: Colors.blue),
                         ),
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
-          ),
+                  navigatorKey: navigatorKey,
+                  home: const HomePage(
+                    title: 'Painel Data7',
+                  ),
+                  routes: {
+                    '/panel': (context) => const PanelPage(),
+                  },
+                );
+              },
+            );
+          },
         ),
       ),
     );
