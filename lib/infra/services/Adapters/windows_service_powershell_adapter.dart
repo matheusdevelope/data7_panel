@@ -2,9 +2,9 @@ import "dart:async";
 import "dart:convert";
 
 import "package:data7_panel/infra/services/Interfaces/windows_service.dart";
+import "package:data7_panel/infra/services/Models/powershel.dart";
 import "package:data7_panel/infra/services/Models/windows_service.dart";
 import 'package:events_emitter/events_emitter.dart';
-import "package:data7_panel/old/services/powershel.dart";
 
 class PowershellWindowsServiceAdapter implements IWindowsService {
   final WindowServiceEvent _events = WindowServiceEvent();

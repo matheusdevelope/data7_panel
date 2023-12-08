@@ -1,7 +1,18 @@
-import 'package:data7_panel/old/services/windows_service.dart';
 import 'package:data7_panel/providers/Settings/settings_preferences.dart';
 import 'package:data7_panel/providers/WindowsService/windows_service_preferences.dart';
 import 'package:flutter/material.dart';
+
+enum StatusService {
+  stopped,
+  startPending,
+  stopPending,
+  running,
+  continuePending,
+  pausePending,
+  paused,
+  unistalled,
+  pending
+}
 
 class WindowsServiceProvider extends ChangeNotifier {
   late String _name;
@@ -51,7 +62,7 @@ class WindowsServiceProvider extends ChangeNotifier {
       }
     }
     _port = await _pref.getPort();
-    _executable = await FileWindowService.getServiceExecutable();
+    // _executable = await FileWindowService.getServiceExecutable();
   }
 
   Future<WindowsServiceProvider> initialize() async {

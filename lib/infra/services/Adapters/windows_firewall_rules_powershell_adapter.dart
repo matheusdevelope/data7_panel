@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:data7_panel/infra/services/Interfaces/windows_firewall_rules.dart';
+import 'package:data7_panel/infra/services/Models/powershel.dart';
 import 'package:data7_panel/infra/services/Models/windows_firewall_rules.dart';
-import 'package:data7_panel/old/services/powershel.dart';
 
 class WindowsFirewallRulePowershellAdapter implements IWindowsFirewallRule {
   WindowsFirewallRulePowershellAdapter();
