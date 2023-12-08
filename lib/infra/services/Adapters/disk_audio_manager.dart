@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+// ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
 
 import 'package:data7_panel/infra/services/Interfaces/audio_manager.dart';

@@ -28,9 +28,7 @@ class WindowsFirewallRulePowershellAdapter implements IWindowsFirewallRule {
   @override
   Future<void> add(WindowsFirewallRule rule) async {
     final command = "New-NetFirewallRule ${_mountParams(rule)}";
-    final result = await PowerShell.runAs(command);
-    print(result);
-    print(command);
+    await PowerShell.runAs(command);
   }
 
   @override

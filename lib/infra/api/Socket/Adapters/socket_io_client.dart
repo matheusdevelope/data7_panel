@@ -1,5 +1,5 @@
 import 'package:data7_panel/infra/api/Socket/socket_client.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:socket_io_client/socket_io_client.dart';
 
 class SocketIOClientFactory implements ISocketClientFactory {
   @override
@@ -9,16 +9,16 @@ class SocketIOClientFactory implements ISocketClientFactory {
 }
 
 class SocketIOClient implements ISocketClient {
-  late IO.Socket _socket;
+  late Socket _socket;
   final SocketParams params;
   bool _connected = false;
   bool _calledAttemptsCallback = false;
   int _attempts = 0;
 
   SocketIOClient({required this.params}) {
-    _socket = IO.io(
+    _socket = io(
       params.url,
-      IO.OptionBuilder()
+      OptionBuilder()
           .setTransports(['websocket'])
           .disableAutoConnect()
           .setReconnectionDelay(params.reconnectAttemptsDelay)

@@ -13,6 +13,7 @@ import 'package:data7_panel/infra/storage/storage.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
+// ignore: non_constant_identifier_names
 final GetIt DI = GetIt.I;
 
 class Dependencies {
