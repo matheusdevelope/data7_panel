@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class WindowsServicePage extends StatelessWidget {
-  const WindowsServicePage({super.key});
+class WindowsServiceScreen extends StatelessWidget {
+  const WindowsServiceScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('WindowsService Page'),
+        title: const Text('WindowsServiceScreen'),
       ),
       body: Center(
         child: TextButton(

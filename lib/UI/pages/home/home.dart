@@ -1,7 +1,7 @@
 import 'package:data7_panel/UI/pages/home/bottom_navigation.dart';
-import 'package:data7_panel/UI/pages/settings%20copy/settings.dart';
-import 'package:data7_panel/UI/pages/windows_service%20copy/windows_service.dart';
 import 'package:data7_panel/UI/screens/panel/panel.dart';
+import 'package:data7_panel/UI/screens/settings/settings.dart';
+import 'package:data7_panel/UI/screens/windows_service/windows_service.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,9 +16,9 @@ class _HomePageState extends State<HomePage> {
   int currentTab = 0;
 
   final List<Widget> screens = [
-    const ConnectionPage(),
-    const SettingsPage(),
-    const WindowsServicePage()
+    const PanelScreen(),
+    const SettingsScreen(),
+    const WindowsServiceScreen()
   ];
 
   @override
