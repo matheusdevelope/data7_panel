@@ -8,5 +8,5 @@ abstract class IAudioManager {
   Future<bool> delete(String path);
   Future<Audio?> find(String path);
   Future<bool> exists(String path);
-  Future<Audio> list();
+  Future<List<Audio>> list();
 }

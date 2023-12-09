@@ -55,11 +55,11 @@ class DiskAudioManager implements IAudioManager {
   }
 
   @override
-  Future<Audio> list() async {
+  Future<List<Audio>> list() async {
     await _init();
     List<FileSystemEntity> list =
         Directory(_baseDir!.path).listSync(recursive: true, followLinks: false);
-    return Audio(path: list.first.path);
+    return list.map((e) => Audio(path: e.path)).toList();
   }
 
   _init() async {

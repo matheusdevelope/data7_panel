@@ -1,12 +1,8 @@
 class Audio {
   String path;
-  // double volume;
-  // bool stopAll;
 
   Audio({
     required this.path,
-    // this.volume = 1,
-    // this.stopAll = true,
   });
 
   factory Audio.fromPath(String path) {
@@ -16,4 +12,7 @@ class Audio {
   factory Audio.fromUrl(String url) {
     return Audio(path: url);
   }
+
+  get name => path.split('/').last.split('.').first;
+  get extension => path.split('.').last;
 }

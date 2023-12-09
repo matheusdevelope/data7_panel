@@ -16,14 +16,13 @@ class MediaKitAudioAdapter implements IAudioPlayer {
   @override
   play({required Audio audio, double? volume, bool? stopAll}) async {
     if (volume != null) await setVolume(volume);
-    _currentAudio = audio;
     if (stopAll == true) await _player.stop();
-
     if (_currentAudio?.path == audio.path) {
       await _player.play();
       return;
     }
     await _player.open(Media(audio.path), play: true);
+    _currentAudio = audio;
   }
 
   @override
@@ -33,7 +32,11 @@ class MediaKitAudioAdapter implements IAudioPlayer {
 
   @override
   playPause(Audio audio) async {
-    isPlaying ? await pause() : await play(audio: audio);
+    if (_currentAudio?.path == audio.path) {
+      isPlaying ? await pause() : await play(audio: audio);
+      return;
+    }
+    await play(audio: audio);
   }
 
   @override

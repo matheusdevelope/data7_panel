@@ -2,9 +2,11 @@ import 'package:data7_panel/core/domain/repository/panel_repository.dart';
 import 'package:data7_panel/core/infra/api/Http/dio_http.dart';
 import 'package:data7_panel/core/infra/api/Http/http_client.dart';
 import 'package:data7_panel/core/infra/repository/http_panel_repository.dart';
+import 'package:data7_panel/core/infra/services/Adapters/disk_audio_manager.dart';
 import 'package:data7_panel/core/infra/services/Adapters/media_kit_audio_palyer_adapter.dart';
 import 'package:data7_panel/core/infra/services/Adapters/windows_firewall_rules_powershell_adapter.dart';
 import 'package:data7_panel/core/infra/services/Adapters/windows_service_powershell_adapter.dart';
+import 'package:data7_panel/core/infra/services/Interfaces/audio_manager.dart';
 import 'package:data7_panel/core/infra/services/Interfaces/audio_player.dart';
 import 'package:data7_panel/core/infra/services/Interfaces/windows_firewall_rules.dart';
 import 'package:data7_panel/core/infra/services/Interfaces/windows_service.dart';
@@ -24,6 +26,7 @@ class Dependencies {
         (baseUrl, _) => HttpPanelRepository(baseUrl: baseUrl));
     DI.registerSingleton<IStorage>(SharedPreferencesStorage());
     DI.registerSingleton<IAudioPlayer>(MediaKitAudioAdapter());
+    DI.registerSingleton<IAudioManager>(DiskAudioManager());
     DI.registerSingleton<IWindowsService>(PowershellWindowsServiceAdapter());
     DI.registerSingleton<IWindowsFirewallRule>(
         WindowsFirewallRulePowershellAdapter());
