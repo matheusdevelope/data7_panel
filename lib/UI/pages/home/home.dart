@@ -1,12 +1,12 @@
+import 'package:flutter/material.dart';
+
 import 'package:data7_panel/UI/components/bottom_navigation.dart';
 import 'package:data7_panel/UI/screens/panel/panel.dart';
 import 'package:data7_panel/UI/screens/settings/settings.dart';
 import 'package:data7_panel/UI/screens/windows_service/windows_service.dart';
-import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.title});
-  final String title;
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
