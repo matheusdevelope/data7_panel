@@ -1,4 +1,4 @@
-import 'package:data7_panel/UI/pages/home/bottom_navigation.dart';
+import 'package:data7_panel/UI/components/bottom_navigation.dart';
 import 'package:data7_panel/UI/screens/panel/panel.dart';
 import 'package:data7_panel/UI/screens/settings/settings.dart';
 import 'package:data7_panel/UI/screens/windows_service/windows_service.dart';

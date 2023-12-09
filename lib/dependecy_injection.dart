@@ -1,15 +1,15 @@
-import 'package:data7_panel/domain/repository/panel_repository.dart';
-import 'package:data7_panel/infra/api/Http/dio_http.dart';
-import 'package:data7_panel/infra/api/Http/http_client.dart';
-import 'package:data7_panel/infra/repository/http_panel_repository.dart';
-import 'package:data7_panel/infra/services/Adapters/media_kit_audio_palyer_adapter.dart';
-import 'package:data7_panel/infra/services/Adapters/windows_firewall_rules_powershell_adapter.dart';
-import 'package:data7_panel/infra/services/Adapters/windows_service_powershell_adapter.dart';
-import 'package:data7_panel/infra/services/Interfaces/audio_player.dart';
-import 'package:data7_panel/infra/services/Interfaces/windows_firewall_rules.dart';
-import 'package:data7_panel/infra/services/Interfaces/windows_service.dart';
-import 'package:data7_panel/infra/storage/shared_preferences_storage.dart';
-import 'package:data7_panel/infra/storage/storage.dart';
+import 'package:data7_panel/core/domain/repository/panel_repository.dart';
+import 'package:data7_panel/core/infra/api/Http/dio_http.dart';
+import 'package:data7_panel/core/infra/api/Http/http_client.dart';
+import 'package:data7_panel/core/infra/repository/http_panel_repository.dart';
+import 'package:data7_panel/core/infra/services/Adapters/media_kit_audio_palyer_adapter.dart';
+import 'package:data7_panel/core/infra/services/Adapters/windows_firewall_rules_powershell_adapter.dart';
+import 'package:data7_panel/core/infra/services/Adapters/windows_service_powershell_adapter.dart';
+import 'package:data7_panel/core/infra/services/Interfaces/audio_player.dart';
+import 'package:data7_panel/core/infra/services/Interfaces/windows_firewall_rules.dart';
+import 'package:data7_panel/core/infra/services/Interfaces/windows_service.dart';
+import 'package:data7_panel/core/infra/storage/shared_preferences_storage.dart';
+import 'package:data7_panel/core/infra/storage/storage.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 

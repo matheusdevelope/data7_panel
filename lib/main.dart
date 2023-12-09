@@ -1,8 +1,8 @@
 import 'package:data7_panel/UI/pages/home/home.dart';
 import 'package:data7_panel/UI/pages/panel/panel.dart';
+import 'package:data7_panel/core/providers/Settings/settings_model.dart';
+import 'package:data7_panel/core/providers/Theme/theme_model.dart';
 import 'package:data7_panel/dependecy_injection.dart';
-import 'package:data7_panel/providers/Settings/settings_model.dart';
-import 'package:data7_panel/providers/theme/theme_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
