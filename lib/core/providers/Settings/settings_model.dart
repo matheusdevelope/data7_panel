@@ -1,6 +1,7 @@
 import 'package:data7_panel/core/providers/Carousel/carousel_model.dart';
 import 'package:data7_panel/core/providers/Database/database_model.dart';
 import 'package:data7_panel/core/providers/Notification/notification_model.dart';
+import 'package:data7_panel/core/providers/Panel/panel_model.dart';
 import 'package:data7_panel/core/providers/WindowsService/windows_service_model.dart';
 import 'package:data7_panel/core/providers/theme/theme_model.dart';
 
@@ -14,12 +15,14 @@ class Settings {
   Settings._internal();
 
   final ThemeModel _theme = ThemeModel();
+  final PanelSettings _panel = PanelSettings();
   final CarouselModel _carousel = CarouselModel();
   final NotificationsSettings _notifications = NotificationsSettings();
   final DatabaseProvider _database = DatabaseProvider();
   final WindowsServiceProvider _windowsService = WindowsServiceProvider();
 
   ThemeModel get theme => _theme;
+  PanelSettings get panel => _panel;
   CarouselModel get carousel => _carousel;
   NotificationsSettings get notifications => _notifications;
   DatabaseProvider get database => _database;
@@ -27,6 +30,7 @@ class Settings {
 
   Future<void> initialize() async {
     await _theme.initialize();
+    await _panel.initialize();
     await _carousel.initialize();
     await _notifications.initialize();
     await _database.initialize();

@@ -1,9 +1,12 @@
+import 'package:data7_panel/core/infra/services/Interfaces/audio_manager.dart';
 import 'package:data7_panel/core/providers/Notification/notification_preferences.dart';
 import 'package:data7_panel/core/providers/Settings/settings_preferences.dart';
-// import 'package:file_picker/file_picker.dart';
+import 'package:data7_panel/dependecy_injection.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 class NotificationsSettings extends ChangeNotifier {
+  final audioManager = DI.get<IAudioManager>();
   late bool _enabled;
   late String _file;
   late Map<String, String> _files;
@@ -47,48 +50,49 @@ class NotificationsSettings extends ChangeNotifier {
     notifyListeners();
   }
 
-  // deleteFile(String file) async {
-  //   NotificationHelper.deleteNotification(file);
-  //   _files = await NotificationHelper.getObjectListFiles();
-  //   notifyListeners();
-  // }
+  Future<Map<String, String>> add({List<String>? filesPath}) async {
+    List<String> pathsToSave = filesPath ?? [];
+    if (pathsToSave.isEmpty) {
+      FilePickerResult? result = await FilePicker.platform
+          .pickFiles(type: FileType.audio, allowMultiple: true);
+      if (result != null) {
+        for (var path in result.paths) {
+          if (path != null) {
+            pathsToSave.add(path);
+          }
+        }
+      }
+    }
+    for (var path in pathsToSave) {
+      await audioManager.save(path);
+    }
+    return _setFiles();
+  }
 
-  // Future<Map<String, String>> addFile(List<String>? pPath) async {
-  //   List<String> pathsToSave = pPath ?? [];
-  //   List<String> retPath = [];
-  //   if (retPath.isEmpty) {
-  //     try {
-  //       FilePickerResult? result = await FilePicker.platform
-  //           .pickFiles(type: FileType.audio, allowMultiple: true);
-  //       if (result != null) {
-  //         for (var path in result.paths) {
-  //           if (path != null) {
-  //             pathsToSave.add(path);
-  //           }
-  //         }
-  //       }
-  //     } catch (e) {}
-  //   }
-  //   for (var path in pathsToSave) {
-  //     retPath.add(await NotificationHelper.saveAudioIntoAppData(path));
-  //   }
-  //   Map<String, String> obj =
-  //       await NotificationHelper.getObjectListFiles(pFiles: retPath);
+  delete(String path) async {
+    await audioManager.delete(path);
+    _setFiles();
+  }
 
-  //   notifyListeners();
-  //   return obj;
-  // }
+  _setFiles() async {
+    final audioManager = DI.get<IAudioManager>();
+    final audiosList = await audioManager.list();
+    Map<String, String> newObj = {};
+    for (var audio in audiosList) {
+      newObj[audio.path] = audio.name;
+    }
+    files = newObj;
+    return newObj;
+  }
 
   _getPreferences() async {
     _enabled = await _pref.getEnabled();
+    _volume = await _pref.getVolume();
     _file = await _pref.getFile();
     if (_file.isEmpty) {
-      // _file = (await NotificationHelper.getDefaultNotificationsAudioPath())[0];
       _pref.setFile(_file);
     }
-    // _files = await NotificationHelper.getObjectListFiles();
-    _volume = await _pref.getVolume();
-
+    _setFiles();
     // _filesDefault = await NotificationHelper.getDefaultNotificationsAudioPath();
   }
 
