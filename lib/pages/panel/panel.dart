@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:data7_panel/components/carousel.dart';
 import 'package:data7_panel/models/tableComponentData.dart';
@@ -9,6 +11,7 @@ import 'package:data7_panel/services/socket.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 import '../../components/bottom_app_bar.dart';
@@ -33,8 +36,7 @@ class _PanelPageState extends State<PanelPage> {
   List<CarouselData> dataPanel = [];
   bool opened = false;
   String _message = "";
-  late IO.Socket socket;
-  late SocketIOClient newSocket = SocketIOClient();
+  SocketIOClient newSocket = SocketIOClient();
 
   bool isConnected = true;
   bool isExpanded = false;
@@ -56,7 +58,8 @@ class _PanelPageState extends State<PanelPage> {
   void _refreshData(dynamic data) {
     setState(() {
       _lastTimeSync = inputFormat.format(DateTime.now()).toString();
-      dataPanel = TransformData().parseData(data.cast<Map<String, dynamic>>());
+      // dataPanel = TransformData().parseData(data.cast<Map<String, dynamic>>());
+      print(data);
       setState(() {
         if (dataPanel.isNotEmpty) {
           _legends = dataPanel[0].panels[0].legendColors;
@@ -66,9 +69,61 @@ class _PanelPageState extends State<PanelPage> {
     // _countRows();
   }
 
-  void _initSocketConnection() {
+  void _initSocketConnection() async {
+//   final retornoPanels =  [
+// 	{
+// 		"columns": [
+// 			{
+// 				"name": "CodUsuario",
+// 				"type": "number"
+// 			},
+// 			{
+// 				"name": "Grupo",
+// 				"type": "string"
+// 			},
+// 			{
+// 				"name": "NomeLegivel",
+// 				"type": "string"
+// 			}
+// 		],
+// 		"id": "0bff33c5-55ac-40d7-8450-111cc239961d",
+// 		"description": "Painel de Usuario",
+// 		"statement": "SELECT CodUsuario, Grupo, NomeLegivel FROM Usuario",
+// 		"interval": 2000
+// 	},
+// 	{
+// 		"columns": [
+// 			{
+// 				"name": "CodVendedor",
+// 				"type": "number"
+// 			},
+// 			{
+// 				"name": "Nome",
+// 				"type": "string"
+// 			}
+// 		],
+// 		"id": "58436ed9-0017-4c9b-a407-83bca9287de3",
+// 		"description": "Painel de Vendedor",
+// 		"statement": "SELECT TOP 2 CodVendedor, Nome Nome FROM Vendedor",
+// 		"interval": 2000
+// 	}
+// ]
+
+    List<String> panels = [];
+    final response = await http.get(Uri.parse('${widget.url}/panels'));
+    if (response.statusCode == 200) {
+      final jsonPanels = jsonDecode(response.body);
+      for (var panel in jsonPanels) {
+        panels.add(panel['id']);
+      }
+    } else {
+      setState(() {
+        _message = "Erro ao buscar paineis disponíveis no servidor.";
+      });
+    }
     newSocket.connect(
       url: widget.url,
+      rooms: panels,
       onConnectionChange: (isConnected) {
         setState(() {
           _connected = isConnected;
@@ -95,7 +150,8 @@ class _PanelPageState extends State<PanelPage> {
         _openDialogAlert(attempts);
       },
     );
-    newSocket.listen('data_dispath_panel', _refreshData);
+
+    newSocket.listen('data', _refreshData);
   }
 
   void _reconnect() {

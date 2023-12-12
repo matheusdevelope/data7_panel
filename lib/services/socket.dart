@@ -27,6 +27,7 @@ class SocketIOClient {
 
   void connect({
     required String url,
+    List<String> rooms = const [],
     int reconnectAttemptsDelay = 1000,
     int maxReconnectAttempts = 10,
     Function(bool)? onConnectionChange,
@@ -43,7 +44,19 @@ class SocketIOClient {
     onConnectionErrorCallback = onConnectionError;
     onMaxReconnectAttemptsReachedCallback = onMaxReconnectAttemptsReached;
     onReconnectedCallback = onReconnected;
-    _connect();
+    _connect(rooms: rooms);
+  }
+
+  void joinRoom(String eventName, String room) {
+    if (_socket != null) {
+      _socket!.emit(eventName, room);
+    }
+  }
+
+  void leaveRoom(String eventName, String room) {
+    if (_socket != null) {
+      _socket!.emit(eventName, room);
+    }
   }
 
   setCancelReconnectCallback() {
@@ -54,7 +67,9 @@ class SocketIOClient {
     return isConnected;
   }
 
-  void _connect() {
+  void _connect({
+    List<String>? rooms,
+  }) {
     _socket = IO.io(
         _url,
         IO.OptionBuilder()
@@ -68,6 +83,11 @@ class SocketIOClient {
       callDisconect = false;
       _onConnectionChange(isConnected);
       _attempts = 0;
+      if (rooms != null) {
+        for (var room in rooms) {
+          joinRoom('join_room', room);
+        }
+      }
     });
 
     _socket!.on('disconnect', (message) {
