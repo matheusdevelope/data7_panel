@@ -1,3 +1,5 @@
+import 'package:data7_panel/UI/screens/windows_service/categories/windows_service_category.dart';
+import 'package:data7_panel/UI/screens/windows_service/categories/windows_service_connection_params_category.dart';
 import 'package:flutter/material.dart';
 
 class WindowsServiceScreen extends StatelessWidget {
@@ -5,17 +7,13 @@ class WindowsServiceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('WindowsServiceScreen'),
-      ),
-      body: Center(
-        child: TextButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text('Go to Home Page'),
-        ),
+    return Padding(
+      padding: const EdgeInsets.all(4),
+      child: ListView(
+        children: const [
+          WindowsServiceConnectionParamsCategory(),
+          WindowsServiceCategory(),
+        ],
       ),
     );
   }
