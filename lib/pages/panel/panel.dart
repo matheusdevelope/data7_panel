@@ -10,7 +10,6 @@ import 'package:data7_panel/services/audio.dart';
 import 'package:data7_panel/services/socket.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
@@ -56,59 +55,34 @@ class _PanelPageState extends State<PanelPage> {
   String currentAudioPath = '';
 
   void _refreshData(dynamic data) {
+    final newData = [...dataPanel];
+    final panels = TransformData()
+        .parseData(data['data']['rows'].cast<Map<String, dynamic>>());
+    final duration = data['data']?['rows']?[0]?['Config_DuracaoCarrossel'];
+    final indexCarousel =
+        newData.indexWhere((element) => element.id == data['room']);
+    if (indexCarousel < 0) {
+      newData.add(CarouselData(
+          id: data['room'], duration: duration ?? 0, panels: panels));
+    } else {
+      if (panels.isEmpty) {
+        newData.removeAt(indexCarousel);
+      } else {
+        newData[indexCarousel].panels = panels;
+        newData[indexCarousel].duration = duration ?? 0;
+      }
+    }
+
     setState(() {
       _lastTimeSync = inputFormat.format(DateTime.now()).toString();
-      // dataPanel = TransformData().parseData(data.cast<Map<String, dynamic>>());
-      print(data);
-      setState(() {
-        if (dataPanel.isNotEmpty) {
-          _legends = dataPanel[0].panels[0].legendColors;
-        }
-      });
+      dataPanel = newData;
+      if (dataPanel.isNotEmpty) {
+        _legends = dataPanel[0].panels[0].legendColors;
+      }
     });
-    // _countRows();
   }
 
   void _initSocketConnection() async {
-//   final retornoPanels =  [
-// 	{
-// 		"columns": [
-// 			{
-// 				"name": "CodUsuario",
-// 				"type": "number"
-// 			},
-// 			{
-// 				"name": "Grupo",
-// 				"type": "string"
-// 			},
-// 			{
-// 				"name": "NomeLegivel",
-// 				"type": "string"
-// 			}
-// 		],
-// 		"id": "0bff33c5-55ac-40d7-8450-111cc239961d",
-// 		"description": "Painel de Usuario",
-// 		"statement": "SELECT CodUsuario, Grupo, NomeLegivel FROM Usuario",
-// 		"interval": 2000
-// 	},
-// 	{
-// 		"columns": [
-// 			{
-// 				"name": "CodVendedor",
-// 				"type": "number"
-// 			},
-// 			{
-// 				"name": "Nome",
-// 				"type": "string"
-// 			}
-// 		],
-// 		"id": "58436ed9-0017-4c9b-a407-83bca9287de3",
-// 		"description": "Painel de Vendedor",
-// 		"statement": "SELECT TOP 2 CodVendedor, Nome Nome FROM Vendedor",
-// 		"interval": 2000
-// 	}
-// ]
-
     List<String> panels = [];
     final response = await http.get(Uri.parse('${widget.url}/panels'));
     if (response.statusCode == 200) {

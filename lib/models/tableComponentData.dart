@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CarouselData {
-  int id;
+  String id;
   int duration;
   List<TableComponentData> panels;
   CarouselData(

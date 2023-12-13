@@ -29,7 +29,55 @@ class TransformData {
   List<List<TableComponentData>> carousels = [];
   late List<CarouselData> carouselsData = [];
 
-  List<CarouselData> parseData(List<Map<String, dynamic>> pdata) {
+  List<TableComponentData> parseData(List<Map<String, dynamic>> pdata) {
+    tables = [];
+    List<Map<String, dynamic>> data =
+        Settings.panel.colsOptions.filters.isNotEmpty
+            ? filterList(list: pdata, colOptions: Settings.panel.colsOptions)
+            : pdata;
+
+    List<List<Map<String, dynamic>>> separatedData = [];
+    _separatePanelsData(data).forEach((key, value) {
+      separatedData.add(value);
+    });
+
+    separatedData
+        .sort((a, b) => a[0]["Config_Painel"].compareTo(b[0]["Config_Painel"]));
+
+    for (var value in separatedData) {
+      configFontSize = 0;
+      configOrderDefault = "ASC";
+      configOrderFieldDefault = "ID";
+      consfigTitlePanel = "Painel";
+      configOrientationPanel = 'VERTICAL';
+      configLegendColors = "";
+      configColumnPanelOrder = 0;
+      configWidthColummns = {};
+      configHideColumns = [];
+      columns = [];
+      columnsHide = [];
+      rows = [];
+
+      if (value.isNotEmpty) {
+        _gererateGeneralInfo(value[0]);
+        _gererateColumns(value[0]);
+        _gererateRows(value);
+        _sortRows(rows);
+      }
+      tables.add(
+        TableComponentData(
+            title: consfigTitlePanel,
+            columns: columns,
+            rows: rows,
+            columnsHide: columnsHide,
+            legendColors: configLegendColors,
+            isHorizontal: configOrientationPanel.toUpperCase() == 'HORIZONTAL'),
+      );
+    }
+    return tables;
+  }
+
+  List<CarouselData> parseDataCarousel(List<Map<String, dynamic>> pdata) {
     List<Map<String, dynamic>> data =
         Settings.panel.colsOptions.filters.isNotEmpty
             ? filterList(list: pdata, colOptions: Settings.panel.colsOptions)
@@ -82,7 +130,7 @@ class TransformData {
         carousels.add(tables);
         carouselsData.add(
           CarouselData(
-              id: key,
+              id: key.toString(),
               duration: separatedData[0][0]['Config_DuracaoCarrossel'] ?? 0,
               panels: tables),
         );
