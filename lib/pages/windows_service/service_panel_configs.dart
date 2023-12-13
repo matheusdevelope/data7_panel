@@ -1,5 +1,6 @@
 import 'package:data7_panel/components/settings/settings.dart';
 import 'package:data7_panel/components/settings/settings_textfield.dart';
+import 'package:data7_panel/pages/windows_service/panels.dart';
 import 'package:data7_panel/services/windows_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -101,64 +102,9 @@ class _ServicePanelConfigsState extends State<ServicePanelConfigs> {
                         ),
                       ],
                     ),
-                    SettingsCategory(
-                      title: "Paramêtros Painel",
-                      icon: Icons.table_view,
-                      iconStyle: IconStyle(),
-                      // expansible: false,
-                      child: [
-                        SettingsItem(
-                          child: SettingRowTextField(
-                            title: "Consulta SQL:",
-                            subtitle:
-                                'Lebre-se de otimizar sua consulta.\nNão é necessário declarar as colunas, apenas o (SELECT * FROM) já é suficiente.',
-                            placeholder: 'Query SQL',
-                            enabled: allowEdit,
-                            required: true,
-                            validations: [
-                              (value) => value.trim().length > 5
-                                  ? null
-                                  : "A query precisa ter pelo menos 5 caracteres.",
-                            ],
-                            initialValue: Settings.panel.query,
-                            maxLines: 5,
-                            onChange: (value) {
-                              Settings.panel.query = value;
-                            },
-                          ),
-                        ),
-                        SettingsItem(
-                          child: SettingRowNumber(
-                            title: "Intervalo de Atualização:",
-                            subtitle:
-                                "Tenha em mente que dependendo da query, o intervalo pode não ser suficiente.",
-
-                            enabled: allowEdit,
-
-                            initialValue: Settings.panel.interval,
-                            minValue: 1,
-                            maxValue: 60,
-                            // maxLines: 5,
-                            onChange: (value) {
-                              Settings.panel.interval = value;
-                            },
-                          ),
-                        ),
-                        SettingsItem(
-                          child: SettingRowDropDown(
-                            title: "Tipo de Intervalo:",
-                            enabled: allowEdit,
-                            items: Settings.panel.availableTypes,
-                            selectedValue: Settings.panel.typeInterval,
-                            onChange: (value) {
-                              Settings.panel.typeInterval = value;
-                            },
-                          ),
-                        ),
-                      ],
-                    )
                   ],
                 ),
+                const Panels()
               ],
             );
             //   ),

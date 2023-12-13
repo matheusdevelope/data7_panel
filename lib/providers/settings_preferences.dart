@@ -142,6 +142,16 @@ class PanelPreferences {
     return sharedPreferences.getString(PanelSettingsKeys.url) ?? "";
   }
 
+  setDescription(String value) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString(PanelSettingsKeys.description, value);
+  }
+
+  getDescription() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString(PanelSettingsKeys.description) ?? "";
+  }
+
   setQuery(String value) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setString(PanelSettingsKeys.query, value);
@@ -186,6 +196,7 @@ class PanelPreferences {
 class PanelSettingsKeys {
   static const pre = "@PanelSettingsPreferences";
   static String url = '$pre.url';
+  static String description = '$pre.description';
   static String query = '$pre.query';
   static String interval = '$pre.interval';
   static String typeInteval = '$pre.typeInteval';

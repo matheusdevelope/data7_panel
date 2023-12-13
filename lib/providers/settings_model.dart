@@ -120,7 +120,7 @@ class DatabaseConnectionSettings {
   late String _databaseName;
   final Map<String, String> _availableRdbms = {
     "mssql": "SQL Server",
-    "sybase": "Sybase SQL Anywhere"
+    // "sybase": "Sybase SQL Anywhere"
   };
 
   late DatabaseConnectionPreferences _pref;
@@ -194,6 +194,7 @@ class DatabaseConnectionSettings {
 class PanelSettings {
   late String _url;
   late ColumnsOptions _colsOptions;
+  late String _description;
   late String _query;
   late int _interval;
   late String _typeInterval;
@@ -207,6 +208,7 @@ class PanelSettings {
   String get url => _url;
   ColumnsOptions get colsOptions => _colsOptions;
   String get query => _query;
+  String get description => _description;
   int get interval => _interval;
   String get typeInterval => _typeInterval;
   bool get openAutomatic => _openAutomatic;
@@ -215,6 +217,7 @@ class PanelSettings {
     _url = '';
     _colsOptions = ColumnsOptions(url: '');
     _query = '';
+    _description = '';
     _interval = 5;
     _typeInterval = '';
     _openAutomatic = true;
@@ -225,6 +228,11 @@ class PanelSettings {
     _url = value;
     _colsOptions = ColumnsOptions(url: value);
     _pref.setUrl(value);
+  }
+
+  set description(String value) {
+    _description = value;
+    _pref.setDescription(value);
   }
 
   set query(String value) {
@@ -250,6 +258,7 @@ class PanelSettings {
   _getPreferences() async {
     _url = await _pref.getUrl();
     _colsOptions = ColumnsOptions(url: _url);
+    _description = await _pref.getDescription();
     _query = await _pref.getQuery() ??
         "SELECT * FROM view_QueRetornaOsDadosDoPainel";
     _interval = await _pref.getInterval();

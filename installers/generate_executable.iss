@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Painel Data7"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "1.0.1"
 #define MyAppPublisher "Se7e Sistemas Sinop"
 #define MyAppURL "http://www.se7esistemas.com.br/"
 #define MyAppExeName "data7_panel.exe"

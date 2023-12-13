@@ -37,20 +37,20 @@ class _WindowsServiceManagerUIState extends State<WindowsServiceManagerUI> {
 
   Map<String, String> paramsWinService(WinServiceSettings settings) {
     return {
-      'server_port': settings.port.toString(),
-      'database': Settings.db.rdbms,
-      'host': Settings.db.server,
-      'port': Settings.db.port,
-      'dbname': Settings.db.databaseName,
-      'user': Settings.db.user,
-      'pass': Settings.db.pass,
-      'query': '"${Settings.panel.query}"',
-      'time_refresh': (Settings.panel.typeInterval == 'min'
-              ? (Settings.panel.interval * 60 * 1000)
-              : Settings.panel.typeInterval == 'hour'
-                  ? Settings.panel.interval * 60 * 60 * 1000
-                  : Settings.panel.interval * 1000)
-          .toString(),
+      'PORT': settings.port.toString(),
+      // 'database': Settings.db.rdbms,
+      'DB_HOST': Settings.db.server,
+      'DB_PORT': Settings.db.port,
+      'DB_NAME': Settings.db.databaseName,
+      'DB_USER': Settings.db.user,
+      'DB_PASSWORD': Settings.db.pass,
+      // 'query': '"${Settings.panel.query}"',
+      // 'time_refresh': (Settings.panel.typeInterval == 'min'
+      //         ? (Settings.panel.interval * 60 * 1000)
+      //         : Settings.panel.typeInterval == 'hour'
+      //             ? Settings.panel.interval * 60 * 60 * 1000
+      //             : Settings.panel.interval * 1000)
+      //     .toString(),
     };
   }
 

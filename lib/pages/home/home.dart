@@ -55,8 +55,10 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     getData();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Settings.panel.initialize();
       if (Settings.panel.openAutomatic) {
+        // ignore: use_build_context_synchronously
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return PanelPage(url: Settings.panel.url);
         }));

@@ -8,6 +8,7 @@ class SettingsCategory extends StatefulWidget {
   final IconData? icon;
   final IconStyle? iconStyle;
   final bool? expansible;
+  Function(bool expanded)? onChangeExpansion;
 
   SettingsCategory(
       {this.title,
@@ -15,7 +16,8 @@ class SettingsCategory extends StatefulWidget {
       this.subtitle,
       this.icon,
       this.iconStyle,
-      this.expansible = true});
+      this.expansible = true,
+      this.onChangeExpansion});
 
   @override
   _SettingsCategoryState createState() => _SettingsCategoryState();
@@ -40,6 +42,9 @@ class _SettingsCategoryState extends State<SettingsCategory> {
               contentPadding: const EdgeInsets.all(2),
               onTap: () {
                 if (widget.expansible!) {
+                  if (widget.onChangeExpansion != null) {
+                    widget.onChangeExpansion!(!_isExpanded);
+                  }
                   setState(() {
                     _isExpanded = !_isExpanded;
                   });
@@ -90,6 +95,9 @@ class _SettingsCategoryState extends State<SettingsCategory> {
                           _isExpanded ? Icons.expand_less : Icons.expand_more,
                         ),
                         onPressed: () {
+                          if (widget.onChangeExpansion != null) {
+                            widget.onChangeExpansion!(!_isExpanded);
+                          }
                           setState(() {
                             _isExpanded = !_isExpanded;
                           });
