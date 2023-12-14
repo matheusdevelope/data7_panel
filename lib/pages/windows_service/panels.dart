@@ -91,31 +91,33 @@ class _PanelsState extends State<Panels> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  panel.description,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    panel.description,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  panel.statement,
-                  style: const TextStyle(
-                    fontSize: 14,
+                  const SizedBox(height: 4),
+                  Text(
+                    panel.statement,
+                    style: const TextStyle(
+                      fontSize: 14,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Intervalo: ${panel.interval} ms',
-                  style: const TextStyle(
-                    fontSize: 14,
+                  const SizedBox(height: 4),
+                  Text(
+                    'Intervalo: ${panel.interval} ms',
+                    style: const TextStyle(
+                      fontSize: 14,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             IconButton(
               onPressed: () {
