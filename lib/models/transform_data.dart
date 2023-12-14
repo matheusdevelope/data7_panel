@@ -245,12 +245,14 @@ class TransformData {
     for (var row in data) {
       List<Data> list = [];
       List<Data> listHide = [];
-      row.keys.toList().forEach((key) {
+      List<String> keys = row.keys.toList();
+      keys.sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
+      for (var key in keys) {
         final hide =
             configHideColumns.contains(key) || key.startsWith('Config_');
         final cell = Data(field: key, value: row[key].toString());
         hide ? listHide.add(cell) : list.add(cell);
-      });
+      }
 
       rows.add(Rows(
           data: list,
