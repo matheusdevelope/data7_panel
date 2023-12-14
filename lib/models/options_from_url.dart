@@ -32,7 +32,6 @@ class ColumnsOption {
     );
     width = getWidth(options);
     hide = getHide(options);
-
     return this;
   }
 
@@ -71,7 +70,6 @@ class FilterOptions {
   bool test(Map<String, dynamic> object) {
     bool passed = true;
     object = convertKeysToLower(object);
-    print(object);
     if (object.containsKey(key)) {
       String valueObj = object[key].toString().trim().toLowerCase();
       if (operator == FilterOperators.equal) {
@@ -157,7 +155,7 @@ class FilterOptions {
         RegExp(r"values:\[.*?\]", caseSensitive: false);
     final RegExp valuesPattern = RegExp(r"\[.*?\]", caseSensitive: false);
     final RegExp operatorPattern =
-        RegExp(r"operator=([\w]+)", caseSensitive: false);
+        RegExp(r"operator:([\w]+)", caseSensitive: false);
     if (filterPattern.hasMatch(stringOptions)) {
       Match match = filterPattern.firstMatch(stringOptions) as Match;
       strOptions = match.group(1) ?? '';
@@ -180,7 +178,7 @@ class FilterOptions {
     if (operatorPattern.hasMatch(strOptions)) {
       Match match = operatorPattern.firstMatch(strOptions) as Match;
       String operatorStr = match.group(0) ?? '';
-      operatorStr = operatorStr.replaceAll('operator=', '').trim();
+      operatorStr = operatorStr.replaceAll('operator:', '').trim();
 
       for (var element in FilterOperators.values) {
         if (element.name.toLowerCase() == operatorStr.toLowerCase()) {
