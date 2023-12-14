@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:data7_panel/components/dialog_alert.dart';
+import 'package:data7_panel/components/panels_selector.dart';
 import 'package:data7_panel/pages/panel/panel.dart';
 import 'package:data7_panel/pages/windows_service/index.dart';
 import 'package:data7_panel/providers/settings_model.dart';
@@ -80,6 +81,7 @@ class _HomePageState extends State<HomePage> {
                   child: currentTab == 0
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             const Padding(
                               padding: EdgeInsets.only(bottom: 8 * 2),
@@ -99,6 +101,15 @@ class _HomePageState extends State<HomePage> {
                                 contentPadding: EdgeInsets.all(8),
                               ),
                             ),
+                            const SizedBox(height: 16),
+                            const Text(
+                              'Paineis disponíveis:',
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            PanelsSelector(url: textController.text)
                           ],
                         )
                       : currentTab == 1

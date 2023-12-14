@@ -226,6 +226,23 @@ class PanelPreferences {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getBool(PanelSettingsKeys.openAutomatic) ?? true;
   }
+
+  setJoined(List<String> value) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setStringList(PanelSettingsKeys.joined, value);
+  }
+
+  getJoined() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    List<String>? ret =
+        sharedPreferences.getStringList(PanelSettingsKeys.joined);
+    if (ret != null) {
+      return ret;
+    } else {
+      ret = [];
+    }
+    return ret;
+  }
 }
 
 class PanelSettingsKeys {
@@ -238,6 +255,7 @@ class PanelSettingsKeys {
   static String typeInteval = '$pre.typeInteval';
   static String typeIntevalDuration = '$pre.typeIntevalDuration';
   static String openAutomatic = '$pre.openAutomatic';
+  static String joined = '$pre.joined';
 }
 
 class ServiceWindowsPreferences {

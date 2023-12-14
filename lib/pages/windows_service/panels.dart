@@ -2,6 +2,7 @@
 
 import 'package:data7_panel/components/dialogAlert.dart';
 import 'package:data7_panel/components/modal.dart';
+import 'package:data7_panel/components/panel_box.dart';
 import 'package:data7_panel/components/settings/settings.dart';
 import 'package:data7_panel/components/settings/settings_textfield.dart';
 import 'package:data7_panel/models/panel.dart';
@@ -79,56 +80,6 @@ class _PanelsState extends State<Panels> {
     }
   }
 
-  Widget _panelBox(Panel panel) {
-    return Container(
-        margin: const EdgeInsets.all(4),
-        padding: const EdgeInsets.all(4),
-        width: double.infinity,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey, width: 0.5),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Flexible(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    panel.description,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    panel.statement,
-                    style: const TextStyle(
-                      fontSize: 14,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Intervalo: ${panel.interval} ms',
-                    style: const TextStyle(
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            IconButton(
-              onPressed: () {
-                _deletePanel(panel.id);
-              },
-              icon: const Icon(Icons.delete, color: Colors.red),
-            ),
-          ],
-        ));
-  }
-
   @override
   void initState() {
     super.initState();
@@ -164,7 +115,17 @@ class _PanelsState extends State<Panels> {
               child: CircularProgressIndicator(),
             )
           else
-            ...panels.map((e) => _panelBox(e)).toList(),
+            ...panels
+                .map((e) => PanelBox(
+                      panel: e,
+                      rightIcon: IconButton(
+                        onPressed: () {
+                          _deletePanel(e.id);
+                        },
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                      ),
+                    ))
+                .toList(),
           SizedBox(
             width: double.infinity,
             child: IconButton.outlined(

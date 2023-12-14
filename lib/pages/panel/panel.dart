@@ -1,16 +1,14 @@
-import 'dart:convert';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:data7_panel/components/carousel.dart';
 import 'package:data7_panel/models/tableComponentData.dart';
 import 'package:data7_panel/models/transform_data.dart';
 import 'package:data7_panel/providers/caroussel_model.dart';
 import 'package:data7_panel/providers/settings_model.dart';
+import 'package:data7_panel/repository/get_panels.dart';
 import 'package:data7_panel/services/audio.dart';
 import 'package:data7_panel/services/socket.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 import '../../components/bottom_app_bar.dart';
@@ -85,22 +83,31 @@ class _PanelPageState extends State<PanelPage> {
   void _initSocketConnection() async {
     List<String> panels = [];
     try {
-      final response =
-          await http.get(Uri.parse('${widget.url.split('?')[0]}/panels'));
-      if (response.statusCode == 200) {
-        final jsonPanels = jsonDecode(response.body);
-        for (var panel in jsonPanels) {
-          panels.add(panel['id']);
-        }
-      } else {
-        setState(() {
-          _message = "Erro ao buscar paineis disponíveis no servidor.";
-        });
+      final panelsAvailable = await GetPanels.execute();
+      await Settings.panel.initialize();
+      final joined = Settings.panel.joined
+          .where((panel) => panelsAvailable.map((e) => e.id).contains(panel));
+      for (var panel in joined) {
+        panels.add(panel);
       }
+      // final response =
+      //     await http.get(Uri.parse('${widget.url.split('?')[0]}/panels'));
+      // if (response.statusCode == 200) {
+      //   final jsonPanels = jsonDecode(response.body);
+      //   for (var panel in jsonPanels) {
+      //     panels.add(panel['id']);
+      //   }
+      // } else {
+      //   setState(() {
+      //     _message = "Erro ao buscar paineis disponíveis no servidor.";
+      //   });
+      // }
+
       newSocket.connect(
         url: widget.url,
         rooms: panels,
         onConnectionChange: (isConnected) {
+          print(isConnected);
           setState(() {
             _connected = isConnected;
             _connecting = false;
@@ -126,7 +133,6 @@ class _PanelPageState extends State<PanelPage> {
           _openDialogAlert(attempts);
         },
       );
-
       newSocket.listen('data', _refreshData);
     } catch (e) {
       _openDialogAlert(1);

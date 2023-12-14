@@ -216,6 +216,8 @@ class PanelSettings {
     "hour": "Hora(s)"
   };
   late PanelPreferences _pref;
+  late List<String> _joined = [];
+
   String get url => _url;
   ColumnsOptions get colsOptions => _colsOptions;
   String get query => _query;
@@ -226,6 +228,7 @@ class PanelSettings {
   String get typeIntervalDuration => _typeIntervalDuration;
   bool get openAutomatic => _openAutomatic;
   Map<String, String> get availableTypes => _availableTypes;
+  List<String> get joined => _joined;
   PanelSettings() {
     _url = '';
     _colsOptions = ColumnsOptions(url: '');
@@ -278,6 +281,11 @@ class PanelSettings {
     _pref.setOpenAutomatic(value);
   }
 
+  set joined(List<String> value) {
+    _joined = value;
+    _pref.setJoined(value);
+  }
+
   _getPreferences() async {
     _url = await _pref.getUrl();
     _colsOptions = ColumnsOptions(url: _url);
@@ -289,6 +297,7 @@ class PanelSettings {
     _duration = await _pref.getDuration();
     _typeIntervalDuration = await _pref.getTypeIntevalDuration();
     _openAutomatic = await _pref.getOpenAutomatic();
+    _joined = await _pref.getJoined();
   }
 
   Future<PanelSettings> initialize() async {
