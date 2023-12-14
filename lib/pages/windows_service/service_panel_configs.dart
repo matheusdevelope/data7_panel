@@ -100,6 +100,19 @@ class _ServicePanelConfigsState extends State<ServicePanelConfigs> {
                             },
                           ),
                         ),
+                        SettingsItem(
+                          child: SettingRowTextField(
+                            title: "Schema DB",
+                            subtitle:
+                                'Usado em caso de conexão com Linked Server, onde a Database é a master, caso contrário deixe em branco. \nEx: [SYBASE].[DATABASENAME].[SCHEMA]',
+                            enabled: allowEdit,
+                            required: false,
+                            initialValue: Settings.db.databaseSchema,
+                            onChange: (value) {
+                              Settings.db.databaseSchema = value;
+                            },
+                          ),
+                        ),
                       ],
                     ),
                   ],

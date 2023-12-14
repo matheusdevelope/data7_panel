@@ -31,6 +31,8 @@ class ColumnsOption {
       stringOptions: options,
     );
     width = getWidth(options);
+    hide = getHide(options);
+
     return this;
   }
 
@@ -69,6 +71,7 @@ class FilterOptions {
   bool test(Map<String, dynamic> object) {
     bool passed = true;
     object = convertKeysToLower(object);
+    print(object);
     if (object.containsKey(key)) {
       String valueObj = object[key].toString().trim().toLowerCase();
       if (operator == FilterOperators.equal) {

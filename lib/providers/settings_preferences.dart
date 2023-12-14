@@ -83,6 +83,12 @@ class DatabaseConnectionPreferences {
         DatabaseConnectionSettingsKeys.databaseName, value);
   }
 
+  setDatabaseSchema(String value) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString(
+        DatabaseConnectionSettingsKeys.databaseSchema, value);
+  }
+
   getRdbms() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getString(DatabaseConnectionSettingsKeys.rdbms) ??
@@ -119,6 +125,13 @@ class DatabaseConnectionPreferences {
             .getString(DatabaseConnectionSettingsKeys.databaseName) ??
         '';
   }
+
+  getDatabaseSchema() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences
+            .getString(DatabaseConnectionSettingsKeys.databaseSchema) ??
+        '';
+  }
 }
 
 class DatabaseConnectionSettingsKeys {
@@ -129,6 +142,7 @@ class DatabaseConnectionSettingsKeys {
   static String server = '$pre.server';
   static String port = '$pre.port';
   static String databaseName = '$pre.databaseName';
+  static String databaseSchema = '$pre.databaseSchema';
 }
 
 class PanelPreferences {
@@ -167,9 +181,19 @@ class PanelPreferences {
     sharedPreferences.setInt(PanelSettingsKeys.interval, value);
   }
 
+  setDuration(int value) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setInt(PanelSettingsKeys.duration, value);
+  }
+
   getInterval() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getInt(PanelSettingsKeys.interval) ?? 5;
+  }
+
+  getDuration() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getInt(PanelSettingsKeys.duration) ?? 5;
   }
 
   setTypeInteval(String value) async {
@@ -180,6 +204,17 @@ class PanelPreferences {
   getTypeInteval() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getString(PanelSettingsKeys.typeInteval) ?? 'sec';
+  }
+
+  getTypeIntevalDuration() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString(PanelSettingsKeys.typeIntevalDuration) ??
+        'sec';
+  }
+
+  setTypeIntervalDuration(String value) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString(PanelSettingsKeys.typeIntevalDuration, value);
   }
 
   setOpenAutomatic(bool value) async {
@@ -199,7 +234,9 @@ class PanelSettingsKeys {
   static String description = '$pre.description';
   static String query = '$pre.query';
   static String interval = '$pre.interval';
+  static String duration = '$pre.duration';
   static String typeInteval = '$pre.typeInteval';
+  static String typeIntevalDuration = '$pre.typeIntevalDuration';
   static String openAutomatic = '$pre.openAutomatic';
 }
 

@@ -41,6 +41,7 @@ class _WindowsServiceManagerUIState extends State<WindowsServiceManagerUI> {
       // 'database': Settings.db.rdbms,
       'DB_HOST': Settings.db.server,
       'DB_PORT': Settings.db.port,
+      'DB_SCHEMA': Settings.db.databaseSchema,
       'DB_NAME': Settings.db.databaseName,
       'DB_USER': Settings.db.user,
       'DB_PASSWORD': Settings.db.pass,

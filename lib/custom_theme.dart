@@ -55,6 +55,7 @@ class CustomTheme {
     double iconSize = 24 * (fontSizeFactor);
     IconThemeData iconTheme = IconThemeData(size: iconSize, color: Colors.blue);
     return ThemeData(
+      useMaterial3: false,
       primarySwatch: myColor,
       dataTableTheme: const DataTableThemeData(
         headingRowHeight: 45,

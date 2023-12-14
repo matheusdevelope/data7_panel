@@ -84,48 +84,53 @@ class _PanelPageState extends State<PanelPage> {
 
   void _initSocketConnection() async {
     List<String> panels = [];
-    final response = await http.get(Uri.parse('${widget.url}/panels'));
-    if (response.statusCode == 200) {
-      final jsonPanels = jsonDecode(response.body);
-      for (var panel in jsonPanels) {
-        panels.add(panel['id']);
+    try {
+      final response =
+          await http.get(Uri.parse('${widget.url.split('?')[0]}/panels'));
+      if (response.statusCode == 200) {
+        final jsonPanels = jsonDecode(response.body);
+        for (var panel in jsonPanels) {
+          panels.add(panel['id']);
+        }
+      } else {
+        setState(() {
+          _message = "Erro ao buscar paineis disponíveis no servidor.";
+        });
       }
-    } else {
-      setState(() {
-        _message = "Erro ao buscar paineis disponíveis no servidor.";
-      });
-    }
-    newSocket.connect(
-      url: widget.url,
-      rooms: panels,
-      onConnectionChange: (isConnected) {
-        setState(() {
-          _connected = isConnected;
-          _connecting = false;
-          _manualAttemptsReconnect = 0;
+      newSocket.connect(
+        url: widget.url,
+        rooms: panels,
+        onConnectionChange: (isConnected) {
           setState(() {
-            if (isConnected) {
-              _message = "Conectado, aguardando dados...";
-            } else {
-              _message =
-                  "Desconectado, verifique a conexão com a rede e se o servidor está online.";
-            }
+            _connected = isConnected;
+            _connecting = false;
+            _manualAttemptsReconnect = 0;
+            setState(() {
+              if (isConnected) {
+                _message = "Conectado, aguardando dados...";
+              } else {
+                _message =
+                    "Desconectado, verifique a conexão com a rede e se o servidor está online.";
+              }
+            });
           });
-        });
-      },
-      onConnectionError: (error) {
-        setState(() {
-          _message = error.toString();
-        });
-      },
-      maxReconnectAttempts: 5,
-      reconnectAttemptsDelay: 1000,
-      onMaxReconnectAttemptsReached: (attempts) {
-        _openDialogAlert(attempts);
-      },
-    );
+        },
+        onConnectionError: (error) {
+          setState(() {
+            _message = error.toString();
+          });
+        },
+        maxReconnectAttempts: 5,
+        reconnectAttemptsDelay: 1000,
+        onMaxReconnectAttemptsReached: (attempts) {
+          _openDialogAlert(attempts);
+        },
+      );
 
-    newSocket.listen('data', _refreshData);
+      newSocket.listen('data', _refreshData);
+    } catch (e) {
+      _openDialogAlert(1);
+    }
   }
 
   void _reconnect() {

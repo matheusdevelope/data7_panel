@@ -9,7 +9,8 @@ class UpdatePanel {
       required String description,
       required String statement,
       required int interval}) async {
-    final url = '${(await Settings.panel.initialize()).url}/panels/$id';
+    final url =
+        '${(await Settings.panel.initialize()).url.split('?')[0]}/panels/$id';
     final body = jsonEncode({
       'description': description,
       'statement': statement,

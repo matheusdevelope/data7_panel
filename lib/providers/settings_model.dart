@@ -118,6 +118,7 @@ class DatabaseConnectionSettings {
   late String _server;
   late String _port;
   late String _databaseName;
+  late String _databaseSchema;
   final Map<String, String> _availableRdbms = {
     "mssql": "SQL Server",
     // "sybase": "Sybase SQL Anywhere"
@@ -131,6 +132,7 @@ class DatabaseConnectionSettings {
   String get server => _server;
   String get port => _port;
   String get databaseName => _databaseName;
+  String get databaseSchema => _databaseSchema;
   Map<String, String> get availableRdbms => _availableRdbms;
   DatabaseConnectionSettings() {
     _rdbms = '';
@@ -139,6 +141,7 @@ class DatabaseConnectionSettings {
     _server = '';
     _port = '';
     _databaseName = '';
+    _databaseSchema = '';
     _pref = SettingsPreferences.database;
     _getPreferences();
   }
@@ -173,6 +176,11 @@ class DatabaseConnectionSettings {
     _pref.setDatabaseName(value);
   }
 
+  set databaseSchema(String value) {
+    _databaseSchema = value;
+    _pref.setDatabaseSchema(value);
+  }
+
   _getPreferences() async {
     _rdbms = await _pref.getRdbms();
     if (_rdbms.isEmpty) {
@@ -183,6 +191,7 @@ class DatabaseConnectionSettings {
     _server = await _pref.getServer();
     _port = await _pref.getPort();
     _databaseName = await _pref.getDatabaseName();
+    _databaseSchema = await _pref.getDatabaseSchema();
   }
 
   Future<DatabaseConnectionSettings> initialize() async {
@@ -197,7 +206,9 @@ class PanelSettings {
   late String _description;
   late String _query;
   late int _interval;
+  late int _duration;
   late String _typeInterval;
+  late String _typeIntervalDuration;
   late bool _openAutomatic;
   final Map<String, String> _availableTypes = {
     "sec": "Segundo(s)",
@@ -210,7 +221,9 @@ class PanelSettings {
   String get query => _query;
   String get description => _description;
   int get interval => _interval;
+  int get duration => _duration;
   String get typeInterval => _typeInterval;
+  String get typeIntervalDuration => _typeIntervalDuration;
   bool get openAutomatic => _openAutomatic;
   Map<String, String> get availableTypes => _availableTypes;
   PanelSettings() {
@@ -245,9 +258,19 @@ class PanelSettings {
     _pref.setInterval(value);
   }
 
+  set duration(int value) {
+    _duration = value;
+    _pref.setDuration(value);
+  }
+
   set typeInterval(String value) {
     _typeInterval = value;
     _pref.setTypeInteval(value);
+  }
+
+  set typeIntervalDuration(String value) {
+    _typeIntervalDuration = value;
+    _pref.setTypeIntervalDuration(value);
   }
 
   set openAutomatic(bool value) {
@@ -263,6 +286,8 @@ class PanelSettings {
         "SELECT * FROM view_QueRetornaOsDadosDoPainel";
     _interval = await _pref.getInterval();
     _typeInterval = await _pref.getTypeInteval();
+    _duration = await _pref.getDuration();
+    _typeIntervalDuration = await _pref.getTypeIntevalDuration();
     _openAutomatic = await _pref.getOpenAutomatic();
   }
 

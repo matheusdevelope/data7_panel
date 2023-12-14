@@ -8,7 +8,8 @@ class CreatePanel {
       {required String description,
       required String statement,
       required int interval}) async {
-    final url = '${(await Settings.panel.initialize()).url}/panels';
+    final url =
+        '${(await Settings.panel.initialize()).url.split('?')[0]}/panels';
     final body = jsonEncode({
       'description': description,
       'statement': statement,
