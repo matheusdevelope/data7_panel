@@ -5,6 +5,7 @@ import 'package:data7_panel/components/modal.dart';
 import 'package:data7_panel/components/panel_box.dart';
 import 'package:data7_panel/components/settings/settings.dart';
 import 'package:data7_panel/components/settings/settings_textfield.dart';
+import 'package:data7_panel/main.dart';
 import 'package:data7_panel/models/panel.dart';
 import 'package:data7_panel/repository/create_panel.dart';
 import 'package:data7_panel/repository/delete_panel.dart';
@@ -29,19 +30,18 @@ class _PanelsState extends State<Panels> {
 
   void _onSavePanel() async {
     try {
-      await Settings.panel.initialize();
       await CreatePanel.execute(
-        description: Settings.panel.description,
-        statement: Settings.panel.query,
-        interval: (Settings.panel.typeInterval == 'min'
-            ? (Settings.panel.interval * 60 * 1000)
-            : Settings.panel.typeInterval == 'hour'
-                ? Settings.panel.interval * 60 * 60 * 1000
-                : Settings.panel.interval * 1000),
+        description: settings.panel.description,
+        statement: settings.panel.query,
+        interval: (settings.panel.typeInterval == 'min'
+            ? (settings.panel.interval * 60 * 1000)
+            : settings.panel.typeInterval == 'hour'
+                ? settings.panel.interval * 60 * 60 * 1000
+                : settings.panel.interval * 1000),
       );
-      Settings.panel.description = '';
-      Settings.panel.query = '';
-      Settings.panel.interval = 10;
+      settings.panel.description = '';
+      settings.panel.query = '';
+      settings.panel.interval = 10;
       _loadQuerys();
       formPanel.close(context);
     } catch (e) {
@@ -51,7 +51,7 @@ class _PanelsState extends State<Panels> {
 
   void _deletePanel(String id) async {
     try {
-      await Settings.panel.initialize();
+      await settings.panel.initialize();
       await DeletePanel.execute(id: id);
       _loadQuerys();
     } catch (e) {
@@ -159,10 +159,10 @@ class FormPanel extends StatelessWidget {
                     ? null
                     : "A descrição precisa ter pelo menos 5 caracteres.",
               ],
-              initialValue: Settings.panel.description,
+              initialValue: settings.panel.description,
               maxLines: 1,
               onChange: (value) {
-                Settings.panel.description = value;
+                settings.panel.description = value;
               },
             ),
           ),
@@ -179,10 +179,10 @@ class FormPanel extends StatelessWidget {
                     ? null
                     : "A query precisa ter pelo menos 5 caracteres.",
               ],
-              initialValue: Settings.panel.query,
+              initialValue: settings.panel.query,
               maxLines: 4,
               onChange: (value) {
-                Settings.panel.query = value;
+                settings.panel.query = value;
               },
             ),
           ),
@@ -194,12 +194,12 @@ class FormPanel extends StatelessWidget {
 
               enabled: true,
 
-              initialValue: Settings.panel.interval,
+              initialValue: settings.panel.interval,
               minValue: 1,
               maxValue: 60,
               // maxLines: 5,
               onChange: (value) {
-                Settings.panel.interval = value;
+                settings.panel.interval = value;
               },
             ),
           ),
@@ -207,10 +207,10 @@ class FormPanel extends StatelessWidget {
             child: SettingRowDropDown(
               title: "Tipo de Intervalo:",
               enabled: true,
-              items: Settings.panel.availableTypes,
-              selectedValue: Settings.panel.typeInterval,
+              items: settings.panel.availableTypes,
+              selectedValue: settings.panel.typeInterval,
               onChange: (value) {
-                Settings.panel.typeInterval = value;
+                settings.panel.typeInterval = value;
               },
             ),
           ),

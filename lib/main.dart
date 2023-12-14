@@ -8,11 +8,14 @@ import 'package:wakelock/wakelock.dart';
 import 'custom_theme.dart';
 import 'providers/theme_model.dart';
 
-void main() {
+final settings = Settings();
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   MediaKit.ensureInitialized();
   Wakelock.enable();
+  await settings.initialize();
   runApp(const MyApp());
 }
 

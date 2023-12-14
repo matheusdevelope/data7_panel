@@ -1,10 +1,9 @@
-import 'package:data7_panel/providers/settings_model.dart';
+import 'package:data7_panel/main.dart';
 import 'package:http/http.dart' as http;
 
 class DeletePanel {
   static Future<void> execute({required String id}) async {
-    final url =
-        '${(await Settings.panel.initialize()).url.split('?')[0]}/panels/$id';
+    final url = '${(settings.panel).url.split('?')[0]}/panels/$id';
     final response = await http.delete(
       Uri.parse(url),
     );

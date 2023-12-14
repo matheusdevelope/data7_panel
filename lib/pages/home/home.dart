@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:data7_panel/components/dialog_alert.dart';
 import 'package:data7_panel/components/panels_selector.dart';
+import 'package:data7_panel/main.dart';
 import 'package:data7_panel/pages/panel/panel.dart';
 import 'package:data7_panel/pages/windows_service/index.dart';
 import 'package:data7_panel/providers/settings_model.dart';
@@ -26,7 +27,7 @@ class _HomePageState extends State<HomePage> {
 
   void _saveAndOpenPanel() {
     if (textController.text.isNotEmpty && textController.text.length > 10) {
-      Settings.panel.url = textController.text;
+      settings.panel.url = textController.text;
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -42,9 +43,8 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  getData() async {
-    await Settings.panel.initialize();
-    String value = Settings.panel.url;
+  getData() {
+    String value = settings.panel.url;
     setState(() {
       if (value.isNotEmpty) {
         textController.text = value;
@@ -56,12 +56,11 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     getData();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await Settings.panel.initialize();
-      if (Settings.panel.openAutomatic) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (settings.panel.openAutomatic) {
         // ignore: use_build_context_synchronously
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return PanelPage(url: Settings.panel.url);
+          return PanelPage(url: settings.panel.url);
         }));
       }
     });

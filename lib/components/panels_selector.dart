@@ -1,5 +1,6 @@
 import 'package:data7_panel/components/panel_box.dart';
 import 'package:data7_panel/components/settings/settings.dart';
+import 'package:data7_panel/main.dart';
 import 'package:data7_panel/models/panel.dart';
 import 'package:data7_panel/repository/get_panels.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class _PanelsSelectorState extends State<PanelsSelector> {
     final retPanels = await GetPanels.execute();
     setState(() {
       panels = retPanels;
-      joined = Settings.panel.joined;
+      joined = settings.panel.joined;
     });
   }
 
@@ -43,7 +44,7 @@ class _PanelsSelectorState extends State<PanelsSelector> {
               rightIcon: Switch(
                 value: joined.contains(panels[index].id),
                 onChanged: (value) {
-                  List<String> tempJoined = Settings.panel.joined;
+                  List<String> tempJoined = settings.panel.joined;
                   if (value) {
                     tempJoined = tempJoined
                         .where((element) => element != panels[index].id)
@@ -54,7 +55,7 @@ class _PanelsSelectorState extends State<PanelsSelector> {
                         .where((element) => element != panels[index].id)
                         .toList();
                   }
-                  Settings.panel.joined = tempJoined;
+                  settings.panel.joined = tempJoined;
                   setState(() {
                     joined = tempJoined;
                   });

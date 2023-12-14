@@ -1,4 +1,5 @@
 import 'package:data7_panel/components/settings/settings.dart';
+import 'package:data7_panel/main.dart';
 import 'package:flutter/material.dart';
 import 'options_from_url.dart';
 import 'tableComponentData.dart';
@@ -32,8 +33,8 @@ class TransformData {
   List<TableComponentData> parseData(List<Map<String, dynamic>> pdata) {
     tables = [];
     List<Map<String, dynamic>> data =
-        Settings.panel.colsOptions.filters.isNotEmpty
-            ? filterList(list: pdata, colOptions: Settings.panel.colsOptions)
+        settings.panel.colsOptions.filters.isNotEmpty
+            ? filterList(list: pdata, colOptions: settings.panel.colsOptions)
             : pdata;
 
     List<List<Map<String, dynamic>>> separatedData = [];
@@ -79,8 +80,8 @@ class TransformData {
 
   List<CarouselData> parseDataCarousel(List<Map<String, dynamic>> pdata) {
     List<Map<String, dynamic>> data =
-        Settings.panel.colsOptions.filters.isNotEmpty
-            ? filterList(list: pdata, colOptions: Settings.panel.colsOptions)
+        settings.panel.colsOptions.filters.isNotEmpty
+            ? filterList(list: pdata, colOptions: settings.panel.colsOptions)
             : pdata;
     String keyToSort = "Config_Carrossel";
     data.sort((a, b) => a.containsKey(keyToSort) && b.containsKey(keyToSort)

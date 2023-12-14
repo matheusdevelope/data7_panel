@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:data7_panel/components/carousel.dart';
+import 'package:data7_panel/main.dart';
 import 'package:data7_panel/models/tableComponentData.dart';
 import 'package:data7_panel/models/transform_data.dart';
 import 'package:data7_panel/providers/caroussel_model.dart';
@@ -84,8 +85,7 @@ class _PanelPageState extends State<PanelPage> {
     List<String> panels = [];
     try {
       final panelsAvailable = await GetPanels.execute();
-      await Settings.panel.initialize();
-      final joined = Settings.panel.joined
+      final joined = settings.panel.joined
           .where((panel) => panelsAvailable.map((e) => e.id).contains(panel));
       for (var panel in joined) {
         panels.add(panel);
@@ -107,7 +107,6 @@ class _PanelPageState extends State<PanelPage> {
         url: widget.url,
         rooms: panels,
         onConnectionChange: (isConnected) {
-          print(isConnected);
           setState(() {
             _connected = isConnected;
             _connecting = false;
@@ -211,22 +210,20 @@ class _PanelPageState extends State<PanelPage> {
 
   void _playSound() async {
     try {
-      if ((await Settings.notifications.initialize()).enabled) {
+      if (settings.notifications.enabled) {
         await audioPlayer.stop();
         if (currentAudioPath.isNotEmpty) {
           await audioPlayer.play(currentAudioPath,
-              volume: (await Settings.notifications.initialize()).volume);
+              volume: settings.notifications.volume);
         } else {
-          await audioPlayer
-              .play((await Settings.notifications.initialize()).file);
+          await audioPlayer.play(settings.notifications.file);
         }
       }
     } catch (e) {}
   }
 
-  _setNotificationSong() async {
-    String tempCurrentAudioPath =
-        (await Settings.notifications.initialize()).file;
+  _setNotificationSong() {
+    String tempCurrentAudioPath = settings.notifications.file;
     setState(() {
       currentAudioPath = tempCurrentAudioPath;
     });

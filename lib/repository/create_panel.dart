@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:data7_panel/providers/settings_model.dart';
+import 'package:data7_panel/main.dart';
 import 'package:http/http.dart' as http;
 
 class CreatePanel {
@@ -8,8 +8,7 @@ class CreatePanel {
       {required String description,
       required String statement,
       required int interval}) async {
-    final url =
-        '${(await Settings.panel.initialize()).url.split('?')[0]}/panels';
+    final url = '${settings.panel.url.split('?')[0]}/panels';
     final body = jsonEncode({
       'description': description,
       'statement': statement,

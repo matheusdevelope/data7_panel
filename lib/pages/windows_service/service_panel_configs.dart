@@ -1,5 +1,6 @@
 import 'package:data7_panel/components/settings/settings.dart';
 import 'package:data7_panel/components/settings/settings_textfield.dart';
+import 'package:data7_panel/main.dart';
 import 'package:data7_panel/pages/windows_service/panels.dart';
 import 'package:data7_panel/services/windows_service.dart';
 import 'package:flutter/material.dart';
@@ -19,9 +20,9 @@ class _ServicePanelConfigsState extends State<ServicePanelConfigs> {
     return ListView(
       children: [
         Consumer<WinServiceSettings>(
-          builder: (context, settings, c) {
-            bool allowEdit = settings.status == StatusService.stopped ||
-                settings.status == StatusService.unistalled;
+          builder: (context, winService, c) {
+            bool allowEdit = winService.status == StatusService.stopped ||
+                winService.status == StatusService.unistalled;
             return Column(
               children: [
                 SettingsGroup(
@@ -36,10 +37,10 @@ class _ServicePanelConfigsState extends State<ServicePanelConfigs> {
                           child: SettingRowDropDown(
                             title: "RDBMS:",
                             enabled: allowEdit,
-                            items: Settings.db.availableRdbms,
-                            selectedValue: Settings.db.rdbms,
+                            items: settings.database.availableRdbms,
+                            selectedValue: settings.database.rdbms,
                             onChange: (value) {
-                              Settings.db.rdbms = value;
+                              settings.database.rdbms = value;
                             },
                           ),
                         ),
@@ -48,9 +49,9 @@ class _ServicePanelConfigsState extends State<ServicePanelConfigs> {
                             title: "Usuário:",
                             enabled: allowEdit,
                             required: true,
-                            initialValue: Settings.db.user,
+                            initialValue: settings.database.user,
                             onChange: (value) {
-                              Settings.db.user = value;
+                              settings.database.user = value;
                             },
                           ),
                         ),
@@ -58,11 +59,11 @@ class _ServicePanelConfigsState extends State<ServicePanelConfigs> {
                           child: SettingRowTextField(
                             title: "Senha:",
                             enabled: allowEdit,
-                            initialValue: Settings.db.pass,
+                            initialValue: settings.database.pass,
                             isPassword: true,
                             required: true,
                             onChange: (value) {
-                              Settings.db.pass = value;
+                              settings.database.pass = value;
                             },
                           ),
                         ),
@@ -71,9 +72,9 @@ class _ServicePanelConfigsState extends State<ServicePanelConfigs> {
                             title: "Servidor",
                             enabled: allowEdit,
                             required: true,
-                            initialValue: Settings.db.server,
+                            initialValue: settings.database.server,
                             onChange: (value) {
-                              Settings.db.server = value;
+                              settings.database.server = value;
                             },
                           ),
                         ),
@@ -82,10 +83,10 @@ class _ServicePanelConfigsState extends State<ServicePanelConfigs> {
                             title: "Porta",
                             enabled: allowEdit,
                             required: true,
-                            initialValue: Settings.db.port,
+                            initialValue: settings.database.port,
                             inputType: TextInputType.number,
                             onChange: (value) {
-                              Settings.db.port = value;
+                              settings.database.port = value;
                             },
                           ),
                         ),
@@ -94,9 +95,9 @@ class _ServicePanelConfigsState extends State<ServicePanelConfigs> {
                             title: "Base de Dados",
                             enabled: allowEdit,
                             required: true,
-                            initialValue: Settings.db.databaseName,
+                            initialValue: settings.database.databaseName,
                             onChange: (value) {
-                              Settings.db.databaseName = value;
+                              settings.database.databaseName = value;
                             },
                           ),
                         ),
@@ -107,9 +108,9 @@ class _ServicePanelConfigsState extends State<ServicePanelConfigs> {
                                 'Usado em caso de conexão com Linked Server, onde a Database é a master, caso contrário deixe em branco. \nEx: [SYBASE].[DATABASENAME].[SCHEMA]',
                             enabled: allowEdit,
                             required: false,
-                            initialValue: Settings.db.databaseSchema,
+                            initialValue: settings.database.databaseSchema,
                             onChange: (value) {
-                              Settings.db.databaseSchema = value;
+                              settings.database.databaseSchema = value;
                             },
                           ),
                         ),

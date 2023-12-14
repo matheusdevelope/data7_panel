@@ -7,18 +7,51 @@ import 'package:data7_panel/services/windows_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
-class Settings extends ChangeNotifier {
-  static ThemeModel theme = ThemeModel();
-  static PanelSettings panel = PanelSettings();
-  static CarousselModel carrossel = CarousselModel();
-  static NotificationsSettings notifications = NotificationsSettings();
-  static DatabaseConnectionSettings db = DatabaseConnectionSettings();
-  static WinServiceSettings winService = WinServiceSettings();
+// class Settings extends ChangeNotifier {
+//   static ThemeModel theme = ThemeModel();
+//   static PanelSettings panel = PanelSettings();
+//   static CarousselModel carrossel = CarousselModel();
+//   static NotificationsSettings notifications = NotificationsSettings();
+//   static DatabaseConnectionSettings db = DatabaseConnectionSettings();
+//   static WinServiceSettings winService = WinServiceSettings();
 
-  late WinServiceSettings _winService;
-  WinServiceSettings get pWinService => _winService;
-  Settings() {
-    _winService = WinServiceSettings();
+//   late WinServiceSettings _winService;
+//   WinServiceSettings get pWinService => _winService;
+//   Settings() {
+//     _winService = WinServiceSettings();
+//   }
+// }
+
+class Settings {
+  static final Settings _instance = Settings._internal();
+
+  factory Settings() {
+    return _instance;
+  }
+
+  Settings._internal();
+
+  final ThemeModel _theme = ThemeModel();
+  final PanelSettings _panel = PanelSettings();
+  final CarousselModel _carousel = CarousselModel();
+  final NotificationsSettings _notifications = NotificationsSettings();
+  final DatabaseConnectionSettings _database = DatabaseConnectionSettings();
+  final WinServiceSettings _windowsService = WinServiceSettings();
+
+  ThemeModel get theme => _theme;
+  PanelSettings get panel => _panel;
+  CarousselModel get carousel => _carousel;
+  NotificationsSettings get notifications => _notifications;
+  DatabaseConnectionSettings get database => _database;
+  WinServiceSettings get winService => _windowsService;
+
+  Future<void> initialize() async {
+    await _theme.initialize();
+    await _panel.initialize();
+    await _carousel.initialize();
+    await _notifications.initialize();
+    await _database.initialize();
+    await _windowsService.initialize();
   }
 }
 

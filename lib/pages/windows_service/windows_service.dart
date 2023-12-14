@@ -2,6 +2,7 @@ import 'package:data7_panel/components/download_box.dart';
 import 'package:data7_panel/components/outilined_buttom.dart';
 import 'package:data7_panel/components/settings/settings.dart';
 import 'package:data7_panel/components/settings/settings_textfield.dart';
+import 'package:data7_panel/main.dart';
 import 'package:data7_panel/services/firewall_rules.dart';
 import 'package:data7_panel/services/windows_service.dart';
 import 'package:flutter/material.dart';
@@ -21,8 +22,7 @@ class _WindowsServiceManagerUIState extends State<WindowsServiceManagerUI> {
 
   Future<void> initializeValues() async {
     if (!initialized) {
-      await Settings.winService.initialize();
-      _getStatus(Settings.winService);
+      _getStatus(settings.winService);
     }
   }
 
@@ -35,16 +35,16 @@ class _WindowsServiceManagerUIState extends State<WindowsServiceManagerUI> {
         program: settings.executable);
   }
 
-  Map<String, String> paramsWinService(WinServiceSettings settings) {
+  Map<String, String> paramsWinService(WinServiceSettings winService) {
     return {
-      'PORT': settings.port.toString(),
-      // 'database': Settings.db.rdbms,
-      'DB_HOST': Settings.db.server,
-      'DB_PORT': Settings.db.port,
-      'DB_SCHEMA': Settings.db.databaseSchema,
-      'DB_NAME': Settings.db.databaseName,
-      'DB_USER': Settings.db.user,
-      'DB_PASSWORD': Settings.db.pass,
+      'PORT': winService.port.toString(),
+      // 'database': settings.database.rdbms,
+      'DB_HOST': settings.database.server,
+      'DB_PORT': settings.database.port,
+      'DB_SCHEMA': settings.database.databaseSchema,
+      'DB_NAME': settings.database.databaseName,
+      'DB_USER': settings.database.user,
+      'DB_PASSWORD': settings.database.pass,
       // 'query': '"${Settings.panel.query}"',
       // 'time_refresh': (Settings.panel.typeInterval == 'min'
       //         ? (Settings.panel.interval * 60 * 1000)

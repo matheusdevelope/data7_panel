@@ -1,4 +1,5 @@
 import 'package:data7_panel/components/settings/settings.dart';
+import 'package:data7_panel/main.dart';
 import 'package:data7_panel/providers/theme_model.dart';
 import 'package:data7_panel/services/audio.dart';
 import 'package:flutter/material.dart';
@@ -13,11 +14,7 @@ class Configurations extends StatefulWidget {
 }
 
 class _ConfigurationsState extends State<Configurations> {
-  Future<void> initializeValues() async {
-    await Settings.notifications.initialize();
-    await Settings.theme.initialize();
-    await Settings.carrossel.initialize();
-  }
+  Future<void> initializeValues() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +49,9 @@ class _ConfigurationsState extends State<Configurations> {
                                 title: 'Abrir Automáticamente',
                                 subtitle:
                                     "Caso o endereço de acesso seja válido, ao entrar no aplicativo o painel será aberto imediatamente.",
-                                initialValue: Settings.panel.openAutomatic,
+                                initialValue: settings.panel.openAutomatic,
                                 onChange: (value) {
-                                  Settings.panel.openAutomatic = value;
+                                  settings.panel.openAutomatic = value;
                                 },
                               ),
                             ),
@@ -63,9 +60,9 @@ class _ConfigurationsState extends State<Configurations> {
                                 title: 'Avanço Automático do Carrossel',
                                 subtitle:
                                     "Se configurado na fonte de dados, os carrosseis carregados irão ficar fazendo a transição/exibição pelo tempo definido.",
-                                initialValue: Settings.carrossel.autoplay,
+                                initialValue: settings.carousel.autoplay,
                                 onChange: (value) {
-                                  Settings.carrossel.autoplay = value;
+                                  settings.carousel.autoplay = value;
                                 },
                               ),
                             ),
@@ -79,11 +76,11 @@ class _ConfigurationsState extends State<Configurations> {
                                 minValue: 1,
                                 maxValue: 60 * 60,
                                 initialValue:
-                                    Settings.carrossel.autoPlayDuration,
+                                    settings.carousel.autoPlayDuration,
                                 // justIntValues: true,
                                 // unit: ' seg.',
                                 onChange: (value) {
-                                  Settings.carrossel.autoPlayDuration = value;
+                                  settings.carousel.autoPlayDuration = value;
                                 },
                               ),
                             ),
@@ -101,9 +98,9 @@ class _ConfigurationsState extends State<Configurations> {
                             SettingsItem(
                               child: SettingRowToggle(
                                 title: 'Alerta Sonoro',
-                                initialValue: Settings.notifications.enabled,
+                                initialValue: settings.notifications.enabled,
                                 onChange: (value) {
-                                  Settings.notifications.enabled = value;
+                                  settings.notifications.enabled = value;
                                 },
                               ),
                             ),
@@ -113,27 +110,27 @@ class _ConfigurationsState extends State<Configurations> {
                                 from: 1,
                                 to: 100,
                                 initialValue:
-                                    Settings.notifications.volume * 100,
+                                    settings.notifications.volume * 100,
                                 justIntValues: true,
                                 unit: ' %',
                                 onChange: (value) {
-                                  Settings.notifications.volume = value / 100;
+                                  settings.notifications.volume = value / 100;
                                 },
                               ),
                             ),
                             SettingsItem(
                               child: SettingRowDropDown(
                                 title: 'Som de Notificação',
-                                items: Settings.notifications.files,
+                                items: settings.notifications.files,
                                 itemsDefault:
-                                    Settings.notifications.filesDefault,
-                                selectedValue: Settings.notifications.file,
+                                    settings.notifications.filesDefault,
+                                selectedValue: settings.notifications.file,
                                 onChange: (value) {
-                                  Settings.notifications.file = value;
+                                  settings.notifications.file = value;
                                 },
-                                onAdd: () => Settings.notifications.addFile([]),
+                                onAdd: () => settings.notifications.addFile([]),
                                 onRightButtonPress: (item) {
-                                  Settings.notifications.deleteFile(item);
+                                  settings.notifications.deleteFile(item);
                                 },
                                 onLeftButtonPress: (item) =>
                                     AudioHelper().playPause(item),
@@ -156,7 +153,7 @@ class _ConfigurationsState extends State<Configurations> {
                             SettingsItem(
                               child: SettingRowToggle(
                                 title: 'Usar Tema Adaptativo',
-                                initialValue: Settings.theme.useAdaptiveTheme,
+                                initialValue: settings.theme.useAdaptiveTheme,
                                 onChange: (value) {
                                   theme.useAdaptiveTheme = value;
                                 },
