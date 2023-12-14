@@ -1,9 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:data7_panel/components/render_panel.dart';
+import 'package:data7_panel/main.dart';
 import 'package:data7_panel/models/tableComponentData.dart';
-import 'package:data7_panel/providers/caroussel_model.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class Carousel extends StatelessWidget {
   final List<CarouselData> data;
@@ -26,31 +25,34 @@ class Carousel extends StatelessWidget {
           child: Builder(
             builder: (context) {
               final double height = MediaQuery.of(context).size.height;
-              return Consumer<CarousselModel>(
-                builder: (context, CarousselModel caroussel, c) {
-                  int currentIndex = caroussel.currentIndex + 1 >= data.length
-                      ? data.length - 1
-                      : caroussel.currentIndex;
+              return ListenableBuilder(
+                listenable: settings.carousel,
+                builder: (BuildContext context, Widget? child) {
+                  int currentIndex =
+                      settings.carousel.currentIndex + 1 >= data.length
+                          ? data.length - 1
+                          : settings.carousel.currentIndex;
 
                   int time = currentIndex == data.length - 1
                       ? data[0].duration
                       : currentIndex + 1 >= data.length
                           ? data[currentIndex].duration
                           : data[currentIndex + 1].duration;
-                  time = time == 0 ? caroussel.autoPlayDuration : time;
+                  time = time == 0 ? settings.carousel.autoPlayDuration : time;
                   if (_interval > 0 && _interval != time) {
                     controller.stopAutoPlay();
                     controller.startAutoPlay();
                   }
                   _interval = time;
+
                   return CarouselSlider(
                     carouselController: controller,
                     options: CarouselOptions(
                       height: height,
                       viewportFraction: 1.0,
                       enlargeCenterPage: false,
-                      autoPlay: caroussel.autoplay &&
-                          (caroussel.itensCount > 1 || data.length > 1),
+                      autoPlay: settings.carousel.autoplay &&
+                          (settings.carousel.itensCount > 1 || data.length > 1),
                       autoPlayCurve: Curves.fastOutSlowIn,
                       enableInfiniteScroll: true,
                       autoPlayInterval: Duration(seconds: _interval),
@@ -58,8 +60,8 @@ class Carousel extends StatelessWidget {
                           const Duration(milliseconds: 500),
                       onPageChanged:
                           (int index, CarouselPageChangedReason reason) {
-                        caroussel.currentIndex = index;
-                        caroussel.itensCount = data.length;
+                        settings.carousel.currentIndex = index;
+                        // settings.carousel.itensCount = data.length;
                         // if (data.length == 1) {
                         //   caroussel.autoplay = false;
                         // }

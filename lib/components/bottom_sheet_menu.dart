@@ -1,5 +1,5 @@
 import 'package:data7_panel/components/custom_increase.dart';
-import 'package:data7_panel/providers/caroussel_model.dart';
+import 'package:data7_panel/main.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
@@ -14,8 +14,9 @@ class BottomSheetMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<ThemeModel>(
       builder: (ctx, ThemeModel theme, c) {
-        return Consumer<CarousselModel>(
-          builder: (context, CarousselModel caroussel, c) {
+        return ListenableBuilder(
+          listenable: settings.carousel,
+          builder: (BuildContext context, Widget? child) {
             return Wrap(
               crossAxisAlignment: WrapCrossAlignment.end,
               alignment: WrapAlignment.spaceAround,
@@ -53,12 +54,15 @@ class BottomSheetMenu extends StatelessWidget {
                       constraints: const BoxConstraints(),
                       iconSize: theme.fontSizeMenuPanel + 12,
                       onPressed: () {
-                        caroussel.autoplay = !caroussel.autoplay;
+                        settings.carousel.autoplay =
+                            !settings.carousel.autoplay;
                       },
-                      color: caroussel.autoplay ? null : Colors.black,
+                      color: settings.carousel.autoplay ? null : Colors.black,
                       tooltip: "Ativo",
                       icon: Icon(
-                        caroussel.autoplay ? Icons.toggle_on : Icons.toggle_off,
+                        settings.carousel.autoplay
+                            ? Icons.toggle_on
+                            : Icons.toggle_off,
                       ),
                     ),
                   ],
@@ -72,11 +76,11 @@ class BottomSheetMenu extends StatelessWidget {
                   ),
                   child: [
                     CustomIncrease(
-                      value: caroussel.autoPlayDuration.toDouble(),
+                      value: settings.carousel.autoPlayDuration.toDouble(),
                       minValue: 1,
                       maxValue: 60 * 10,
                       onChange: (value) {
-                        caroussel.autoPlayDuration = value.toInt();
+                        settings.carousel.autoPlayDuration = value.toInt();
                       },
                       fontSize: theme.fontSizeMenuPanel,
                     ),

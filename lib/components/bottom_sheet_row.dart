@@ -1,4 +1,4 @@
-import 'package:data7_panel/providers/caroussel_model.dart';
+import 'package:data7_panel/main.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_model.dart';
@@ -13,8 +13,9 @@ class BottomSheetRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(left: 6, right: 6),
-      child: Consumer<CarousselModel>(
-        builder: (context, CarousselModel caroussel, c) {
+      child: ListenableBuilder(
+        listenable: settings.carousel,
+        builder: (BuildContext context, Widget? _) {
           return Consumer<ThemeModel>(
             builder: (ctx, ThemeModel theme, c) {
               return Column(

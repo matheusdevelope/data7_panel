@@ -1,6 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:data7_panel/components/carousel.dart';
-import 'package:data7_panel/providers/caroussel_model.dart';
+import 'package:data7_panel/main.dart';
 import 'package:data7_panel/providers/theme_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,13 +34,14 @@ class CustomBottomAppBar extends StatelessWidget {
                       children: <Widget>[
                         Expanded(
                           flex: 1,
-                          child: Consumer<CarousselModel>(
-                            builder: (context, CarousselModel caroussel, c) {
+                          child: ListenableBuilder(
+                            listenable: settings.carousel,
+                            builder: (BuildContext context, Widget? child) {
                               return ControlsCarousel(
                                 controller: controller,
-                                activeIndex: caroussel.currentIndex,
-                                autoplay: caroussel.autoplay,
-                                items: caroussel.itensCount,
+                                activeIndex: settings.carousel.currentIndex,
+                                autoplay: settings.carousel.autoplay,
+                                items: settings.carousel.itensCount,
                                 fontSize: theme.fontSizeMenuPanel,
                               );
                             },
@@ -60,13 +61,14 @@ class CustomBottomAppBar extends StatelessWidget {
                       if (MediaQuery.of(context).size.width > 450)
                         Expanded(
                           flex: 1,
-                          child: Consumer<CarousselModel>(
-                            builder: (context, CarousselModel caroussel, c) {
+                          child: ListenableBuilder(
+                            listenable: settings.carousel,
+                            builder: (BuildContext context, Widget? child) {
                               return ControlsCarousel(
                                 controller: controller,
-                                activeIndex: caroussel.currentIndex,
-                                autoplay: caroussel.autoplay,
-                                items: caroussel.itensCount,
+                                activeIndex: settings.carousel.currentIndex,
+                                autoplay: settings.carousel.autoplay,
+                                items: settings.carousel.itensCount,
                                 fontSize: theme.fontSizeMenuPanel,
                               );
                             },

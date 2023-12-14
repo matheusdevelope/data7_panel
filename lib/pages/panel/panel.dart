@@ -260,38 +260,37 @@ class _PanelPageState extends State<PanelPage> {
       });
     }
 
-    return ChangeNotifierProvider(
-      create: (_) => CarousselModel(),
-      child: Scaffold(
-        body: dataPanel.isEmpty
-            ? LoadingAnimated(
-                message: _message,
-              )
-            : Carousel(
-                data: dataPanel,
-                controller: _controller,
-              ),
-        bottomNavigationBar: CustomBottomAppBar(
-          legends: _legends,
-          lastTimeSync: _lastTimeSync,
-          controller: _controller,
-        ),
-        floatingActionButton: FloatingActionButton.small(
-          onPressed: _onPressFloatingButtom,
-          tooltip: _connected ? "Painel Conectado" : "Reconectar",
-          backgroundColor: Colors.white,
-          child: _connecting
-              ? const CircularProgressIndicator()
-              : Icon(
-                  Icons.connected_tv_outlined,
-                  size: 30,
-                  color: _connected ? Colors.green : Colors.red,
-                ),
-        ),
-        floatingActionButtonLocation:
-            FloatingActionButtonLocation.miniCenterDocked,
-        bottomSheet: isExpanded ? const BottomSheetMenu() : null,
+    settings.carousel.itensCount = dataPanel.length;
+
+    return Scaffold(
+      body: dataPanel.isEmpty
+          ? LoadingAnimated(
+              message: _message,
+            )
+          : Carousel(
+              data: dataPanel,
+              controller: _controller,
+            ),
+      bottomNavigationBar: CustomBottomAppBar(
+        legends: _legends,
+        lastTimeSync: _lastTimeSync,
+        controller: _controller,
       ),
+      floatingActionButton: FloatingActionButton.small(
+        onPressed: _onPressFloatingButtom,
+        tooltip: _connected ? "Painel Conectado" : "Reconectar",
+        backgroundColor: Colors.white,
+        child: _connecting
+            ? const CircularProgressIndicator()
+            : Icon(
+                Icons.connected_tv_outlined,
+                size: 30,
+                color: _connected ? Colors.green : Colors.red,
+              ),
+      ),
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterDocked,
+      bottomSheet: isExpanded ? const BottomSheetMenu() : null,
     );
   }
 }

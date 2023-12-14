@@ -7,21 +7,6 @@ import 'package:data7_panel/services/windows_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
-// class Settings extends ChangeNotifier {
-//   static ThemeModel theme = ThemeModel();
-//   static PanelSettings panel = PanelSettings();
-//   static CarousselModel carrossel = CarousselModel();
-//   static NotificationsSettings notifications = NotificationsSettings();
-//   static DatabaseConnectionSettings db = DatabaseConnectionSettings();
-//   static WinServiceSettings winService = WinServiceSettings();
-
-//   late WinServiceSettings _winService;
-//   WinServiceSettings get pWinService => _winService;
-//   Settings() {
-//     _winService = WinServiceSettings();
-//   }
-// }
-
 class Settings {
   static final Settings _instance = Settings._internal();
 
@@ -55,7 +40,7 @@ class Settings {
   }
 }
 
-class NotificationsSettings {
+class NotificationsSettings extends ChangeNotifier {
   late bool _enabled;
   late String _file;
   late Map<String, String> _files;
@@ -79,15 +64,21 @@ class NotificationsSettings {
   set enabled(bool value) {
     _enabled = value;
     _pref.setEnabled(value);
+
+    notifyListeners();
   }
 
   set file(String value) {
     _file = value;
     _pref.setFile(value);
+
+    notifyListeners();
   }
 
   set files(Map<String, String> value) {
     _files = value;
+
+    notifyListeners();
   }
 
   set volume(double value) {
@@ -144,7 +135,7 @@ class NotificationsSettings {
   }
 }
 
-class DatabaseConnectionSettings {
+class DatabaseConnectionSettings extends ChangeNotifier {
   late String _rdbms;
   late String _user;
   late String _pass;
@@ -182,31 +173,43 @@ class DatabaseConnectionSettings {
   set rdbms(String value) {
     _rdbms = value;
     _pref.setRdbms(value);
+
+    notifyListeners();
   }
 
   set user(String value) {
     _user = value;
     _pref.setUser(value);
+
+    notifyListeners();
   }
 
   set pass(String value) {
     _pass = value;
     _pref.setPass(value);
+
+    notifyListeners();
   }
 
   set server(String value) {
     _server = value;
     _pref.setServer(value);
+
+    notifyListeners();
   }
 
   set port(String value) {
     _port = value;
     _pref.setPort(value);
+
+    notifyListeners();
   }
 
   set databaseName(String value) {
     _databaseName = value;
     _pref.setDatabaseName(value);
+
+    notifyListeners();
   }
 
   set databaseSchema(String value) {
@@ -233,7 +236,7 @@ class DatabaseConnectionSettings {
   }
 }
 
-class PanelSettings {
+class PanelSettings extends ChangeNotifier {
   late String _url;
   late ColumnsOptions _colsOptions;
   late String _description;
@@ -277,41 +280,57 @@ class PanelSettings {
     _url = value;
     _colsOptions = ColumnsOptions(url: value);
     _pref.setUrl(value);
+
+    notifyListeners();
   }
 
   set description(String value) {
     _description = value;
     _pref.setDescription(value);
+
+    notifyListeners();
   }
 
   set query(String value) {
     _query = value;
     _pref.setQuery(value);
+
+    notifyListeners();
   }
 
   set interval(int value) {
     _interval = value;
     _pref.setInterval(value);
+
+    notifyListeners();
   }
 
   set duration(int value) {
     _duration = value;
     _pref.setDuration(value);
+
+    notifyListeners();
   }
 
   set typeInterval(String value) {
     _typeInterval = value;
     _pref.setTypeInteval(value);
+
+    notifyListeners();
   }
 
   set typeIntervalDuration(String value) {
     _typeIntervalDuration = value;
     _pref.setTypeIntervalDuration(value);
+
+    notifyListeners();
   }
 
   set openAutomatic(bool value) {
     _openAutomatic = value;
     _pref.setOpenAutomatic(value);
+
+    notifyListeners();
   }
 
   set joined(List<String> value) {
