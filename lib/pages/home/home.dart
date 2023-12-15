@@ -5,7 +5,6 @@ import 'package:data7_panel/components/panels_selector.dart';
 import 'package:data7_panel/main.dart';
 import 'package:data7_panel/pages/panel/panel.dart';
 import 'package:data7_panel/pages/windows_service/index.dart';
-import 'package:data7_panel/providers/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/theme_model.dart';
@@ -20,49 +19,45 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  TextEditingController textController =
-      TextEditingController(text: 'http://192.168.0.1:3546');
+  TextEditingController textController = TextEditingController(
+      text: settings.panel.url.isNotEmpty
+          ? settings.panel.url
+          : 'http://192.168.0.1:3546');
   CustomDialogAlert alert = CustomDialogAlert();
   int currentTab = 0;
+  bool showPanels = true;
 
-  void _saveAndOpenPanel() {
+  void _saveAndOpenPanel() async {
     if (textController.text.isNotEmpty && textController.text.length > 10) {
       settings.panel.url = textController.text;
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          maintainState: true,
-          builder: (context) {
-            return PanelPage(url: textController.text);
-          },
-        ),
-      );
     } else {
       alert.show(
           context, 'Atenção', 'Para prosseguir informe um endereço válido.');
+      return;
     }
-  }
 
-  getData() {
-    String value = settings.panel.url;
-    setState(() {
-      if (value.isNotEmpty) {
-        textController.text = value;
-      }
-    });
+    if (settings.panel.joined.isEmpty) {
+      alert.show(context, 'Atenção',
+          'Para prosseguir, selecione pelo menos um painel.');
+      return;
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        maintainState: true,
+        builder: (context) {
+          return PanelPage(url: textController.text);
+        },
+      ),
+    );
   }
 
   @override
   void initState() {
     super.initState();
-    getData();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (settings.panel.openAutomatic) {
-        // ignore: use_build_context_synchronously
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return PanelPage(url: settings.panel.url);
-        }));
-      }
+      if (settings.panel.openAutomatic) _saveAndOpenPanel();
     });
   }
 
@@ -101,13 +96,6 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                             const SizedBox(height: 16),
-                            const Text(
-                              'Paineis disponíveis:',
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
                             PanelsSelector(url: textController.text)
                           ],
                         )

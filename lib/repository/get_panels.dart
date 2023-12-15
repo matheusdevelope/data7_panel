@@ -5,10 +5,11 @@ import 'package:data7_panel/models/panel.dart';
 import 'package:http/http.dart' as http;
 
 class GetPanels {
-  static Future<List<Panel>> execute() async {
+  static Future<List<Panel>> execute({String? url}) async {
     List<Panel> panels = [];
-    final url = '${settings.panel.url.split('?')[0]}/panels';
-    final response = await http.get(Uri.parse(url));
+    url = url ?? settings.panel.url;
+    final urlPanels = '${url.split('?')[0]}/panels';
+    final response = await http.get(Uri.parse(urlPanels));
     if (response.statusCode == 200) {
       final jsonPanels = jsonDecode(response.body);
       for (var panel in jsonPanels) {

@@ -116,7 +116,10 @@ class _PanelsState extends State<Panels> {
             )
           else
             ...panels
-                .map((e) => PanelBox(
+                .map(
+                  (e) => Container(
+                    margin: const EdgeInsets.only(bottom: 8),
+                    child: PanelBox(
                       panel: e,
                       rightIcon: IconButton(
                         onPressed: () {
@@ -124,7 +127,9 @@ class _PanelsState extends State<Panels> {
                         },
                         icon: const Icon(Icons.delete, color: Colors.red),
                       ),
-                    ))
+                    ),
+                  ),
+                )
                 .toList(),
           SizedBox(
             width: double.infinity,

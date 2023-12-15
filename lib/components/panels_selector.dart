@@ -1,3 +1,4 @@
+import 'package:data7_panel/components/dialogAlert.dart';
 import 'package:data7_panel/components/panel_box.dart';
 import 'package:data7_panel/components/settings/settings.dart';
 import 'package:data7_panel/main.dart';
@@ -18,52 +19,72 @@ class _PanelsSelectorState extends State<PanelsSelector> {
   List<String> joined = [];
 
   _loadPanels() async {
-    final retPanels = await GetPanels.execute();
-    setState(() {
-      panels = retPanels;
-      joined = settings.panel.joined;
-    });
+    try {
+      final retPanels = await GetPanels.execute(url: widget.url);
+      setState(() {
+        panels = retPanels;
+        joined = settings.panel.joined;
+      });
+    } catch (e) {
+      showAlertDialog(context, 'Erro ao buscar paineis',
+          'Não foi possível buscar os paineis, verifique sua conexão e se o endereço está correto.');
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    _loadPanels();
   }
 
   @override
   Widget build(BuildContext context) {
     return Flexible(
-      child: ListView.builder(
-        itemCount: panels.length,
-        itemBuilder: (context, index) {
-          return Container(
-            margin: const EdgeInsets.only(bottom: 8),
-            child: PanelBox(
-              panel: panels[index],
-              rightIcon: Switch(
-                value: joined.contains(panels[index].id),
-                onChanged: (value) {
-                  List<String> tempJoined = settings.panel.joined;
-                  if (value) {
-                    tempJoined = tempJoined
-                        .where((element) => element != panels[index].id)
-                        .toList();
-                    tempJoined.add(panels[index].id);
-                  } else {
-                    tempJoined = tempJoined
-                        .where((element) => element != panels[index].id)
-                        .toList();
-                  }
-                  settings.panel.joined = tempJoined;
-                  setState(() {
-                    joined = tempJoined;
-                  });
-                },
-              ),
+      child: ListView(
+        children: [
+          SettingsCategory(
+            title: "Selecionar paineis",
+            expansible: true,
+            icon: Icons.table_view,
+            iconStyle: IconStyle(
+              withBackground: true,
+              backgroundColor: Colors.green[700],
             ),
-          );
-        },
+            onChangeExpansion: (expanded) {
+              if (expanded) {
+                _loadPanels();
+              }
+            },
+            child: panels
+                .map(
+                  (panel) => SettingsItem(
+                    child: PanelBox(
+                      panel: panel,
+                      rightIcon: Switch(
+                        value: joined.contains(panel.id),
+                        onChanged: (value) {
+                          List<String> tempJoined = settings.panel.joined;
+                          if (value) {
+                            tempJoined = tempJoined
+                                .where((element) => element != panel.id)
+                                .toList();
+                            tempJoined.add(panel.id);
+                          } else {
+                            tempJoined = tempJoined
+                                .where((element) => element != panel.id)
+                                .toList();
+                          }
+                          settings.panel.joined = tempJoined;
+                          setState(() {
+                            joined = tempJoined;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+        ],
       ),
     );
   }

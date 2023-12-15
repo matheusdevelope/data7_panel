@@ -11,7 +11,8 @@ class SettingsCategory extends StatefulWidget {
   Function(bool expanded)? onChangeExpansion;
 
   SettingsCategory(
-      {this.title,
+      {super.key,
+      this.title,
       required this.child,
       this.subtitle,
       this.icon,
@@ -20,7 +21,7 @@ class SettingsCategory extends StatefulWidget {
       this.onChangeExpansion});
 
   @override
-  _SettingsCategoryState createState() => _SettingsCategoryState();
+  State<SettingsCategory> createState() => _SettingsCategoryState();
 }
 
 class _SettingsCategoryState extends State<SettingsCategory> {
